@@ -6,6 +6,7 @@
   
 <style>
 
+<style>
 @font-face {
   font-family: "SBL";
   src: url("font/SBL_BLit.ttf") format("truetype");
@@ -15,7 +16,7 @@
 }
   
 body {
-  font-family: SBL;
+  font-family: "font/SBL_BLit.ttf";
   padding: 20px;
 }
 
@@ -24,6 +25,10 @@ body {
   line-height: 1.6;
 }
 
+span.wrap {
+  word-wrap: break-word;
+}
+  
 span.word {
   padding: 3px;
   cursor: pointer;
@@ -50,6 +55,7 @@ span.active {
 
 <body>
 
+<h1>📖 Greek Reader (Test 18)</h1>
 <h1>📖 Greek Reader (Test 20)</h1>
 
 <!--input-->
@@ -60,7 +66,7 @@ time_stamp =
   
 <!--actual code-->
   
-<p id="text">
+<p id="text" class="wrap">
   <span data-start="2.2"><span class="word">Εἰσὶ</span><span class="word">δὲ</span><span class="word">τῶν</span><span class="word">μύθων</span><span class="word">οἱ</span><span class="word">μὲν</span><span class="word">ἁπλοῖ</span><span class="word">οἱ</span><span class="word">δὲ</span><span class="word">πεπλεγμένοι</span><span class="punctuation">·</span></span>
   <span data-start="7.15"><span class="word">καὶ</span><span class="word">γὰρ</span><span class="word">αἱ</span><span class="word">πράξεις</span><span class="punctuation">,</span></span>
   <span data-start="8.8"><span class="word">ὧν</span><span class="word">μιμήσεις</span><span class="word">οἱ</span><span class="word">μῦθοί</span><span class="word">εἰσιν</span><span class="punctuation">,</span></span>
