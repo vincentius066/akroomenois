@@ -37,7 +37,7 @@ span {
 
 <body>
 
-<h1>📖 Greek Reader (Test 20)</h1>
+<h1>📖 Greek Reader (Test 21)</h1>
 
 <!--actual code-->
   
@@ -84,6 +84,30 @@ audio.addEventListener("timeupdate", () => {
   });
 });
 
+// Add click handler to words in active phrases
+const words = document.querySelectorAll("#text span.word");
+words.forEach((word) => {
+  word.addEventListener("click", (e) => {
+    e.stopPropagation();
+    
+    // Check if the word is in an active phrase
+    const phrase = word.closest("span.phrase");
+    if (phrase && phrase.classList.contains("active")) {
+      // Pause audio
+      audio.pause();
+      
+      // Show popup with word
+      const popup = document.getElementById("popup");
+      const popupOverlay = document.getElementById("popupOverlay");
+      const popupContent = document.getElementById("popupContent");
+      
+      popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent}</p>`;
+      popup.style.display = "block";
+      popupOverlay.style.display = "block";
+    }
+  });
+});
+  
 // Add click handler to words to jump to containing phrase start time
 const words = document.querySelectorAll("#text span.word");
 words.forEach((word) => {
