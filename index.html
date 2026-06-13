@@ -16,7 +16,7 @@
 
 body {
   font-family: SBL;
-  padding: 80px;
+  padding: 120px 80px 100px;
 }
 
 #text {
@@ -68,13 +68,54 @@ span {
 #progressBar {
   flex: 1;
 }
+
+#topBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  background: #222;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px;
+  box-sizing: border-box;
+
+  z-index: 1000;
+}
+
+/* center the title properly */
+#title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+}
+
+/* match your bottom bar style */
+#topBar button {
+  background: #444;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#topBar button:hover {
+  background: #666;
+}
 	
 </style>
 </head>
 
 <body>
 
-<h1>📖 Greek Reader (Test 40)</h1>
+<h1>📖 Greek Reader (Test 41)</h1>
 
 <!--input-->
 
@@ -100,6 +141,18 @@ span {
 
 <!--actual code-->
 
+<!--top bar-->
+	
+<div id="topBar">
+  <button id="homeBtn">🏠</button>
+
+  <div id="title">Greek Reader</div>
+
+  <button id="settingsBtn">⚙️</button>
+</div>
+
+<!--dictionary pop up-->
+	
 <div id="popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1px solid #ccc; padding: 20px; z-index: 1000; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
   <button id="closePopup" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">✕</button>
   <div id="popupContent"></div>
@@ -390,6 +443,19 @@ volumeControl.addEventListener("input", () => {
   audio.volume = volumeControl.value;
   volumeValue.textContent = Math.round(volumeControl.value * 100) + "%";
 });
+
+// Top Bar
+
+const homeBtn = document.getElementById("homeBtn");
+const settingsBtn = document.getElementById("settingsBtn");
+
+// Placeholder behavior for now
+homeBtn.addEventListener("click", () => {
+  console.log("Home clicked");
+});
+
+settingsBtn.addEventListener("click", () => {
+  console.log("Settings clicked");
 	
 // Debug: check if audio loads
 audio.addEventListener("loadedmetadata", () => {
@@ -399,6 +465,7 @@ audio.addEventListener("loadedmetadata", () => {
 audio.addEventListener("error", (e) => {
   console.error("Audio failed to load:", e);
 });
+	
 </script>
 
 </body>
