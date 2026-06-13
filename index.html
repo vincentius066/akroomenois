@@ -298,7 +298,6 @@ nextBtn.addEventListener("click", () => {
   let index = getCurrentPhraseIndex();
   if (index < phrases.length - 1) {
     audio.currentTime = parseFloat(phrases[index + 1].dataset.start);
-    audio.play();
   }
 });
 
@@ -307,7 +306,6 @@ prevBtn.addEventListener("click", () => {
   let index = getCurrentPhraseIndex();
   if (index > 0) {
     audio.currentTime = parseFloat(phrases[index - 1].dataset.start);
-    audio.play();
   }
 });
 
