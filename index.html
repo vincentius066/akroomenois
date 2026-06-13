@@ -54,7 +54,7 @@ span.wrap {
 
 <body>
 
-<h1>📖 Greek Reader (Test A.1)</h1>
+<h1>📖 Greek Reader (Test A.2)</h1>
 
 <!--input-->
 
@@ -89,15 +89,13 @@ const audio = document.getElementById("audio");
 const phrases = document.querySelectorAll("#text > span[data-start]");
 const words = document.querySelectorAll("#text span.word");
 
-console.log("Found", phrases.length, "phrases and", words.length, "words");
-
 audio.addEventListener("timeupdate", () => {
   const time = audio.currentTime;
 
   phrases.forEach((phrase, index) => {
     const start = parseFloat(phrase.dataset.start);
-    const nextStart = index < phrases.length - 1 
-      ? parseFloat(phrases[index + 1].dataset.start) 
+    const nextStart = (index < phrases.length - 1)
+      ? parseFloat(phrases[index + 1].dataset.start)
       : Infinity;
 
     if (time >= start && time < nextStart) {
@@ -108,46 +106,43 @@ audio.addEventListener("timeupdate", () => {
   });
 });
 
-// Add click handler to jump to phrase start time
 phrases.forEach((phrase) => {
   phrase.addEventListener("click", (e) => {
-    if (e.target.classList.contains("word")) return; // Let word click handler take precedence
-    
-    e.stopPropagation();
+    if (e.target.classList.contains("word")) return;
+
     const startTime = parseFloat(phrase.dataset.start);
-    console.log("Clicked phrase, jumping to:", startTime);
     audio.currentTime = startTime;
+    audio.play();
   });
 });
 
-// Add click handler for individual words to lookup in dictionary
 words.forEach((word) => {
   word.addEventListener("click", (e) => {
     e.stopPropagation();
-    const greekWord = word.textContent.trim();
-    console.log("Clicked word:", greekWord);
-    
-    // TODO: Call Python romanization function here
-    // For now, we'll pass the Greek word directly
-    redirectToPerseus(greekWord);
+
+    const phrase = word.closest("span[data-start]");
+
+    const isActive = phrase.classList.contains("active");
+
+    if (isActive) {
+      const greekWord = word.textContent.trim();
+      openDictionary(greekWord);
+
+    } else {
+      const startTime = parseFloat(phrase.dataset.start);
+      audio.currentTime = startTime;
+      audio.play();
+    }
   });
 });
 
-function redirectToPerseus(greekWord) {
-  // Remove diacritical marks for romanization input
-  // This is a temporary solution - will be replaced by Python romanizer
-  const url = `https://www.perseus.tufts.edu/hopper/morph?l=${encodeURIComponent(greekWord)}&la=greek`;
-  console.log("Redirecting to:", url);
+function openDictionary(word) {
+  const url = `https://www.perseus.tufts.edu/hopper/morph?l=${encodeURIComponent(word)}&la=greek`;
   window.open(url, "_blank");
 }
 
-// Debug: check if audio loads
 audio.addEventListener("loadedmetadata", () => {
-  console.log("Audio metadata loaded. Duration:", audio.duration);
-});
-
-audio.addEventListener("error", (e) => {
-  console.error("Audio failed to load:", e);
+  console.log("Audio loaded, duration:", audio.duration);
 });
 </script>
 
