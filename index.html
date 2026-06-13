@@ -54,7 +54,7 @@ span.wrap {
 
 <body>
 
-<h1>📖 Greek Reader (Test 27)</h1>
+<h1>📖 Greek Reader (Test A.1)</h1>
 
 <!--input-->
 
@@ -108,34 +108,28 @@ audio.addEventListener("timeupdate", () => {
   });
 });
 
-// Add click handler for phrases - handles both phrase jumps and word lookups
+// Add click handler to jump to phrase start time
 phrases.forEach((phrase) => {
   phrase.addEventListener("click", (e) => {
-    // Get the parent phrase of the clicked element
-    const clickedPhrase = e.target.closest("span[data-start]");
+    if (e.target.classList.contains("word")) return; // Let word click handler take precedence
     
-    if (e.target.classList.contains("word")) {
-      // If clicking a word, check if its phrase is already active
-      if (clickedPhrase.classList.contains("active")) {
-        // Word is in active phrase - lookup in dictionary
-        e.stopPropagation();
-        const greekWord = e.target.textContent.trim();
-        console.log("Clicked word in active phrase:", greekWord);
-        redirectToPerseus(greekWord);
-      } else {
-        // Word is in inactive phrase - jump to that phrase
-        e.stopPropagation();
-        const startTime = parseFloat(clickedPhrase.dataset.start);
-        console.log("Clicked word in inactive phrase, jumping to:", startTime);
-        audio.currentTime = startTime;
-      }
-    } else {
-      // Non-word click on phrase - jump to phrase
-      e.stopPropagation();
-      const startTime = parseFloat(clickedPhrase.dataset.start);
-      console.log("Clicked phrase, jumping to:", startTime);
-      audio.currentTime = startTime;
-    }
+    e.stopPropagation();
+    const startTime = parseFloat(phrase.dataset.start);
+    console.log("Clicked phrase, jumping to:", startTime);
+    audio.currentTime = startTime;
+  });
+});
+
+// Add click handler for individual words to lookup in dictionary
+words.forEach((word) => {
+  word.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const greekWord = word.textContent.trim();
+    console.log("Clicked word:", greekWord);
+    
+    // TODO: Call Python romanization function here
+    // For now, we'll pass the Greek word directly
+    redirectToPerseus(greekWord);
   });
 });
 
