@@ -28,7 +28,7 @@ span {
 
 <body>
 
-<h1>📖 Greek Reader (Test 8)</h1>
+<h1>📖 Greek Reader (Test 9)</h1>
 
 <!--input-->
 
@@ -69,8 +69,8 @@ audio.addEventListener("timeupdate", () => {
 
   words.forEach((word, index) => {
     const start = parseFloat(word.dataset.start);
-    const nextStart = index < words.length
-      ? parseFloat(words[index].dataset.start) 
+    const nextStart = index < words.length -1
+      ? parseFloat(words[index +1].dataset.start) 
       : Infinity;
 
     if (time >= start && time < nextStart) {
