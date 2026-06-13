@@ -37,7 +37,7 @@ span {
 
 <body>
 
-<h1>📖 Greek Reader (Test 28)</h1>
+<h1>📖 Greek Reader (Test 29)</h1>
 
 <!--input-->
 
@@ -114,6 +114,10 @@ words.forEach((word) => {
       const popupContent = document.getElementById("popupContent");
 	  //DICTIONARY TESTING
 	  const wordText = word.textContent;
+	  fetch(`https://scaife.perseus.org/morpheus/?word=${encodeURIComponent(wordText)}&lang=grc`)
+	    .then(response => response.text())
+	    .then(html => {
+	      console.log(html);
 	  //END DICTIONARY TESTING
       
       popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent}<br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong><br><br><strong>Grammar:</strong></p>`;
