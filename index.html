@@ -37,7 +37,7 @@ span {
 
 <body>
 
-<h1>📖 Greek Reader (Test 26)</h1>
+<h1>📖 Greek Reader (Test 27)</h1>
 
 <!--input-->
 
@@ -112,8 +112,28 @@ words.forEach((word) => {
       const popup = document.getElementById("popup");
       const popupOverlay = document.getElementById("popupOverlay");
       const popupContent = document.getElementById("popupContent");
-      
-      popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent}<br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong><br><br><strong>Grammar:</strong></p>`;
+	  // DICTIONARY DATA BELOW
+	  const wordText = word.textContent;
+
+	  fetch(`https://scaife.perseus.org/morpheus/?word=${encodeURIComponent(wordText)}&lang=grc`)
+	  .then(response => response.text())
+	  .then(html => {
+	    console.log(html);
+
+	  	// Parse HTML
+	  const parser = new DOMParser();
+	  const doc = parser.parseFromString(html, "text/html");
+
+	  	// Try to find "pofs"
+	  const pofsElement = doc.querySelector('[data-key="pofs"]');
+
+	  let pofs = "unknown";
+
+	  if (pofsElement) {
+	  pofs = pofsElement.textContent;
+	  }
+	  //DICTIONARY DATA ABOVE
+      popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent}<br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong> ${pofsElement.textContent}<br><br><strong>Grammar:</strong></p>`;
       popup.style.display = "block";
       popupOverlay.style.display = "block";
       
