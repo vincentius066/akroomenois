@@ -147,7 +147,7 @@ span {
 <div id="topBar">
   <button id="homeBtn">🏠</button>
 
-  <div id="title">Ars Poetica — Ioannis Stratakis (test 47)</div>
+  <div id="title">Ars Poetica — Ioannis Stratakis (test 48)</div>
 
   <button id="settingsBtn">⚙️</button>
 </div>
@@ -333,10 +333,10 @@ const playBtn = document.getElementById("playBtn");
 playBtn.addEventListener("click", () => {
   if (audio.paused) {
     audio.play();
-    playBtn.innerHTML = <img src="icon/play-pause.svg" alt="Play" width="32" height="32">;
+    playBtn.innerHTML = '<img src="icon/play-pause.svg" alt="Pause" width="32" height="32">';
   } else {
     audio.pause();
-    playBtn.innerHTML = <img src="icon/play-button.svg" alt="Play" width="32" height="32">;
+    playBtn.innerHTML = '<img src="icon/play-button.svg" alt="Play" width="32" height="32">';
   }
 });	
 
@@ -414,10 +414,10 @@ document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     if (audio.paused) {
       audio.play();
-	playBtn.innerHTML = <img src="icon/play-pause.svg" alt="Play" width="32" height="32">;
+	playBtn.innerHTML = '<img src="icon/play-pause.svg" alt="Pause" width="32" height="32">';
     } else {
       audio.pause();
-	playBtn.innerHTML = <img src="icon/play-button.svg" alt="Play" width="32" height="32">;
+	playBtn.innerHTML = '<img src="icon/play-button.svg" alt="Play" width="32" height="32">';
     }
   }
 
