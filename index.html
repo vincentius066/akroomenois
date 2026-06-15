@@ -153,7 +153,7 @@ span {
 <div id="topBar">
   <button id="homeBtn">🏠</button>
 
-  <div id="title">Ars Poetica — Ioannis Stratakis (test 54)</div>
+  <div id="title">Ars Poetica — Ioannis Stratakis (test 55)</div>
 
   <button id="settingsBtn">⚙️</button>
 </div>
@@ -266,7 +266,7 @@ function isOutOfView(el) {
 function scrollToTop(el) {
   window.scrollTo({
     top: window.scrollY + el.getBoundingClientRect().top - 120, // align to top (below top bar)
-    behavior: "instant" // abrupt jump
+    behavior: "smooth" // smouth jump
   });
 }
 
