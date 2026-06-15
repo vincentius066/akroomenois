@@ -153,7 +153,7 @@ span {
 <div id="topBar">
   <button id="homeBtn">🏠</button>
 
-  <div id="title">Ars Poetica — Ioannis Stratakis (test 53)</div>
+  <div id="title">Ars Poetica — Ioannis Stratakis (test 54)</div>
 
   <button id="settingsBtn">⚙️</button>
 </div>
@@ -251,6 +251,28 @@ function isPopupActive() {
 
 console.log("Found", phrases.length, "phrases");
 
+// make sure the active phrase is always visible
+	
+function isOutOfView(el) {
+  const rect = el.getBoundingClientRect();
+
+  // Adjust margins so it doesn't trigger too early
+  const topOffset = 120;   // your top bar height
+  const bottomOffset = window.innerHeight - 100; // avoid player bar
+
+  return rect.top < topOffset + 40 || rect.bottom > bottomOffset - 40;
+}
+
+function scrollToTop(el) {
+  window.scrollTo({
+    top: window.scrollY + el.getBoundingClientRect().top - 120, // align to top (below top bar)
+    behavior: "instant" // abrupt jump
+  });
+}
+
+// important stuff
+let currentActive = null;
+	
 audio.addEventListener("timeupdate", () => {
   const time = audio.currentTime;
 
@@ -261,7 +283,19 @@ audio.addEventListener("timeupdate", () => {
       : Infinity;
 
     if (time >= start && time < nextStart) {
-      phrase.classList.add("active");
+
+      // Only react if it's a NEW active phrase
+      if (currentActive !== phrase) {
+        currentActive = phrase;
+
+        phrase.classList.add("active");
+
+        // ✅ Only scroll if it's out of view
+        if (isOutOfView(phrase)) {
+          scrollToTop(phrase);
+        }
+      }
+
     } else {
       phrase.classList.remove("active");
     }
