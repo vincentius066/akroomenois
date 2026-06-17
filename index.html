@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Greek Reader</title>
-	
+
+
+<!--to put in the .css file-->	
 <style>
 
   @font-face {
@@ -124,7 +126,7 @@ span {
 
 <body>
 
-<!--input-->
+<!--where to put the HTML version of the text with the time spans and stuff-->
 
 <p id="text">
   <span data-start="2.2" class="phrase"><span class="word">Εἰσὶ</span> <span class="word">δὲ</span> <span class="word">τῶν</span> <span class="word">μύθων</span> <span class="word">οἱ</span> <span class="word">μὲν</span> <span class="word">ἁπλοῖ</span> <span class="word">οἱ</span> <span class="word">δὲ</span> <span class="word">πεπλεγμένοι</span><span class="punctuation">·</span></span>
@@ -146,7 +148,7 @@ span {
   <source src="audio/aristotle_test_audio_2.webm" type="audio/webm">
 </audio>
 
-<!--actual code-->
+<!--all the div id's-->
 
 <!--top bar-->
 	
@@ -193,7 +195,7 @@ span {
 
   <h3>Settings</h3>
 
-  <!-- Playback speed -->
+  <!--playback speed-->
   <label>
     Speed:
     <input type="range" id="speedControl" min="0.5" max="2" step="0.1" value="1">
@@ -202,7 +204,7 @@ span {
 
   <br><br>
 
-  <!-- Text size -->
+  <!--text size-->
   <label>
     Text size:
     <input type="range" id="fontControl" min="20" max="100" step="1" value="70">
@@ -236,9 +238,12 @@ span {
   <button id="langBtn">GR</button>
 </div>
 	
-<!--actual actual code-->
+<!--actual code-->
 	
 <script>
+
+// not sure what this does
+
 const audio = document.getElementById("audio");
 const phrases = document.querySelectorAll("#text > span.phrase");
 let wasPlaying = false
@@ -251,7 +256,7 @@ function isPopupActive() {
 
 console.log("Found", phrases.length, "phrases");
 
-// make sure the active phrase is always visible
+// make sure the active phrase is always visible (auto-scroll-er)
 	
 function isOutOfView(el) {
   const rect = el.getBoundingClientRect();
@@ -270,7 +275,7 @@ function scrollToTop(el) {
   });
 }
 
-// important stuff
+// important stuff (the highlight-er)
 let currentActive = null;
 	
 audio.addEventListener("timeupdate", () => {
@@ -284,13 +289,13 @@ audio.addEventListener("timeupdate", () => {
 
     if (time >= start && time < nextStart) {
 
-      // Only react if it's a NEW active phrase
+      // only react if it's a NEW active phrase
       if (currentActive !== phrase) {
         currentActive = phrase;
 
         phrase.classList.add("active");
 
-        // ✅ Only scroll if it's out of view
+        // only scroll if it's out of view
         if (isOutOfView(phrase)) {
           scrollToTop(phrase);
         }
@@ -344,6 +349,8 @@ words.forEach((word) => {
     }
   });
 });
+
+//less important stuff (UI)
 
 // Close popup handlers
 const closePopupBtn = document.getElementById("closePopup");
@@ -453,7 +460,7 @@ prevBtn.addEventListener("click", () => {
 const langBtn = document.getElementById("langBtn");
 
 langBtn.addEventListener("click", () => {
-  if (langBtn.textContent.includes("Greek")) {
+  if (langBtn.textContent.includes("GR")) {
     langBtn.textContent = "EN";
   } else {
     langBtn.textContent = "GR";
@@ -499,7 +506,7 @@ document.addEventListener("keydown", (e) => {
   }
 });
 	
-// --- SPEED CONTROL ---
+// --- SPEED CONTROL (in the settings, look at the div id's)---
 const speedControl = document.getElementById("speedControl");
 const speedValue = document.getElementById("speedValue");
 
@@ -510,7 +517,7 @@ speedControl.addEventListener("input", () => {
 });
 
 
-// --- FONT SIZE CONTROL ---
+// --- FONT SIZE CONTROL (in the settings, look at the div id's)---
 const fontControl = document.getElementById("fontControl");
 const fontValue = document.getElementById("fontValue");
 const text = document.getElementById("text");
@@ -542,6 +549,8 @@ const settingsBtn = document.getElementById("settingsBtn");
 homeBtn.addEventListener("click", () => {
   console.log("Home clicked");
 });
+
+// Settings button
 
 settingsBtn.addEventListener("click", () => {
   wasPlaying = !audio.paused;
