@@ -57,28 +57,27 @@
 
   <h3>Settings</h3>
 
-  <!--playback speed-->
-  <label>
-    Speed:
-    <input type="range" id="speedControl" min="0.5" max="2" step="0.1" value="1">
-    <span id="speedValue">1.0x</span>
-  </label>
+  <h3>Settings</h3>
 
-  <br><br>
-
-  <!--text size-->
-  <label>
-    Text size:
-    <input type="range" id="fontControl" min="20" max="100" step="1" value="70">
-    <span id="fontValue">70px</span>
-  </label>
-
-  <br><br>
+	<label>
+	  Speed:
+	  <input type="range" id="speedControl" step="0.1">
+	  <span id="speedValue"></span>
+	</label>
 	
-  <label for="volumeControl">
-	Volume:</label>
-	<input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
-	<span id="volumeValue">100%</span>
+	<br><br>
+	
+	<label>
+	  Text size:
+	  <input type="range" id="fontControl" step="1">
+	  <span id="fontValue"></span>
+	</label>
+	
+	<br><br>
+	
+	<label for="volumeControl">Volume:</label>
+	<input type="range" id="volumeControl" step="0.01">
+	<span id="volumeValue"></span>
 
 </div>
 	
@@ -101,7 +100,7 @@
 </div>
 	
 <!--actual code-->
-	
+  <script src="config.js"></script>
 <script>
 
 // not sure what this does
@@ -446,6 +445,5 @@ audio.addEventListener("error", (e) => {
 });
 	
 </script>
-
 </body>
 </html>
