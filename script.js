@@ -71,6 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const fontControl = document.getElementById("fontControl");
   const fontValue = document.getElementById("fontValue");
   const text = document.getElementById("text");
+  const textEn =
+document.getElementById("text_en");
   const volumeControl = document.getElementById("volumeControl");
   const volumeValue = document.getElementById("volumeValue");
 
@@ -257,7 +259,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fontControl.addEventListener("input", () => {
     const size = fontControl.value + "px";
-    text.style.fontSize = size;
+    
+    // Update the Greek text size
+    if (text) text.style.fontSize = size;
+    
+    // Update the English text size simultaneously!
+    if (textEn) textEn.style.fontSize = size;
+    
     fontValue.textContent = size;
   });
 
