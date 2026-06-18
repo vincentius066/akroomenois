@@ -11,6 +11,46 @@ const SITE_SETTINGS = {
 // 2. INITIALIZE LOGIC ON PAGE LOAD
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
+  
+  // ==========================================
+  // 3. GENERATE THE INTERFACE AUTOMATICALLY
+  // ==========================================
+  const interfaceHTML = `
+    <div id="topBar">
+      <button id="homeBtn">🏠</button>
+      <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
+    </div>
+
+    <div id="popup">
+      <button id="closePopup">✕</button>
+      <div id="popupContent"></div>
+    </div>
+    <div id="popupOverlay"></div>
+
+    <div id="settingsPopup">
+      <button id="closeSettings">✕</button>
+      <h3>Settings</h3>
+      <label>Speed: <input type="range" id="speedControl" step="0.1"><span id="speedValue"></span></label>
+      <br><br>
+      <label>Text size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
+      <br><br>
+      <label for="volumeControl">Volume:</label><input type="range" id="volumeControl" step="0.01"><span id="volumeValue"></span>
+    </div>
+        
+    <div id="playerBar">
+      <button id="prevBtn"><img src="icon/play-backwards.svg" alt="Backward" width="32" height="32"></button>
+      <button id="playBtn"><img src="icon/play-button.svg" alt="Play" width="32" height="32"></button>
+      <button id="nextBtn"><img src="icon/play-forwards.svg" alt="Forward" width="32" height="32"></button>
+      <input type="range" id="progressBar" value="0" min="0" step="0.1">
+      <button id="langBtn">GR</button>
+    </div>
+  `;
+
+  // Inject the interface into the body of the page
+  document.body.insertAdjacentHTML('beforeend', interfaceHTML);
+
+  // ... ALL THE REST OF YOUR EXISTING SCRIPT.JS CODE STAYS EXACTLY THE SAME BELOW THIS ...
+  
   // Grab all DOM elements
   const audio = document.getElementById("audio");
   const phrases = document.querySelectorAll("#text > span.phrase");
