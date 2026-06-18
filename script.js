@@ -30,16 +30,16 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="settingsPopup">
       <button id="closeSettings">✕</button>
       <h3>Settings</h3>
-      <label>Speed: <input type="range" id="speedControl" step="0.1"><span id="speedValue"></span></label>
-      <br><br>
-      <label>Text size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
-      <br><br>
       <label>Greek Font: 
         <select id="fontFamilyControl">
           <option value="SBL">SBL</option>
           <option value="'EB Garamond'">EB Garamond</option>
         </select>
       </label>
+      <br><br>
+      <label>Text size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
+      <br><br>
+      <label>Speed: <input type="range" id="speedControl" step="0.1"><span id="speedValue"></span></label>
       <br><br>
       <label for="volumeControl">Volume:</label><input type="range" id="volumeControl" step="0.01"><span id="volumeValue"></span>
     </div>
