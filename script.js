@@ -55,12 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Inject the interface into the body of the page
   document.body.insertAdjacentHTML('beforeend', interfaceHTML);
-
-  // ... ALL THE REST OF YOUR EXISTING SCRIPT.JS CODE STAYS EXACTLY THE SAME BELOW THIS ...
   
   // Grab all DOM elements
   const audio = document.getElementById("audio");
-  const phrases = document.querySelectorAll("#text > span.phrase");
+  const phrases = document.querySelectorAll("#text > .phrase"); // Widened selector to find spans or custom heading blocks
   const settingsPopup = document.getElementById("settingsPopup");
   const closeSettings = document.getElementById("closeSettings");
   const popup = document.getElementById("popup");
@@ -85,6 +83,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let wasPlaying = false;
   let currentActive = null;
+
+  // ==========================================
+  // INITIAL VISIBILITY AND TRANSLATION STORAGE
+  // ==========================================
+  // Read historical preference or default to full Greek reader view
+  const savedLang = localStorage.getItem("reader_lang") || "GR";
+  langBtn.textContent = savedLang;
+  
+  if (savedLang === "GR") {
+    if (text) text.style.display = "block";
+    if (textEn) textEn.style.display = "none";
+  } else {
+    if (text) text.style.display = "none";
+    if (textEn) textEn.style.display = "block";
+  }
 
   // ==========================================
   // SETUP CONFIG BOUNDARIES & LOAD SAVED PREFERENCES
@@ -154,6 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return rect.top < topOffset + 40 || rect.bottom > bottomOffset - 40;
   }
 
+  // Smooth scroll function altered slightly to ensure it accounts for active visible parent text block
   function scrollToTop(el) {
     window.scrollTo({
       top: window.scrollY + el.getBoundingClientRect().top - 120, 
@@ -184,10 +198,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currentActive !== phrase) {
           currentActive = phrase;
           phrase.classList.add("active");
-          if (isOutOfView(phrase)) scrollToTop(phrase);
+          // Only scroll view smoothly if the element is inside the currently viewed layout
+          if (isOutOfView(phrase) && text.style.display !== "none") scrollToTop(phrase);
         }
       } else {
-        phrase.classList.remove("active");
+        phrase.phrase.classList.remove("active");
       }
     });
   });
@@ -196,25 +211,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // RESILIENT PROGRESS AND METADATA RESTORATION
   // ==========================================
 
-  // 1. Force the progress bar to update its maximum capacity as soon as the real duration is resolved
   audio.addEventListener("timeupdate", () => {
     if (audio.duration && isFinite(audio.duration) && progressBar.max !== audio.duration.toString()) {
       progressBar.max = audio.duration;
     }
   });
 
-  // 2. Safely capture data availability to restore historical playback offsets
   audio.addEventListener("loadeddata", () => {
-    // If the browser is still struggling to read the WebM header timeline,
-    // we jump the playhead forward 0.1s and back instantly. This forces Chromium to parse the full file layout.
     if (!audio.duration || !isFinite(audio.duration) || audio.duration === Infinity) {
       audio.currentTime = 0.1;
       audio.currentTime = 0;
     }
 
-    // Wrap in a tiny delay to give the browser a split second to calculate the real file boundary
     setTimeout(() => {
-      progressBar.max = audio.duration || 100; // Fallback placeholder if still loading
+      progressBar.max = audio.duration || 100;
 
       const savedTime = localStorage.getItem("reader_currentTime");
       if (savedTime) {
@@ -227,13 +237,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 150);
   });
 
-  // Handle Clicking Words
+  // Handle Clicking Words (Isolated explicitly to active Greek text view)
   const words = document.querySelectorAll("#text span.word");
   words.forEach((word) => {
     word.addEventListener("click", (e) => {
       e.stopPropagation();
       if (isPopupActive()) return;
-      const phrase = word.closest("span.phrase");
+      const phrase = word.closest(".phrase");
       if (phrase && phrase.classList.contains("active")) {
         wasPlaying = !audio.paused; 
         audio.pause();
@@ -295,8 +305,25 @@ document.addEventListener("DOMContentLoaded", () => {
     if (index > 0) audio.currentTime = parseFloat(phrases[index - 1].dataset.start);
   });
 
+  // ==========================================
+  // LANGUAGE TOGGLE EVENT LISTENER
+  // ==========================================
   langBtn.addEventListener("click", () => {
-    langBtn.textContent = langBtn.textContent.includes("GR") ? "EN" : "GR";
+    if (langBtn.textContent.includes("GR")) {
+      langBtn.textContent = "EN";
+      text.style.display = "none";
+      textEn.style.display = "block";
+      localStorage.setItem("reader_lang", "EN");
+    } else {
+      langBtn.textContent = "GR";
+      text.style.display = "block";
+      textEn.style.display = "none";
+      localStorage.setItem("reader_lang", "GR");
+      
+      // Auto-focus scroll to current phrase when swapping back to Greek view
+      const activePhrase = document.querySelector("#text > .phrase.active");
+      if (activePhrase) scrollToTop(activePhrase);
+    }
   });
 
   // Keyboard Navigation Bindings
@@ -331,7 +358,6 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("reader_currentTime", audio.currentTime);
   });
 
-  // Backup: Save time if they close the tab or navigate away while playing
   window.addEventListener("beforeunload", () => {
     localStorage.setItem("reader_currentTime", audio.currentTime);
   });
@@ -344,28 +370,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const speed = parseFloat(speedControl.value);
     audio.playbackRate = speed;
     speedValue.textContent = speed.toFixed(1) + "x";
-    localStorage.setItem("reader_playerSpeed", speed); // Save preference
+    localStorage.setItem("reader_playerSpeed", speed);
   });
 
   fontControl.addEventListener("input", () => {
     const size = fontControl.value + "px";
-    
-    // Update the Greek text size
     if (text) text.style.fontSize = size;
-    
-    // Update the English text size simultaneously!
     if (textEn) textEn.style.fontSize = size;
-    
     fontValue.textContent = size;
-    localStorage.setItem("reader_fontSize", fontControl.value); // Save preference
+    localStorage.setItem("reader_fontSize", fontControl.value);
   });
 
-  // Font Family Operational Event Listener
   if (fontFamilyControl) {
     fontFamilyControl.addEventListener("change", () => {
       if (text) {
         text.style.fontFamily = fontFamilyControl.value;
-        localStorage.setItem("reader_fontFamily", fontFamilyControl.value); // Save preference
+        localStorage.setItem("reader_fontFamily", fontFamilyControl.value);
       }
     });
   }
@@ -373,10 +393,9 @@ document.addEventListener("DOMContentLoaded", () => {
   volumeControl.addEventListener("input", () => {
     audio.volume = volumeControl.value;
     volumeValue.textContent = Math.round(volumeControl.value * 100) + "%";
-    localStorage.setItem("reader_volume", volumeControl.value); // Save preference
+    localStorage.setItem("reader_volume", volumeControl.value);
   });
 
-  // Settings Actions
   if (homeBtn) homeBtn.addEventListener("click", () => console.log("Home clicked"));
 
   settingsBtn.addEventListener("click", () => {
