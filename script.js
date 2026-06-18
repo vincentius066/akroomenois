@@ -192,21 +192,39 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Restore Progress
-  audio.addEventListener("loadedmetadata", () => {
-    progressBar.max = audio.duration;
+  // ==========================================
+  // RESILIENT PROGRESS AND METADATA RESTORATION
+  // ==========================================
 
-    // Load and restore saved listening time
-    const savedTime = localStorage.getItem("reader_currentTime");
-    if (savedTime) {
-      const targetTime = parseFloat(savedTime);
-      
-      // Safety check: Make sure the saved time fits within the current track length
-      if (targetTime < audio.duration) {
-        audio.currentTime = targetTime;
-        progressBar.value = targetTime;
-      }
+  // 1. Force the progress bar to update its maximum capacity as soon as the real duration is resolved
+  audio.addEventListener("timeupdate", () => {
+    if (audio.duration && isFinite(audio.duration) && progressBar.max !== audio.duration.toString()) {
+      progressBar.max = audio.duration;
     }
+  });
+
+  // 2. Safely capture data availability to restore historical playback offsets
+  audio.addEventListener("loadeddata", () => {
+    // If the browser is still struggling to read the WebM header timeline,
+    // we jump the playhead forward 0.1s and back instantly. This forces Chromium to parse the full file layout.
+    if (!audio.duration || !isFinite(audio.duration) || audio.duration === Infinity) {
+      audio.currentTime = 0.1;
+      audio.currentTime = 0;
+    }
+
+    // Wrap in a tiny delay to give the browser a split second to calculate the real file boundary
+    setTimeout(() => {
+      progressBar.max = audio.duration || 100; // Fallback placeholder if still loading
+
+      const savedTime = localStorage.getItem("reader_currentTime");
+      if (savedTime) {
+        const targetTime = parseFloat(savedTime);
+        if (isFinite(audio.duration) && targetTime < audio.duration) {
+          audio.currentTime = targetTime;
+          progressBar.value = targetTime;
+        }
+      }
+    }, 150);
   });
 
   // Handle Clicking Words
