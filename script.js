@@ -71,8 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const fontControl = document.getElementById("fontControl");
   const fontValue = document.getElementById("fontValue");
   const text = document.getElementById("text");
-  const textEn =
-document.getElementById("text_en");
+  const textEn = document.getElementById("text_en");
   const volumeControl = document.getElementById("volumeControl");
   const volumeValue = document.getElementById("volumeValue");
 
