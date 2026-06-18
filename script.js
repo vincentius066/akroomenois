@@ -34,6 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
       <br><br>
       <label>Text size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
       <br><br>
+      <label>Greek Font: 
+        <select id="fontFamilyControl">
+          <option value="SBL">SBL</option>
+          <option value="'EB Garamond'">EB Garamond</option>
+        </select>
+      </label>
+      <br><br>
       <label for="volumeControl">Volume:</label><input type="range" id="volumeControl" step="0.01"><span id="volumeValue"></span>
     </div>
         
@@ -74,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const textEn = document.getElementById("text_en");
   const volumeControl = document.getElementById("volumeControl");
   const volumeValue = document.getElementById("volumeValue");
+  const fontFamilyControl = document.getElementById("fontFamilyControl");
 
   let wasPlaying = false;
   let currentActive = null;
@@ -266,8 +274,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (textEn) textEn.style.fontSize = size;
     
     fontValue.textContent = size;
+
+    
   });
 
+  // Font Family Operational Event Listener
+  if (fontFamilyControl) {
+    fontFamilyControl.addEventListener("change", () => {
+      if (text) {
+        text.style.fontFamily = fontFamilyControl.value;
+      }
+    });
+  }
+  
   volumeControl.addEventListener("input", () => {
     audio.volume = volumeControl.value;
     volumeValue.textContent = Math.round(volumeControl.value * 100) + "%";
