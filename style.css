@@ -24,6 +24,12 @@ body {
   text-align: justify;
 }
 
+#text_en {
+  font-size: 70px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
 span {
   padding: 0px;
   cursor: pointer;
