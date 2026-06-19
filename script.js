@@ -62,12 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const text = document.getElementById("text");
   const textEn = document.getElementById("text_en");
-
-  // Wipe out any accidental non-breaking spaces ruining the layout
-  if (text) text.innerHTML = text.innerHTML.replace(/\u00A0/g, ' ');
-  if (textEn) textEn.innerHTML = textEn.innerHTML.replace(/\u00A0/g, ' ');
-
-
   const audio = document.getElementById("audio");
   const phrases = document.querySelectorAll("#text > span.phrase");
   const phrasesEn = document.querySelectorAll("#text_en > span.phrase_en");
