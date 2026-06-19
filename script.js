@@ -162,6 +162,11 @@ document.addEventListener("DOMContentLoaded", () => {
     top: window.scrollY + el.getBoundingClientRect().top - 120, 
     behavior: "smooth" 
   });
+
+  // Wipe out any accidental non-breaking spaces ruining the layout
+  if (text) text.innerHTML = text.innerHTML.replace(/\u00A0/g, ' ');
+  if (textEn) textEn.innerHTML = textEn.innerHTML.replace(/\u00A0/g, ' ');
+
 }
 
   // instantaneous jumping
