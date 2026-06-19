@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Grab all DOM elements
   const audio = document.getElementById("audio");
   const phrases = document.querySelectorAll("#text > span.phrase");
+  const phrasesEn = document.querySelectorAll("#text_en > span.phrase_en");
   const settingsPopup = document.getElementById("settingsPopup");
   const closeSettings = document.getElementById("closeSettings");
   const popup = document.getElementById("popup");
@@ -172,44 +173,36 @@ document.addEventListener("DOMContentLoaded", () => {
     return -1;
   }
 
-  // Highlight Phrase & Timeline Track
+  // Universal Highlight & Timeline Track
   audio.addEventListener("timeupdate", () => {
     const time = audio.currentTime;
     progressBar.value = time;
 
-    phrases.forEach((phrase, index) => {
+    // Determine which language loop to run based on what's visible
+    const isGreekVisible = (text.style.display !== "none");
+    const activePhrasesList = isGreekVisible ? phrases : phrasesEn;
+
+    activePhrasesList.forEach((phrase, index) => {
       const start = parseFloat(phrase.dataset.start);
-      const nextStart = index < phrases.length - 1 ? parseFloat(phrases[index + 1].dataset.start) : Infinity;
+      const nextStart = index < activePhrasesList.length - 1 ? parseFloat(activePhrasesList[index + 1].dataset.start) : Infinity;
 
       if (time >= start && time < nextStart) {
         if (currentActive !== phrase) {
+          // Remove old highlight
+          if (currentActive) currentActive.classList.remove("active");
+          
           currentActive = phrase;
           phrase.classList.add("active");
           
-          // CASE A: Greek View is visible
-          if (text.style.display !== "none") {
-            if (isOutOfView(phrase)) scrollToTop(phrase);
-          } 
-          
-          // CASE B: English View is visible (Optimized to fire ONLY ONCE per section change)
-          else if (textEn && textEn.style.display !== "none") {
-            const sectionNum = phrase.dataset.section;
-            
-            if (sectionNum && currentSection !== sectionNum) {
-              currentSection = sectionNum; // Lock it down so it doesn't repeat
-              const targetEnSection = document.getElementById(`en_${sectionNum}`);
-              if (targetEnSection) {
-                scrollToTop(targetEnSection);
-              }
-            }
-          }
+          // Instantly jump the active text line directly to the top!
+          scrollToTop(phrase);
         }
       } else {
         phrase.classList.remove("active");
       }
     });
   });
-
+  
   // ==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION
   // ==========================================
@@ -314,11 +307,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   langBtn.addEventListener("click", () => {
+    if (currentActive) currentActive.classList.remove("active");
+    currentActive = null; // Clear tracking cache
+  
     if (langBtn.textContent === "GR") {
       langBtn.textContent = "EN";
       text.style.display = "none";
       textEn.style.display = "block";
-      currentSection = null; // Forces an instant English scroll sync update
     } else {
       langBtn.textContent = "GR";
       text.style.display = "block";
