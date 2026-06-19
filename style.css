@@ -162,6 +162,17 @@ span {
   background: #666;
 }
 	
+.note-marker {
+  color: #a52a2a;      /* A nice deep classical red/burgundy color */
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 4px;      /* Makes it slightly easier to tap on mobile screens */
+  user-select: none;   /* Prevents accidentally selecting the text when clicking */
+}
+
+.note-marker:hover {
+  color: #ff4500;      /* Lights up bright red-orange on mouse hover */
+}
 
 /* all the stuff that was in the div id's section of the code */
 
