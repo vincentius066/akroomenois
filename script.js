@@ -84,6 +84,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const volumeValue = document.getElementById("volumeValue");
   const fontFamilyControl = document.getElementById("fontFamilyControl");
 
+  // Wipe out any accidental non-breaking spaces ruining the layout
+  if (text) text.innerHTML = text.innerHTML.replace(/\u00A0/g, ' ');
+  if (textEn) textEn.innerHTML = textEn.innerHTML.replace(/\u00A0/g, ' ');
+
+
   let wasPlaying = false;
   let currentActive = null;
   let currentSection = null;
@@ -101,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedFontSize = localStorage.getItem("reader_fontSize") || SITE_SETTINGS.fontSize.default;
     fontControl.value = savedFontSize;
     fontValue.textContent = savedFontSize + "px";
-    fontValue.textEnContent = savedFontSize + "px";
     
     // Apply to text containers immediately
     if (text) text.style.fontSize = savedFontSize + "px";
@@ -162,10 +166,6 @@ document.addEventListener("DOMContentLoaded", () => {
     top: window.scrollY + el.getBoundingClientRect().top - 120, 
     behavior: "smooth" 
   });
-
-  // Wipe out any accidental non-breaking spaces ruining the layout
-  if (text) text.innerHTML = text.innerHTML.replace(/\u00A0/g, ' ');
-  if (textEn) textEn.innerHTML = textEn.innerHTML.replace(/\u00A0/g, ' ');
 
 }
 
