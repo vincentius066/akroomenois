@@ -253,7 +253,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Handle Clicking Note Markers (With Auto-URL Linking)
-  const notes = document.querySelectorAll(".note-marker");
   notes.forEach((note) => {
     note.addEventListener("click", (e) => {
       e.stopPropagation(); 
