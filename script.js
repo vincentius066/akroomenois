@@ -85,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let wasPlaying = false;
   let currentActive = null;
+  let currentSection = null;
 
   // ==========================================
   // SETUP CONFIG BOUNDARIES & LOAD SAVED PREFERENCES
@@ -185,18 +186,19 @@ document.addEventListener("DOMContentLoaded", () => {
           currentActive = phrase;
           phrase.classList.add("active");
           
-          // CASE A: Greek View is visible -> Scroll to the active Greek phrase
+          // CASE A: Greek View is visible
           if (text.style.display !== "none") {
             if (isOutOfView(phrase)) scrollToTop(phrase);
           } 
-          // CASE B: English View is visible -> Force the active paragraph directly to the top
+          
+          // CASE B: English View is visible (Optimized to fire ONLY ONCE per section change)
           else if (textEn && textEn.style.display !== "none") {
             const sectionNum = phrase.dataset.section;
             
-            if (sectionNum) {
+            if (sectionNum && currentSection !== sectionNum) {
+              currentSection = sectionNum; // Lock it down so it doesn't repeat
               const targetEnSection = document.getElementById(`en_${sectionNum}`);
               if (targetEnSection) {
-                // No view checking, no lag—just jump it straight up
                 scrollToTop(targetEnSection);
               }
             }
@@ -313,15 +315,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   langBtn.addEventListener("click", () => {
     if (langBtn.textContent === "GR") {
-      // Switch to English mode
       langBtn.textContent = "EN";
-      text.style.display = "none";    // Hides Greek
-      textEn.style.display = "block"; // Shows English
+      text.style.display = "none";
+      textEn.style.display = "block";
+      currentSection = null; // Forces an instant English scroll sync update
     } else {
-      // Switch back to Greek mode
       langBtn.textContent = "GR";
-      text.style.display = "block";   // Shows Greek
-      textEn.style.display = "none";  // Hides English
+      text.style.display = "block";
+      textEn.style.display = "none";
     }
   });
 
