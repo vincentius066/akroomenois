@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <button id="playBtn"><img src="icon/play-button.svg" alt="Play" width="32" height="32"></button>
       <button id="nextBtn"><img src="icon/play-forwards.svg" alt="Forward" width="32" height="32"></button>
       <input type="range" id="progressBar" value="0" min="0" step="0.1">
+      <span id="timeDisplay" style="color: white; font-family: monospace; margin: 0 10px; font-size: 16px; white-space: nowrap;">0:00 / 0:00</span>
       <button id="langBtn">GR</button>
     </div>
   `;
@@ -84,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const volumeControl = document.getElementById("volumeControl");
   const volumeValue = document.getElementById("volumeValue");
   const fontFamilyControl = document.getElementById("fontFamilyControl");
+  const timeDisplay = document.getElementById("timeDisplay");
 
 
   let wasPlaying = false;
@@ -226,7 +228,29 @@ document.addEventListener("DOMContentLoaded", () => {
   audio.addEventListener("timeupdate", () => {
     progressBar.value = audio.currentTime;
     syncVisibleText(false); // False means use smooth scrolling while audio plays
+    
+    // NEW: Update the clock string dynamically
+    if (timeDisplay) {
+      timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+    }
   });
+
+  function formatTime(seconds) {
+    if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
+    
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+  
+    const formattedSecs = secs < 10 ? "0" + secs : secs;
+  
+    if (hrs > 0) {
+      const formattedMins = mins < 10 ? "0" + mins : mins;
+      return `${hrs}:${formattedMins}:${formattedSecs}`;
+    }
+    
+    return `${mins}:${formattedSecs}`;
+  }
   
   // ==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION
