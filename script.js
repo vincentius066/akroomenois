@@ -523,24 +523,87 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================================
-  // ANCIENT GREEK AUTOMATED HYPHENATION ENGINE
+  // MASTER CLASSICAL GREEK HYPHENATOR
   // ==========================================
-  if (typeof Hypher !== "undefined" && typeof HyphenationPatterns !== "undefined") {
-    // Initialize Hypher with the Ancient Greek dictionary patterns we loaded
-    const greekHypher = new Hypher(HyphenationPatterns.grc);
+  const ALL_GREEK_VOWELS = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", "ϋ", "ἀ", "ἐ", "ἰ", "ὀ", "ὐ", "ᾱ̓", "ἠ", "ῑ̓", "ὠ", "ῡ̓", "αἰ", "αὐ", "εἰ", "εὐ", "οἰ", "οὐ", "υἰ", "ᾀ", "ᾱὐ", "ᾐ", "ηὐ", "ᾠ", "ωὐ", "ῡἰ", "ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ", "ά", "έ", "ί", "ό", "ύ", "ᾱ́", "ή", "ῑ́", "ώ", "ῡ́", "αί", "αύ", "εί", "εύ", "οί", "ού", "υί", "ᾴ", "ᾱύ", "ῄ", "ηύ", "ῴ", "ωύ", "ῡί", "ΐ", "ΰ", "ἄ", "ἔ", "ἴ", "ὄ", "ὔ", "ᾱ̓́", "ἤ", "ῑ̓́", "ὤ", "ῡ̓́", "αἴ", "αὔ", "εἴ", "εὔ", "οἴ", "οὔ", "υἴ", "ᾄ", "ᾱὔ", "ᾔ", "ηὔ", "ᾤ", "ωὔ", "ῡἴ", "ἅ", "ἕ", "ἵ", "ὅ", "ὕ", "ᾱ̔́", "ἥ", "ῑ̔́", "ὥ", "ῡ̔́", "αἵ", "αὕ", "εἵ", "εὕ", "οἵ", "οὕ", "υἵ", "ᾅ", "ᾱὕ", "ᾕ", "ηὕ", "ᾥ", "ωὕ", "ῡἵ", "ὰ", "ὲ", "ὶ", "ὸ", "ὺ", "ᾱ̀", "ὴ", "ῑ̀", "ὼ", "ῡ̀", "αὶ", "αὺ", "εὶ", "εὺ", "οὶ", "οὺ", "υὶ", "ᾲ", "ᾱὺ", "ῂ", "ηὺ", "ῲ", "ωὺ", "ῡὶ", "ῒ", "ῢ", "ἂ", "ἒ", "ἲ", "ὂ", "ὒ", "ᾱ̓̀", "ἢ", "ῑ̓̀", "ὢ", "ῡ̓̀", "αἲ", "αὒ", "εἲ", "εὒ", "οἲ", "οὒ", "υἲ", "ᾂ", "ᾱὒ", "ᾒ", "ηὒ", "ᾢ", "ωὒ", "ῡἲ", "ἃ", "ἓ", "ἳ", "ὃ", "ὓ", "ᾱ̔̀", "ἣ", "ῑ̔̀", "ὣ", "ῡ̔̀", "αἳ", "αὓ", "εἳ", "εὓ", "οἳ", "οὓ", "υἳ", "ᾃ", "ᾱὓ", "ᾓ", "ηὓ", "ᾣ", "ωὓ", "ῡἳ", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "αῖ", "αῦ", "εῖ", "εῦ", "οῖ", "οῦ", "υῖ", "ᾷ", "ᾱῦ", "ῇ", "ηῦ", "ῷ", "ωῦ", "ῡῖ", "ἆ", "ἦ", "ἶ", "ὦ", "ὖ", "αἶ", "αὖ", "εἶ", "εὖ", "οἶ", "οὖ", "υἶ", "ᾆ", "ᾱὖ", "ᾖ", "ηὖ", "ᾦ", "ωὖ", "ῡἶ", "ἇ", "ἧ", "ἷ", "ὧ", "ὗ", "αἷ", "αὗ", "εἷ", "εὗ", "οἷ", "οὗ", "υἷ", "ᾇ", "ᾱὗ", "ᾗ", "ηὗ", "ᾧ", "ωὗ", "ῡἷ"];
 
-    // Target every single individual Greek word span in your text
-    const greekWords = document.querySelectorAll("#text span.word");
+  // Sort by length descending to match clusters like "αἷ" completely before breaking them into "α"
+  const sortedVowels = [...ALL_GREEK_VOWELS].sort((a, b) => b.length - a.length);
+
+  function tokenizeGreekWord(word) {
+    let tokens = [];
+    let i = 0;
     
-    greekWords.forEach(wordElement => {
-      const originalText = wordElement.textContent;
+    while (i < word.length) {
+      let matched = false;
       
-      // Let Hypher automatically calculate and inject the soft hyphen breaks
-      const hyphenatedText = greekHypher.hyphenateText(originalText);
+      // Try to find the longest vowel/diphthong match from your list first
+      for (const vowel of sortedVowels) {
+        if (word.startsWith(vowel, i)) {
+          tokens.push({ type: 'V', text: vowel });
+          i += vowel.length;
+          matched = true;
+          break;
+        }
+      }
       
-      // Update the DOM text with the new hyphen layout placeholders
-      wordElement.textContent = hyphenatedText;
-    });
+      // If it's not a vowel cluster, treat it as a consonant/punctuation block
+      if (!matched) {
+        tokens.push({ type: 'C', text: word[i] });
+        i++;
+      }
+    }
+    return tokens;
   }
+
+  function hyphenateGreekWord(word) {
+    // Strip trailing punctuation details for linguistic checking, restore later
+    const cleanWord = word.replace(/[.,·;:’'’\"\(\)]/g, "");
+    const tokens = tokenizeGreekWord(cleanWord);
+    let output = "";
+    
+    for (let i = 0; i < tokens.length; i++) {
+      output += tokens[i].text;
+      
+      // Rule Core: Core Classical Syllabification (V-C-V pattern)
+      if (i < tokens.length - 2) {
+        const current = tokens[i];
+        const next = tokens[i + 1];
+        const nextNext = tokens[i + 2];
+        
+        if (current.type === 'V' && next.type === 'C' && nextNext.type === 'V') {
+          // Do not drop a soft hyphen if it is a standalone vowel modifier or punctuation mark
+          if (["'", "’", "·"].includes(next.text)) continue;
+          output += "&shy;";
+        }
+        // Split between identical double consonants (e.g., ν-ν, λ-λ, μ-μ)
+        else if (current.type === 'C' && next.type === 'C' && current.text.toLowerCase() === next.text.toLowerCase()) {
+          output += "&shy;";
+        }
+      }
+    }
+    
+    // Put back any trailing punctuation stripped from the original outer word string
+    const punctuationMatch = word.match(/[.,·;:’'’\"\(\)]+$/);
+    if (punctuationMatch) {
+      output += punctuationMatch[0];
+    }
+    const leadingPunctuation = word.match(/^[(\"’']+/);
+    if (leadingPunctuation) {
+      output = leadingPunctuation[0] + output;
+    }
+    
+    return output;
+  }
+
+  // Execute across the layout
+  const greekWords = document.querySelectorAll("#text span.word");
+  greekWords.forEach(wordElement => {
+    // Preserve internal tags/notes if any, but replace clean text nodes safely
+    const originalText = wordElement.textContent.trim();
+    if (originalText.length > 0) {
+      wordElement.innerHTML = hyphenateGreekWord(originalText);
+    }
+  });
   
 });
