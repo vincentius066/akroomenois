@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -447,7 +447,10 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(`https://scaife.perseus.org/morpheus/?word=${encodeURIComponent(wordText)}&lang=grc`);
         const start = word.dataset.wordStart || "0";
         const end = word.dataset.wordEnd || "0";
-        popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent} <button id="dictSpeakBtn" data-start="${start}" data-end="${end}" style= cursor: pointer;">🔊</button><br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong><br><br><strong>Grammar:</strong></p>`;
+        const audioButtonHTML = (start && end) 
+          ? `<button id="dictSpeakBtn" data-start="${start}" data-end="${end}" style= cursor: pointer;">🔊</button>` 
+          : '';
+        popupContent.innerHTML = `<p><strong>Word:</strong> ${word.textContent} ${audioButtonHTML}<br><br><strong>Lemma:</strong><br><br><strong>Word Type:</strong><br><br><strong>Grammar:</strong></p>`;
         popup.style.display = "block";
         popupOverlay.style.display = "block";
         setupDictionaryAudioButton();
