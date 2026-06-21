@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠🏠</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
       function checkPrecisionTimeline() {
         if (!dictAudioInstance) return; // Stop loop if cleaned up
 
-        if (dictAudioInstance.currentTime >= adjustedEnd) {
+        if (dictAudioInstance.currentTime >= end) {
           dictAudioInstance.pause();
           dictAudioInstance = null;
         } else {
