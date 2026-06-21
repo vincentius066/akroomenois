@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🎃</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -180,15 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function checkAndCorrectWordVisibility() {
     const activeWord = document.querySelector("#text span.word.active");
     if (!activeWord) return;
-  
-    const wordRect = activeWord.getBoundingClientRect();
-    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-  
-    // 40px padding buffer from the bottom of the screen
-    const bottomBuffer = 40; 
-  
-    // If the word drops below the screen limits, put it cleanly at the top line instead!
-    if (wordRect.bottom > (viewportHeight - bottomBuffer)) {
+    if (isOutOfView(activeWord)) {
     scrollToTop(activeWord);
     }
   }
