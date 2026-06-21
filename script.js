@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠🏠</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -447,7 +447,14 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch(`https://scaife.perseus.org/morpheus/?word=${encodeURIComponent(wordText)}&lang=grc`);
         const start = word.dataset.wordStart || "0";
         const end = word.dataset.wordEnd || "0";
-        const hasValidTiming = (typeof start === 'string' && typeof end === 'string' && start.trim() !== "" && end.trim() !== "");
+        const hasValidTiming = (
+          typeof start === 'string' && 
+          typeof end === 'string' && 
+          start.trim() !== "" && 
+          end.trim() !== "" &&
+          start.toLowerCase().trim() !== "n/a" &&
+          end.toLowerCase().trim() !== "n/a"
+        );
         const audioButtonHTML = hasValidTiming 
           ? `<button id="dictSpeakBtn" data-start="${start}" data-end="${end}" style= cursor: pointer;">🔊</button>` 
           : '';
