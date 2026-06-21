@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠🏠</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -579,11 +579,12 @@ document.addEventListener("DOMContentLoaded", () => {
   //});
 
   langBtn.addEventListener("click", () => {
-    // 1. Capture the exact screen position of the active Greek line BEFORE toggling layouts
-    let screenVisualOffset = 120; // Default fallback to topBar padding offset
-    let relativeWordProgress = 0; // Where the active line is proportionally inside its phrase
+    let finalScrollTarget = window.scrollY; // Default fallback to current position
+    let screenVisualOffset = 120; // Baseline fallback header spacing
+    let relativeWordProgress = 0; 
     let activePhraseIndex = -1;
 
+    // 1. Find our active items while BOTH are still fully visible/rendered
     const activeWord = document.querySelector("#text span.word.active");
     const activeGreekPhrase = currentActive || (activeWord ? activeWord.closest("span.phrase") : null);
 
@@ -591,66 +592,80 @@ document.addEventListener("DOMContentLoaded", () => {
       const phrasesArray = Array.from(phrases);
       activePhraseIndex = phrasesArray.indexOf(activeGreekPhrase);
 
-      // If a word is active, calculate its exact pixel coordinates relative to the viewport window
       if (activeWord) {
         const wordRect = activeWord.getBoundingClientRect();
-        screenVisualOffset = wordRect.top; // Exact pixel position on user's monitor screen
+        screenVisualOffset = wordRect.top; // The literal pixel coordinate on your monitor screen
 
         const phraseRect = activeGreekPhrase.getBoundingClientRect();
         relativeWordProgress = (wordRect.top - phraseRect.top) / phraseRect.height;
       } else {
-        // Fallback if just a phrase is active but no specific word timing is playing
         const phraseRect = activeGreekPhrase.getBoundingClientRect();
         screenVisualOffset = phraseRect.top;
       }
     }
 
-    // 2. Clear out old highlights
+    // 2. Clear out active styling states safely before swapping layouts
     if (currentActive) currentActive.classList.remove("active");
     phrases.forEach(p => p.classList.remove("active"));
     phrasesEn.forEach(p => p.classList.remove("active"));
     currentActive = null; 
 
-    // 3. Toggle the layout visibility strings
+    // 3. Determine our direction string
     const turningToEnglish = (langBtn.textContent === "GR");
-    if (turningToEnglish) {
-      langBtn.textContent = "EN";
-      text.style.display = "none";
-      textEn.style.display = "block";
-    } else {
-      langBtn.textContent = "GR";
-      text.style.display = "block";
-      textEn.style.display = "none";
-    }
 
-    // 4. Update the highlights for the new active layout
-    syncVisibleText(false); // Run your framework layout highlighting without its default scrolling trigger
-
-    // 5. CALCULATE AND EXECUTE PERFECT ALIGNMENT SCROLL
+    // 4. CRITICAL FIX: CALCULATE FOR THE TARGET TEXT BLOCKS BEFORE WE HIDE THE CURRENT ONE
+    // We force a brief rendering sequence where the target block is temporarily active
     if (activePhraseIndex !== -1) {
-      const targetPhrasesList = turningToEnglish ? phrasesEn : phrases;
-      const targetPhrase = targetPhrasesList[activePhraseIndex];
-
-      if (targetPhrase) {
-        // Find the absolute document Y coordinate of the phrase top
-        const phraseAbsoluteTop = window.scrollY + targetPhrase.getBoundingClientRect().top;
-        
-        // Estimate the height offset for our target line using the progress ratio captured from the previous view
-        const phraseTotalHeight = targetPhrase.getBoundingClientRect().height;
-        const lineOffsetWithinPhrase = phraseTotalHeight * relativeWordProgress;
-
-        // Calculate the perfect scroll position: Absolute Line Position - Saved Screen Screen Level
-        const finalScrollTarget = (phraseAbsoluteTop + lineOffsetWithinPhrase) - screenVisualOffset;
-
-        // Instantly snap the window scroll so the text line appears at the exact same screen height
-        window.scrollTo({
-          top: finalScrollTarget,
-          behavior: "auto" // Immediate snap to prevent text shifting visible lag
-        });
+      if (turningToEnglish) {
+        // Temporarily display English layout alongside Greek so the browser can calculate its layout/line height maps
+        textEn.style.display = "block"; 
+        const targetPhrase = phrasesEn[activePhraseIndex];
+        if (targetPhrase) {
+          const phraseAbsoluteTop = window.scrollY + targetPhrase.getBoundingClientRect().top;
+          const phraseTotalHeight = targetPhrase.getBoundingClientRect().height;
+          const lineOffsetWithinPhrase = phraseTotalHeight * relativeWordProgress;
+          finalScrollTarget = (phraseAbsoluteTop + lineOffsetWithinPhrase) - screenVisualOffset;
+        }
+        // Now cleanly drop out the old Greek view layout
+        text.style.display = "none";
+        langBtn.textContent = "EN";
+      } else {
+        // Temporarily display Greek layout alongside English to track the target pixel properties
+        text.style.display = "block";
+        const targetPhrase = phrases[activePhraseIndex];
+        if (targetPhrase) {
+          const phraseAbsoluteTop = window.scrollY + targetPhrase.getBoundingClientRect().top;
+          const phraseTotalHeight = targetPhrase.getBoundingClientRect().height;
+          const lineOffsetWithinPhrase = phraseTotalHeight * relativeWordProgress;
+          finalScrollTarget = (phraseAbsoluteTop + lineOffsetWithinPhrase) - screenVisualOffset;
+        }
+        // Drop out the English layout tracks cleanly
+        textEn.style.display = "none";
+        langBtn.textContent = "GR";
+      }
+    } else {
+      // Basic fallback loop toggler structure if no text line coordinates are currently active
+      if (turningToEnglish) {
+        langBtn.textContent = "EN";
+        text.style.display = "none";
+        textEn.style.display = "block";
+      } else {
+        langBtn.textContent = "GR";
+        text.style.display = "block";
+        textEn.style.display = "none";
       }
     }
-  });
 
+    // 5. Initialize layout tracking updates
+    syncVisibleText(false); 
+
+    // 6. Execute the viewport snap using the pre-calculated scroll coordinate
+    window.scrollTo({
+      top: finalScrollTarget,
+      behavior: "auto" // Instant snap
+    });
+  });
+  
   // Keyboard Navigation Bindings
   document.addEventListener("keydown", (e) => {
     if (isPopupActive()) return;
