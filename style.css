@@ -63,28 +63,40 @@ body {
   text-align: center;
 }
 
-/* Plane 1: Greek Mode */
+/* Default state: Greek controls the page, English floats invisibly over it */
 body:not(.english-mode) #text {
+  visibility: visible;
   opacity: 1;
+  position: relative;
   pointer-events: auto;
-  z-index: 2; /* Bring to front */
-}
-body:not(.english-mode) #text_en {
-  opacity: 0;
-  pointer-events: none; /* Click-through mode */
-  z-index: 1; /* Send to back */
 }
 
-/* Plane 2: English Mode */
-body.english-mode #text {
+body:not(.english-mode) #text_en {
+  visibility: hidden;
   opacity: 0;
+  position: absolute;
+  top: 120px;   /* Matches body padding-top */
+  left: 80px;   /* Matches body padding-left */
+  right: 80px;  /* Matches body padding-right */
   pointer-events: none;
-  z-index: 1;
 }
+
+/* English mode state: English controls the page, Greek floats invisibly over it */
+body.english-mode #text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 120px;   /* Matches body padding-top */
+  left: 80px;   /* Matches body padding-left */
+  right: 80px;  /* Matches body padding-right */
+  pointer-events: none;
+}
+
 body.english-mode #text_en {
+  visibility: visible;
   opacity: 1;
+  position: relative;
   pointer-events: auto;
-  z-index: 2;
 }
 
 span {
