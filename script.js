@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠🏠</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -580,44 +580,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
   langBtn.addEventListener("click", () => {
     let activePhraseIndex = -1;
-    let relativeWordProgress = 0.5; // Default to paragraph middle if no word is highlighted
-    let greekWordCenterPageY = 0;
+    let relativeWordProgress = 0.5; // Default middle fallback
+    let sourceWordCenterPageY = 0;
 
-    // Identify current direction
     const turningToEnglish = (langBtn.textContent === "GR");
 
-    // 1. Find our active source paragraph based on current active language state
+    // Identify the active element on the current plane before toggling
     const currentActiveWord = document.querySelector(".word.active");
     const sourcePhrase = currentActive || (currentActiveWord ? currentActiveWord.closest("span.phrase, span.phrase_en") : null);
 
     if (sourcePhrase) {
-      // Find the index of the source phrase
       const sourcePhrasesArray = Array.from(turningToEnglish ? phrases : phrasesEn);
       activePhraseIndex = sourcePhrasesArray.indexOf(sourcePhrase);
 
-      // --- STEP 1: Find height and boundaries of the active paragraph ---
+      // --- STEP 1: Find height and page top of the active paragraph ---
       const sourcePhraseRect = sourcePhrase.getBoundingClientRect();
       const sourcePhraseTopPageY = window.scrollY + sourcePhraseRect.top;
       const sourcePhraseHeight = sourcePhraseRect.height;
 
-      // --- STEP 2: Find middle point of the active word (or fallback to phrase center) ---
+      // --- STEP 2: Find absolute middle point of the active word ---
       if (currentActiveWord) {
         const wordRect = currentActiveWord.getBoundingClientRect();
-        greekWordCenterPageY = window.scrollY + wordRect.top + (wordRect.height / 2);
+        sourceWordCenterPageY = window.scrollY + wordRect.top + (wordRect.height / 2);
       } else {
-        greekWordCenterPageY = sourcePhraseTopPageY + (sourcePhraseHeight / 2);
+        sourceWordCenterPageY = sourcePhraseTopPageY + (sourcePhraseHeight / 2);
       }
 
       // --- STEP 3: Make a percentage based on the position of the word within the paragraph ---
-      relativeWordProgress = (greekWordCenterPageY - sourcePhraseTopPageY) / sourcePhraseHeight;
+      relativeWordProgress = (sourceWordCenterPageY - sourcePhraseTopPageY) / sourcePhraseHeight;
     }
 
-    // Clear old visual highlights safely
+    // Clear previous visual focus tags safely
     if (currentActive) currentActive.classList.remove("active");
     phrases.forEach(p => p.classList.remove("active"));
     phrasesEn.forEach(p => p.classList.remove("active"));
 
-    // --- STEP 4: Switch UI indicators and add the state class to the document body ---
+    // --- STEP 4: Switch visibility planes by changing the body class ---
     if (turningToEnglish) {
       langBtn.textContent = "EN";
       document.body.classList.add("english-mode");
@@ -626,20 +624,16 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.classList.remove("english-mode");
     }
 
-    // Remove old hard-coded inline display values so they don't block our CSS rules
-    text.style.display = "";
-    textEn.style.display = "";
-
-    // Target the corresponding destination paragraph
+    // Link target structural paragraph highlights
     if (activePhraseIndex !== -1) {
       currentActive = turningToEnglish ? phrasesEn[activePhraseIndex] : phrases[activePhraseIndex];
       if (currentActive) currentActive.classList.add("active");
     }
 
-    // Run layout highlight sync checks
+    // Sync app interface text updates safely without auto-scroll interference
     syncVisibleText(false);
 
-    // --- STEP 5: Find matching paragraph and use the percentage to calculate the target position ---
+    // --- STEP 5: Find matching paragraph and calculate the precise target position ---
     if (activePhraseIndex !== -1 && currentActive) {
       const targetPhraseRect = currentActive.getBoundingClientRect();
       const targetPhraseTopPageY = window.scrollY + targetPhraseRect.top;
@@ -647,12 +641,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const targetLinePageY = targetPhraseTopPageY + (targetPhraseHeight * relativeWordProgress);
 
-      // --- STEP 6: Calculate difference and scroll exactly that number of pixels ---
-      const scrollDifference = targetLinePageY - greekWordCenterPageY;
+      // --- STEP 6: Calculate the exact difference and scroll by that number of pixels ---
+      const scrollDifference = targetLinePageY - sourceWordCenterPageY;
       
       window.scrollTo({
         top: window.scrollY + scrollDifference,
-        behavior: "auto" // Clean instant visual swap jump
+        behavior: "auto" // Instant frame snap
       });
     }
   });
