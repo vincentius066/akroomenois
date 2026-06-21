@@ -65,6 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const textEn = document.getElementById("text_en");
   const audio = document.getElementById("audio");
   const phrases = document.querySelectorAll("#text > span.phrase");
+
+  const words = document.querySelectorAll("#text > span.word");
+  
   const phrasesEn = document.querySelectorAll("#text_en > span.phrase_en");
   const settingsPopup = document.getElementById("settingsPopup");
   const closeSettings = document.getElementById("closeSettings");
@@ -186,6 +189,20 @@ document.addEventListener("DOMContentLoaded", () => {
     return -1;
   }
 
+  function getCurrentWordIndex() {
+    const time = audio.currentTime;
+    
+    for (let i = 0; i < words.length; i++) {
+      const start = parseFloat(words[i].dataset.wordStart);
+      const end = parseFloat(words[i].dataset.wordEnd);
+      
+      // Check if the narrator is actively pronouncing this specific word
+      if (time >= start && time <= end) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
   // makes it so the highlight isnt lost when using the english translation
   function syncVisibleText(useInstantJump = false) {
