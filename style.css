@@ -237,41 +237,47 @@ span {
 }
 
 
-/*====================
-== DARK MODE
-====================*/
+/* ==========================================
+   MANUAL LIGHT / DARK INTERFACE OVERRIDES
+   ========================================== */
 
-@media (prefers-color-scheme: dark) {
-  /* 1. Invert the main canvas */
-  body {
-    background-color: #121212;
-    color: #e0e0e0;
-  }
+/* High-priority overrides when body has the testing class applied */
+body.dark-mode {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
 
-  /* 2. Fix the phrases so they aren't hardcoded to black text */
-  .phrase, .phrase_en {
-    color: #e0e0e0;
-  }
+/* Force inner interactive paragraph layers to inherit readable dark text colors */
+body.dark-mode #text,
+body.dark-mode #text_en,
+body.dark-mode #tiny_text,
+body.dark-mode #text span.word,
+body.dark-mode #text_en span.phrase_en {
+  color: #e0e0e0 !important;
+}
 
-  /* 3. Your custom active highlight for dark mode */
-  .phrase.active {
-    background-color: #e06e04;
-    color: #ffffff; /* Ensures text stays readable on the orange highlight */
-  }
+/* Keep currently active highlight reading trackers beautifully distinct in dark space */
+body.dark-mode .phrase.active,
+body.dark-mode .phrase_en.active {
+  background-color: rgba(224, 110, 4, 0.35) !important; /* Soft version of your accent amber color */
+  color: #ffffff !important;
+}
 
-  /* 4. Update the popups so they don't blind the user */
-  #popup, #settingsPopup {
-    background: #1e1e1e;
-    color: #e0e0e0;
-    border-color: #444;
-  }
+/* Make settings popups easily readable in dark mode */
+body.dark-mode #settingsPopup,
+body.dark-mode #popup {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+  border: 1px solid #444444 !important;
+}
 
-  #closePopup, #closeSettings {
-    color: #e0e0e0;
-  }
+body.dark-mode #topBar {
+  background-color: #1a1a1a !important;
+  border-bottom: 1px solid #333333 !important;
+}
 
-  /* 5. Adjust note markers for better dark mode contrast */
-  .note-marker {
-    color: #ff6b6b; 
-  }
+body.dark-mode #themeToggleBtn {
+  background-color: #333333 !important;
+  color: #ffffff !important;
+  border: 1px solid #555555 !important;
 }
