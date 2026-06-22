@@ -57,6 +57,13 @@ body {
   hyphens: auto;
   text-wrap: pretty;
   display: none;
+}
+
+#text_en :not(.note-marker) {
+  pointer-events: none;
+}
+
+#text_en .note-marker {
   pointer-events: auto;
 }
 
