@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠</button>
+      <button id="homeBtn">🏠🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -579,45 +579,13 @@ document.addEventListener("DOMContentLoaded", () => {
   //});
 
   langBtn.addEventListener("click", () => {
-    let activePhraseIndex = -1;
-
-    // Identify current language direction before the toggle
-    const turningToEnglish = (langBtn.textContent === "GR");
-
-    const currentActiveWord = document.querySelector(".word.active");
-    const sourcePhrase = currentActive || (currentActiveWord ? currentActiveWord.closest("span.phrase, span.phrase_en") : null);
-
-    if (sourcePhrase) {
-      const sourcePhrasesArray = Array.from(turningToEnglish ? phrases : phrasesEn);
-      activePhraseIndex = sourcePhrasesArray.indexOf(sourcePhrase);
-    }
-
-    // Clear previous visual focus highlights safely
-    if (currentActive) currentActive.classList.remove("active");
-    phrases.forEach(p => p.classList.remove("active"));
-    phrasesEn.forEach(p => p.classList.remove("active"));
-
-    // --- TOGGLE VISIBILITY VIA CSS CLASS ONLY ---
-    if (turningToEnglish) {
+    if (langBtn.textContent === "GR") {
       langBtn.textContent = "EN";
       document.body.classList.add("english-mode");
     } else {
       langBtn.textContent = "GR";
       document.body.classList.remove("english-mode");
     }
-
-    // Clear out any old hardcoded inline display values if present
-    text.style.display = "";
-    textEn.style.display = "";
-
-    // Set highlights onto the matching counterpart paragraph
-    if (activePhraseIndex !== -1) {
-      currentActive = turningToEnglish ? phrasesEn[activePhraseIndex] : phrases[activePhraseIndex];
-      if (currentActive) currentActive.classList.add("active");
-    }
-
-    // Sync audio tracking highlight state cleanly without triggering an auto-scroll
-    syncVisibleText(false);
   });
   
   // Keyboard Navigation Bindings
