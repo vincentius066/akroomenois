@@ -234,19 +234,40 @@ span {
 
 
 /*====================
-==DARK MODE
+== DARK MODE
 ====================*/
 
 @media (prefers-color-scheme: dark) {
-  #playerBar {
-    background: #222;
-    color: white;
+  /* 1. Invert the main canvas */
+  body {
+    background-color: #121212;
+    color: #e0e0e0;
   }
-}
 
-@media (prefers-color-scheme: dark) {
+  /* 2. Fix the phrases so they aren't hardcoded to black text */
+  .phrase, .phrase_en {
+    color: #e0e0e0;
+  }
+
+  /* 3. Your custom active highlight for dark mode */
   .phrase.active {
-    background-color: #e06e04
+    background-color: #e06e04;
+    color: #ffffff; /* Ensures text stays readable on the orange highlight */
+  }
+
+  /* 4. Update the popups so they don't blind the user */
+  #popup, #settingsPopup {
+    background: #1e1e1e;
+    color: #e0e0e0;
+    border-color: #444;
+  }
+
+  #closePopup, #closeSettings {
+    color: #e0e0e0;
+  }
+
+  /* 5. Adjust note markers for better dark mode contrast */
+  .note-marker {
+    color: #ff6b6b; 
   }
 }
-
