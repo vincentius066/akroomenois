@@ -43,8 +43,8 @@ body {
   word-break: break-word;
   hyphens: auto;
   text-wrap: pretty;
-	display: block;
-	pointer-events: auto;
+  display: block;
+  pointer-events: auto;
 }
 
 #text_en {
@@ -56,8 +56,8 @@ body {
   word-break: break-word;
   hyphens: auto;
   text-wrap: pretty;
-	display: none;
-	pointer-events: none;
+  display: none;
+  pointer-events: auto;
 }
 
 #tiny_text {
@@ -72,6 +72,7 @@ span {
   cursor: pointer;
 }
 
+	
 /* 1. Base phrase state */
 .phrase {
   border-radius: 6px;        /* Softens the highlight edges slightly */
