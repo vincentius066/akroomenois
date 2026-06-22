@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   const interfaceHTML = `
     <div id="topBar">
-      <button id="homeBtn">🏠🏠</button>
+      <button id="homeBtn">🏠</button>
       <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
     </div>
 
@@ -32,8 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <h3>Settings</h3>
       <label>Greek Font: 
         <select id="fontFamilyControl">
-          <option value="SBL">SBL</option>
+          <option value="'SBL'">SBL</option>
           <option value="'EB Garamond'">EB Garamond</option>
+          <option value="'Anaktoria'">Anaktoria</option>
         </select>
       </label>
       <br><br>
