@@ -241,15 +241,11 @@ span {
    MANUAL LIGHT / DARK INTERFACE OVERRIDES
    ========================================== */
 
-/*
-
-/* High-priority overrides when body has the testing class applied */
-body.dark-mode {
+/*body.dark-mode {
   background-color: #121212 !important;
   color: #e0e0e0 !important;
 }
 
-/* Force inner interactive paragraph layers to inherit readable dark text colors */
 body.dark-mode #text,
 body.dark-mode #text_en,
 body.dark-mode #tiny_text,
@@ -258,14 +254,13 @@ body.dark-mode #text_en span.phrase_en {
   color: #e0e0e0 !important;
 }
 
-/* Keep currently active highlight reading trackers beautifully distinct in dark space */
 body.dark-mode .phrase.active,
 body.dark-mode .phrase_en.active {
   background-color: rgba(224, 110, 4, 0.35) !important; /* Soft version of your accent amber color */
   color: #ffffff !important;
 }
 
-/* Make settings popups easily readable in dark mode */
+
 body.dark-mode #settingsPopup,
 body.dark-mode #popup {
   background-color: #1e1e1e !important;
@@ -282,6 +277,4 @@ body.dark-mode #themeToggleBtn {
   background-color: #333333 !important;
   color: #ffffff !important;
   border: 1px solid #555555 !important;
-}
-
-*/
+}*/
