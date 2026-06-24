@@ -30,12 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="settingsPopup">
       <button id="closeSettings">✕</button>
       <h3>Settings</h3>
-      <label>Interface Theme: 
-        <button id="themeToggleBtn" style="padding: 5px 10px; margin-left: 10px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; color: #000;">
-          Toggle Dark Mode 🌙
-        </button>
-      </label>
-      <br><br>
       <label>Greek Font: 
         <select id="fontFamilyControl">
           <option value="'SBL'">SBL</option>
@@ -411,30 +405,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("theme");
   
   // Use the saved preference if it exists, otherwise check the device's system settings
-  if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-    document.documentElement.setAttribute("data-theme", "dark");
-    if (themeToggleBtn) themeToggleBtn.textContent = "Toggle Light Mode ☀️";
-  } else {
-    document.documentElement.setAttribute("data-theme", "light");
-    if (themeToggleBtn) themeToggleBtn.textContent = "Toggle Dark Mode 🌙";
-  }
+  //if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    //document.documentElement.setAttribute("data-theme", "dark");
+    //if (themeToggleBtn) themeToggleBtn.textContent = "Toggle Light Mode ☀️";
+  //} else {
+    //document.documentElement.setAttribute("data-theme", "light");
+    //if (themeToggleBtn) themeToggleBtn.textContent = "Toggle Dark Mode 🌙";
+ // }
 
   // Handle click events on your manual override toggle button
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener("click", () => {
-      const currentTheme = document.documentElement.getAttribute("data-theme");
-      const targetTheme = currentTheme === "dark" ? "light" : "dark";
+ // if (themeToggleBtn) {
+    //themeToggleBtn.addEventListener("click", () => {
+      //const currentTheme = document.documentElement.getAttribute("data-theme");
+      //const targetTheme = currentTheme === "dark" ? "light" : "dark";
 
-      document.documentElement.setAttribute("data-theme", targetTheme);
-      localStorage.setItem("theme", targetTheme);
+      //document.documentElement.setAttribute("data-theme", targetTheme);
+      //localStorage.setItem("theme", targetTheme);
 
-      if (targetTheme === "dark") {
-        themeToggleBtn.textContent = "Toggle Light Mode ☀️";
-      } else {
-        themeToggleBtn.textContent = "Toggle Dark Mode 🌙";
-      }
-    });
-  }
+      //if (targetTheme === "dark") {
+        //themeToggleBtn.textContent = "Toggle Light Mode ☀️";
+      //} else {
+        //themeToggleBtn.textContent = "Toggle Dark Mode 🌙";
+      //}
+    //});
+  //}
 
   // Listen for device-level system changes in real-time (only updates if user hasn't explicitly overridden it)
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
