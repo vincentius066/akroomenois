@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <button id="playBtn"><img src="icon/play-button.svg" alt="Play" width="32" height="32"></button>
       <button id="nextBtn"><img src="icon/play-forwards.svg" alt="Forward" width="32" height="32"></button>
       <input type="range" id="progressBar" value="0" min="0" step="0.1">
-      <span id="timeDisplay" style="color: white; font-family: monospace; margin: 0 10px; font-size: 16px; white-space: nowrap;">0:00 / 0:00</span>
+      <span id="timeDisplay" style="color: white; font-family: monospace !important; margin: 0 10px; font-size: 16px; white-space: nowrap;">0:00 / 0:00</span>
       <button id="langBtn">GR</button>
     </div>
   `;
