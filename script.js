@@ -300,14 +300,14 @@ document.addEventListener("DOMContentLoaded", () => {
   statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';
   
   // Force an immediate UI redraw if audio is paused/playing
-  if (audioElement) {
-    timeDisplay.textContent = formatAudioTime(audioElement.currentTime, useGreekNumerals);
+  if (audio) {
+    timeDisplay.textContent = formatAudioTime(audio.currentTime, useGreekNumerals);
     }
   });
 
   // Inside your existing audio 'timeupdate' event listener, just swap to this:
-  audioElement.addEventListener('timeupdate', () => {
-    timeDisplay.textContent = formatAudioTime(audioElement.currentTime, useGreekNumerals);
+  audi.addEventListener('timeupdate', () => {
+    timeDisplay.textContent = formatAudioTime(audio.currentTime, useGreekNumerals);
   });
   
   //End of Greek numeral Timeline Track
@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Update the clock string dynamically
     if (timeDisplay) {
-      timeDisplay.textContent = formatAudioTime(audioElement.currentTime, useGreekNumerals);
+      timeDisplay.textContent = formatAudioTime(audio.currentTime, useGreekNumerals);
     }
   });
 
