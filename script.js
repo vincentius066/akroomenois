@@ -306,7 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Inside your existing audio 'timeupdate' event listener, just swap to this:
-  audi.addEventListener('timeupdate', () => {
+  audio.addEventListener('timeupdate', () => {
     timeDisplay.textContent = formatAudioTime(audio.currentTime, useGreekNumerals);
   });
   
