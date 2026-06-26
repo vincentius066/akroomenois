@@ -39,7 +39,17 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="settingsPopup">
       <button id="closeSettings">✕</button>
       <h3>Settings</h3>
-      <label>Greek Font: 
+      <br><br>
+      <h4>UI<h4>
+      <label>Time Display:
+        <button id="toggle-greek-time" class="settings-btn">
+          <span id="greek-time-status">Standard</span>
+        </button>
+      </label>
+      <br><br>
+      <h4>Text<h4>
+      <br><br>
+      <label>Font: 
         <select id="fontFamilyControl">
           <option value="'SBL'">SBL</option>
           <option value="'EB Garamond'">EB Garamond</option>
@@ -47,13 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
         </select>
       </label>
       <br><br>
-      <label>Time Display:
-        <button id="toggle-greek-time" class="settings-btn">
-          <span id="greek-time-status">Standard</span>
-        </button>
-      </label>
+      <label>Size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
       <br><br>
-      <label>Text size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
+      <h4>Audio<h4>
       <br><br>
       <label>Speed: <input type="range" id="speedControl" step="0.1"><span id="speedValue"></span></label>
       <br><br>
