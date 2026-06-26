@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 5. Greek Numeral Time Display Preference
   if (statusText) {
-    statusText.textContent = useGreekNumerals ? 'Standard' : 'Greek';
+    statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';
   }
   
   // Helper check for active popups
