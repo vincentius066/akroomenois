@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}</div> <button id="settingsBtn">⚙️</button>
+      <div id="title">${document.title}</div> <button id="settingsBtn"><img src="icon/options.svg" alt="Play" width="32" height="32"></button>
     </div>
 
     <div id="popup">
