@@ -42,8 +42,12 @@ document.addEventListener("DOMContentLoaded", () => {
       <h5 style="text-align: center;">UI</h5>
       <label>Time Display:
         <button id="toggle-greek-time" class="settings-btn">
-          <span id="greek-time-status">Standard</span>
+          <span id="greek-time-status">Greek</span>
         </button>
+      </label>
+      <br><br>
+      <label>Viewing Mode:
+        <button id="fullscreenBtn" class="settings-btn" style="cursor: pointer;">Fullscreen</button>
       </label>
       <h5 style="text-align: center;">Text</h5>
       <label>Font: 
@@ -108,11 +112,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeToggleBtn = document.getElementById("themeToggleBtn");
   const toggleBtn = document.getElementById('toggle-greek-time');
   const statusText = document.getElementById('greek-time-status');
-  
   const moreBtn = document.getElementById("moreBtn");
   const extraActionsGroup = document.getElementById("extraActionsGroup");
   const contentsBtn = document.getElementById("contentsBtn");
   const freqBtn = document.getElementById("freqBtn");
+  const fullscreenBtn = document.getElementById('fullscreenBtn')
 
   let wasPlaying = false;
   let currentActive = null;
@@ -177,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 5. Greek Numeral Time Display Preference
   if (statusText) {
-    statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';
+    statusText.textContent = useGreekNumerals ? 'Standard' : 'Greek';
   }
   
   // Helper check for active popups
@@ -780,6 +784,35 @@ document.addEventListener("DOMContentLoaded", () => {
     freqBtn.addEventListener("click", () => {
       console.log("Word Frequency metrics opened!");
       // Your niche philological vocabulary analyzer logic goes here
+    });
+  }
+
+  // Fullscreen Mode Toggle Listener
+  if (fullscreenBtn) {
+    fullscreenBtn.addEventListener("click", () => {
+      // If the page is NOT currently in fullscreen mode, enter it
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen()
+          .then(() => {
+            fullscreenBtn.textContent = "Windowed";
+          })
+          .catch((err) => {
+            console.error(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+      } else {
+        // Otherwise, exit fullscreen mode
+        document.exitFullscreen();
+        fullscreenBtn.textContent = "Fullscreen";
+      }
+    });
+
+    // Sync button text if the user exits fullscreen using the 'Esc' key
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) {
+        fullscreenBtn.textContent = "Enter Fullscreen";
+      } else {
+        fullscreenBtn.textContent = "Exit Fullscreen";
+      }
     });
   }
   
