@@ -540,7 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
       audio.currentTime = 0;
     }
 
-    // Wrap in a delay to give fonts, hyphenation, and the browser layout engine a moment to settle
+    // Wrap in a tiny delay to give the browser a split second to calculate the real file boundary
     setTimeout(() => {
       progressBar.max = audio.duration || 100; // Fallback placeholder if still loading
 
@@ -550,29 +550,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isFinite(audio.duration) && targetTime < audio.duration) {
           audio.currentTime = targetTime;
           progressBar.value = targetTime;
-
-          // FIX: Wait an extra brief moment for audio.currentTime to trigger updates,
-          // then force a final high-precision position recalibration jump!
-          setTimeout(() => {
-            if (currentActive) {
-              // Check if we are in GR layout and have a section grouping rule to honor
-              const isGreekVisible = (text.style.display !== "none");
-              const currentSecNum = currentActive.dataset.section;
-
-              if (isGreekVisible && currentSecNum) {
-                const firstPhraseOfSection = Array.from(phrases).find(p => p.dataset.section === currentSecNum);
-                if (firstPhraseOfSection) {
-                  jumpToTop(firstPhraseOfSection);
-                  return;
-                }
-              }
-              // Default fallback: snap directly to the active phrase
-              jumpToTop(currentActive);
-            }
-          }, 100); 
         }
       }
-    }, 250); // Increased from 150ms to 250ms to give fonts/hyphenation breathing room
+    }, 150);
   });
 
   // Handle Clicking Words
