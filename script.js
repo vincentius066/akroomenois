@@ -39,16 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="settingsPopup">
       <button id="closeSettings">✕</button>
       <h3>Settings</h3>
-      <br><br>
       <h4>UI<h4>
       <label>Time Display:
         <button id="toggle-greek-time" class="settings-btn">
           <span id="greek-time-status">Standard</span>
         </button>
       </label>
-      <br><br>
       <h4>Text<h4>
-      <br><br>
       <label>Font: 
         <select id="fontFamilyControl">
           <option value="'SBL'">SBL</option>
@@ -58,9 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </label>
       <br><br>
       <label>Size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
-      <br><br>
       <h4>Audio<h4>
-      <br><br>
       <label>Speed: <input type="range" id="speedControl" step="0.1"><span id="speedValue"></span></label>
       <br><br>
       <label for="volumeControl">Volume:</label><input type="range" id="volumeControl" step="0.01"><span id="volumeValue"></span>
