@@ -244,8 +244,8 @@ span {
   /* 2. Re-architect the control bar to handle centering */
   #controls {
     display: flex;
-    justify-content: center; /* Push children to the absolute middle */
-    align-items: center;
+    justify-content: center !important; /* Push children to the absolute middle */
+    align-items: center !important;
     position: relative;     /* Set up a frame for absolute side positioning */
     width: 100%;
     padding: 10px 0;
