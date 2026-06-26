@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 5. Greek Numeral Time Display Preference
   if (statusText) {
-    statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';
+    statusText.textContent = useGreekNumerals ? 'Standard' : 'Greek';
   }
   
   // Helper check for active popups
@@ -318,7 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("reader_useGreekNumerals", useGreekNumerals);
     
     // Update button text indicator
-    statusText.textContent = useGreekNumerals ? 'Greek' : 'Standard';
+    statusText.textContent = useGreekNumerals ? 'Standard' : 'Greek';
     
     // Force an immediate UI redraw if audio is paused/playing
     if (audio) {
