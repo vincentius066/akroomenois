@@ -271,6 +271,6 @@ span {
   }
 
   body {
-  padding: 60px 40px 50px;
+  padding: 60px 40px 50px !important;
   }
 }
