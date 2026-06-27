@@ -244,25 +244,35 @@ span {
    CLEAN MOBILE PHONE VIEWPORT RULES (MAX-WIDTH: 768px)
    ========================================================= */
 @media (max-width: 768px) {
-  
-  /* 1. Hide the timeline tracking slider and the timestamps */
+
+
+  /* 1. Ensure popups don't slam into the edges of the phone screen */
+  #popup, 
+  #settingsPopup {
+    width: 85% !important;       /* Forces them to fill most of the screen width gracefully */
+    max-width: 400px !important;  /* Keeps them from getting overly wide if rotated */
+    padding: 25px !important;     /* Slightly boosts inner spacing for clear readability */
+    box-sizing: border-box !important; /* Forces the padding to stay inside the width check */
+  }
+
+  /* 2. Hide the timeline tracking slider and the timestamps */
   #progressBar,
   #timeDisplay {
     display: none;
   }
 
-  /* 2. Overwrite the desktop layout: change space-between to center alignment */
+  /* 3. Overwrite the desktop layout: change space-between to center alignment */
   #playerBar {
     justify-content: center !important;
     gap: 0; /* Clear out any flex gap spacing that pushes items apart */
   }
 
-  /* 3. Give your playback button trio uniform, touch-friendly thumb spacing */
+  /* 4. Give your playback button trio uniform, touch-friendly thumb spacing */
   #playerBar > button:not(#langBtn) {
     margin: 0 10px;
   }
 
-  /* 4. Absolute positioning pins this button tightly against the right wall 
+  /* 5. Absolute positioning pins this button tightly against the right wall 
         of the fixed bar, without throwing off the layout of the centered buttons */
   #langBtn {
     position: absolute;
