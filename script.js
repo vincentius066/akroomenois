@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="popupOverlay"></div>
 
     <div id="advancedFontPopup">
-      <button id="closePopup">✕</button>
+      <button id="closeAdvancedFont">✕</button>
       <h3>Advanced Font Settings</h3>
     </div>
 
@@ -94,9 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const phrases = document.querySelectorAll("#text > span.phrase");
   const words = document.querySelectorAll("#text span.word");
   const phrasesEn = document.querySelectorAll("#text_en > span.phrase_en");
-  const settingsPopup = document.getElementById("settingsPopup");
-  const advancedFontPopup = document.getElementById("advancedFontPopup");
-  const closeSettings = document.getElementById("closeSettings");
+  const settingsPopup = document.getElementById("settingsPopup");[cite: 2]
+  const advancedFontPopup = document.getElementById("advancedFontPopup");[cite: 2]
+  const closeSettings = document.getElementById("closeSettings");[cite: 2]
+  const closeAdvancedFont = document.getElementById("closeAdvancedFont");
   const popup = document.getElementById("popup");
   const popupOverlay = document.getElementById("popupOverlay");
   const popupContent = document.getElementById("popupContent");
@@ -624,14 +625,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   if (document.getElementById("closePopup")) document.getElementById("closePopup").addEventListener("click", closePopup);
 
-  // General Overlay Click Closure
-  popupOverlay.addEventListener("click", () => {
-    popup.style.display = "none";
-    settingsPopup.style.display = "none";
-    popupOverlay.style.display = "none";
-    if (wasPlaying) { audio.play(); wasPlaying = false; }
-  });
-
   // Controls UI Action
   playBtn.addEventListener("click", () => {
     if (isPopupActive()) return; 
@@ -847,29 +840,53 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   
-  // Settings Actions
-  if (homeBtn) homeBtn.addEventListener("click", () => console.log("Home clicked"));
+  // ==========================================
+  // INTEGRATED POPUP ACTION ROUTERS
+  // ==========================================
+  if (homeBtn) homeBtn.addEventListener("click", () => console.log("Home clicked"));[cite: 2]
 
-  advancedFontBtn.addEventListener("click", () => {
-    wasPlaying = !audio.paused;
-    audio.pause();
-    advancedFontPopup.style.display = "block";
-    popupOverlay.style.display = "block";
-  });
-
+  // Opening Main Settings
   settingsBtn.addEventListener("click", () => {
-    wasPlaying = !audio.paused;
-    audio.pause();
-    settingsPopup.style.display = "block";
-    popupOverlay.style.display = "block";
+    wasPlaying = !audio.paused;[cite: 2]
+    audio.pause();[cite: 2]
+    settingsPopup.style.display = "block";[cite: 2]
+    popupOverlay.style.display = "block";[cite: 2]
   });
 
+  // Handoff: Settings -> Advanced Font Panel
+  advancedFontBtn.addEventListener("click", () => {
+    // Hide settings panel temporarily so they don't visually overlap
+    settingsPopup.style.display = "none";[cite: 2]
+    // Open the advanced menu layer
+    advancedFontPopup.style.display = "block";[cite: 2]
+  });
+
+  // Handoff Back: Advanced Font Panel -> Settings
+  if (closeAdvancedFont) {
+    closeAdvancedFont.addEventListener("click", () => {
+      // Hide advanced panel
+      advancedFontPopup.style.display = "none";
+      // Re-reveal standard settings smoothly without toggling audio playback
+      settingsPopup.style.display = "block";[cite: 2]
+    });
+  }
+
+  // Closing Main Settings entirely (Resumes Audio if it was playing)
   closeSettings.addEventListener("click", () => {
-    settingsPopup.style.display = "none";
-    popupOverlay.style.display = "none";
-    if (wasPlaying) { audio.play(); wasPlaying = false; }
+    settingsPopup.style.display = "none";[cite: 2]
+    popupOverlay.style.display = "none";[cite: 2]
+    if (wasPlaying) { audio.play(); wasPlaying = false; }[cite: 2]
   });
 
+  // Overlay Click: Emergency Backup Close-All
+  popupOverlay.addEventListener("click", () => {
+    popup.style.display = "none";[cite: 2]
+    settingsPopup.style.display = "none";[cite: 2]
+    advancedFontPopup.style.display = "none"; // Make sure this shuts off too
+    popupOverlay.style.display = "none";[cite: 2]
+    if (wasPlaying) { audio.play(); wasPlaying = false; }[cite: 2]
+  });
+  
   // ==========================================
   // MASTER CLASSICAL GREEK HYPHENATOR
   // ==========================================
