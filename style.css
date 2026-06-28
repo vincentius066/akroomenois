@@ -82,6 +82,7 @@ body {
   hyphens: auto;
   text-wrap: pretty;
   display: none;
+  font-style: normal !important;
 }
 
 #text_en :not(.note-marker) {
