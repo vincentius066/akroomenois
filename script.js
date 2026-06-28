@@ -39,6 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="advancedFontPopup">
       <button id="closeAdvancedFont">✕</button>
       <h3>Advanced Font Settings</h3>
+      <label>Sigma: 
+        <select id="sigmaStyleControl">
+          <option value="standard">σ/ς (Standard)</option>
+          <option value="lunate">ϲ (Lunate)</option>
+        </select>
+      </label>
     </div>
 
     <div id="settingsPopup">
@@ -125,7 +131,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const extraActionsGroup = document.getElementById("extraActionsGroup");
   const contentsBtn = document.getElementById("contentsBtn");
   const freqBtn = document.getElementById("freqBtn");
-  const fullscreenBtn = document.getElementById('fullscreenBtn')
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  const sigmaStyleControl = document.getElementById("sigmaStyleControl");
 
   let wasPlaying = false;
   let currentActive = null;
@@ -730,6 +737,31 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("beforeunload", () => {
     localStorage.setItem("reader_currentTime", audio.currentTime);
   });
+
+  // ==========================================
+  // SIGMA GLYPH VARIANT SELECTION CONTROL
+  // ==========================================
+  if (sigmaStyleControl && text) {
+    // 1. Load saved sigma preference on page boot
+    const savedSigmaStyle = localStorage.getItem("reader_sigmaStyle") || "standard";
+    sigmaStyleControl.value = savedSigmaStyle;
+    
+    if (savedSigmaStyle === "lunate") {
+      text.classList.add("lunate-sigma-active");
+    }
+
+    // 2. Listen for real-time user selections
+    sigmaStyleControl.addEventListener("change", () => {
+      const selectedStyle = sigmaStyleControl.value;
+      localStorage.setItem("reader_sigmaStyle", selectedStyle); // Save choice
+
+      if (selectedStyle === "lunate") {
+        text.classList.add("lunate-sigma-active");
+      } else {
+        text.classList.remove("lunate-sigma-active");
+      }
+    });
+  }
   
   // ==========================================
   // SLIDERS & CONTROLS OPERATIONAL EVENT LISTENERS
