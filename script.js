@@ -774,6 +774,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   // SIGMA GLYPH VARIANT SELECTION CONTROL
   // ==========================================
+  =====
   if (sigmaStyleControl) {
     const greekWordsList = document.querySelectorAll("#text span.word");
 
@@ -805,7 +806,37 @@ document.addEventListener("DOMContentLoaded", () => {
       updateDocumentSigmaStyle(selectedStyle);
     });
   }
-  
+  =====
+  =====
+  if (piStyleControl) {
+    const greekWordsList = document.querySelectorAll("#text span.word");
+
+    const updateDocumentPiStyle = (style) => {
+      greekWordsList.forEach(wordElement => {
+        let currentText = wordElement.textContent.trim();
+        
+        if (style === "cursive") {
+          wordElement.textContent = currentText.replace(/π/g, "ϖ");
+        } else {
+          let restoredText = currentText.replace(/ϖ/g, "π");
+          wordElement.textContent = restoredText;
+        }
+      });
+    };
+
+    const savedPiStyle = localStorage.getItem("reader_piStyle") || "standard";
+    piStyleControl.value = savedPiStyle;
+    if (savedPiStyle === "cursive") {
+      updateDocumentSigmaStyle("cursive");
+    }
+
+    piStyleControl.addEventListener("change", () => {
+      const selectedStyle = piStyleControl.value;
+      localStorage.setItem("reader_piStyle", selectedStyle);
+      updateDocumentPiStyle(selectedStyle);
+    });
+  }
+  =====
   // ==========================================
   // SLIDERS & CONTROLS OPERATIONAL EVENT LISTENERS
   // ==========================================
