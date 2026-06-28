@@ -252,6 +252,12 @@ span {
   cursor: pointer;
 }
 
+/* Instructs the browser font engine to show the lunate variant if available */
+.lunate-sigma-active {
+  font-feature-settings: "cv01" 1, "ss01" 1 !important;
+  font-variant-alternates: character-variant(cv01) !important;
+}
+
 /* =========================================================
    CLEAN MOBILE PHONE VIEWPORT RULES (MAX-WIDTH: 768px)
    ========================================================= */
