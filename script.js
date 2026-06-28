@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 3)</div>
+      <div id="title">${document.title}(test 4)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -600,7 +600,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Create a totally isolated variable for the dictionary display
         let dictionaryLookupTerm = word.textContent;
         // 2. Normalize lunate sigmas to standard mid-sigmas
-        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ");
+        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ");
         // 3. Flip to a final sigma ONLY if it sits at the end of the clean word string
         if (dictionaryLookupTerm.endsWith("σ")) {
           dictionaryLookupTerm = dictionaryLookupTerm.slice(0, -1) + "ς";
@@ -758,9 +758,9 @@ document.addEventListener("DOMContentLoaded", () => {
         let currentText = wordElement.textContent.trim();
         
         if (style === "lunate") {
-          wordElement.textContent = currentText.replace(/σ/g, "ϲ").replace(/ς/g, "ϲ");
+          wordElement.textContent = currentText.replace(/σ/g, "ϲ").replace(/ς/g, "ϲ").replace(/Σ/g, "Ϲ");
         } else {
-          let restoredText = currentText.replace(/ϲ/g, "σ");
+          let restoredText = currentText.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ");
           if (restoredText.endsWith("σ")) {
             restoredText = restoredText.slice(0, -1) + "ς";
           }
