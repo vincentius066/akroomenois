@@ -624,7 +624,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Create a totally isolated variable for the dictionary display
         let dictionaryLookupTerm = word.textContent;
         // 2. Normalize lunate sigmas to standard mid-sigmas
-        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ");
+        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ").replace(/ϖ/g, "π").replace(/ϰ/g, "κ").replace(/ϛ/g, "στ").replace(/Ϛ/g, /Στ/);
         // 3. Flip to a final sigma ONLY if it sits at the end of the clean word string
         if (dictionaryLookupTerm.endsWith("σ")) {
           dictionaryLookupTerm = dictionaryLookupTerm.slice(0, -1) + "ς";
