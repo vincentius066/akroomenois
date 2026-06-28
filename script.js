@@ -94,9 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const phrases = document.querySelectorAll("#text > span.phrase");
   const words = document.querySelectorAll("#text span.word");
   const phrasesEn = document.querySelectorAll("#text_en > span.phrase_en");
-  const settingsPopup = document.getElementById("settingsPopup");[cite: 2]
-  const advancedFontPopup = document.getElementById("advancedFontPopup");[cite: 2]
-  const closeSettings = document.getElementById("closeSettings");[cite: 2]
+  const settingsPopup = document.getElementById("settingsPopup");
+  const advancedFontPopup = document.getElementById("advancedFontPopup");
+  const closeSettings = document.getElementById("closeSettings");
   const closeAdvancedFont = document.getElementById("closeAdvancedFont");
   const popup = document.getElementById("popup");
   const popupOverlay = document.getElementById("popupOverlay");
@@ -843,22 +843,22 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   // INTEGRATED POPUP ACTION ROUTERS
   // ==========================================
-  if (homeBtn) homeBtn.addEventListener("click", () => console.log("Home clicked"));[cite: 2]
+  if (homeBtn) homeBtn.addEventListener("click", () => console.log("Home clicked"));
 
   // Opening Main Settings
   settingsBtn.addEventListener("click", () => {
-    wasPlaying = !audio.paused;[cite: 2]
-    audio.pause();[cite: 2]
-    settingsPopup.style.display = "block";[cite: 2]
-    popupOverlay.style.display = "block";[cite: 2]
+    wasPlaying = !audio.paused;
+    audio.pause();
+    settingsPopup.style.display = "block";
+    popupOverlay.style.display = "block";
   });
 
   // Handoff: Settings -> Advanced Font Panel
   advancedFontBtn.addEventListener("click", () => {
     // Hide settings panel temporarily so they don't visually overlap
-    settingsPopup.style.display = "none";[cite: 2]
+    settingsPopup.style.display = "none";
     // Open the advanced menu layer
-    advancedFontPopup.style.display = "block";[cite: 2]
+    advancedFontPopup.style.display = "block";
   });
 
   // Handoff Back: Advanced Font Panel -> Settings
@@ -867,24 +867,24 @@ document.addEventListener("DOMContentLoaded", () => {
       // Hide advanced panel
       advancedFontPopup.style.display = "none";
       // Re-reveal standard settings smoothly without toggling audio playback
-      settingsPopup.style.display = "block";[cite: 2]
+      settingsPopup.style.display = "block";
     });
   }
 
   // Closing Main Settings entirely (Resumes Audio if it was playing)
   closeSettings.addEventListener("click", () => {
-    settingsPopup.style.display = "none";[cite: 2]
-    popupOverlay.style.display = "none";[cite: 2]
-    if (wasPlaying) { audio.play(); wasPlaying = false; }[cite: 2]
+    settingsPopup.style.display = "none";
+    popupOverlay.style.display = "none";
+    if (wasPlaying) { audio.play(); wasPlaying = false; }
   });
 
   // Overlay Click: Emergency Backup Close-All
   popupOverlay.addEventListener("click", () => {
-    popup.style.display = "none";[cite: 2]
-    settingsPopup.style.display = "none";[cite: 2]
+    popup.style.display = "none";
+    settingsPopup.style.display = "none";
     advancedFontPopup.style.display = "none"; // Make sure this shuts off too
-    popupOverlay.style.display = "none";[cite: 2]
-    if (wasPlaying) { audio.play(); wasPlaying = false; }[cite: 2]
+    popupOverlay.style.display = "none";
+    if (wasPlaying) { audio.play(); wasPlaying = false; }
   });
   
   // ==========================================
