@@ -838,6 +838,39 @@ document.addEventListener("DOMContentLoaded", () => {
       updateDocumentPiStyle(selectedStyle);
     });
   }
+==========================================
+  // KAPPA GLYPH VARIANT SELECTION CONTROL
+  // ==========================================
+  if (kappaStyleControl) {
+    const greekWordsList = document.querySelectorAll("#text span.word");
+
+    const updateDocumentKappaStyle = (style) => {
+      greekWordsList.forEach(wordElement => {
+        let currentText = wordElement.textContent; // Don't strip trailing spaces/punctuation with trim()
+
+        if (style === "cursive") {
+          wordElement.textContent = currentText.replace(/κ/g, "ϰ");
+        } else {
+          // ONLY target the kappa characters when turning it off,
+          // leaving whatever the sigma controller did completely untouched!
+          wordElement.textContent = currentText.replace(/ϰ/g, "κ");
+        }
+      });
+    };
+
+    const savedKappaStyle = localStorage.getItem("reader_kappaStyle") || "standard";
+    kappaStyleControl.value = savedKappaStyle;
+    
+    if (savedKappaStyle === "cursive") {
+      updateDocumentKappaStyle("cursive"); // Fixed the function name typo here
+    }
+
+    kappaStyleControl.addEventListener("change", () => {
+      const selectedStyle = kappaStyleControl.value;
+      localStorage.setItem("reader_kappaStyle", selectedStyle);
+      updateDocumentKappaStyle(selectedStyle);
+    });
+  }
   // ==========================================
   // SLIDERS & CONTROLS OPERATIONAL EVENT LISTENERS
   // ==========================================
