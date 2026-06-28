@@ -39,6 +39,20 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="advancedFontPopup">
       <button id="closeAdvancedFont">✕</button>
       <h3>Advanced Font Settings</h3>
+      <label>Kappa: 
+         <select id="kappaStyleControl">
+           <option value="standard">κ (Standard)</option>
+           <option value="cursive">ϰ (Cursive)</option>
+         </select>
+      </label>
+      <br><br>
+      <label>Pi: 
+         <select id="piStyleControl">
+           <option value="standard">π (Standard)</option>
+           <option value="cursive">ϖ (Cursive)</option>
+         </select>
+      </label>
+      <br><br>
       <label>Sigma: 
         <select id="sigmaStyleControl">
           <option value="standard">σ/ς (Standard)</option>
@@ -46,10 +60,10 @@ document.addEventListener("DOMContentLoaded", () => {
         </select>
       </label>
       <br><br>
-      <label>Pi: 
-         <select id="piStyleControl">
-           <option value="standard">π (Standard)</option>
-           <option value="cursive">ϖ (Cursive)</option>
+      <label>Stigma: 
+         <select id="stigmaStyleControl">
+           <option value="standard">στ (Standard)</option>
+           <option value="monograph">ϛ (Monograph)</option>
          </select>
       </label>
     </div>
