@@ -43,8 +43,8 @@
   @font-face {
   font-family: "EB Garamond";
   src: url("font/Adobe-Garamond-LT-Semibold.ttf") format("truetype");
-  font-weight: normal;
-  font-style: bold;
+  font-weight: bold;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -82,7 +82,6 @@ body {
   hyphens: auto;
   text-wrap: pretty;
   display: none;
-  font-style: normal !important;
 }
 
 #text_en :not(.note-marker) {
@@ -127,7 +126,6 @@ span {
   border-radius: 6px;        /* Softens the highlight edges slightly */
   color: #000000;
   background-color: transparent;
-  font-style: normal !important;
 }
 
 /* Standard Desktop Rules */
