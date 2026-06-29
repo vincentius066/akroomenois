@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 14)</div>
+      <div id="title">${document.title}(test 15)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -981,18 +981,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       greekWordsList.forEach(wordElement => {
         let currentText = wordElement.textContent;
+        let cleanText = currentText.trim();
 
-        if (style === "ligature" && currentText.length === 3) {
+        if (style === "ligature" && cleanText.length === 3) {
           // Turn both standard and lunate combinations into the ligature ligatures
-          wordElement.textContent = currentText.replace(/και/g, "ϗ")
-                                               .replace(/καί/g, "ϗ́")
-                                               .replace(/καὶ/g, "ϗ̀")
-                                               .replace(/Και/g, "Ϗ")
-                                               .replace(/Καί/g, "Ϗ́")
-                                               .replace(/Καὶ/g, "Ϗ̀")
-                                               .replace(/ϰαι/g, "ϗ")
-                                               .replace(/ϰαί/g, "ϗ́")
-                                               .replace(/ϰαὶ/g, "ϗ̀");
+          wordElement.textContent = currentText.replace(/και/g, "ϗ").replace(/καί/g, "ϗ́").replace(/καὶ/g, "ϗ̀").replace(/Και/g, "Ϗ").replace(/Καί/g, "Ϗ́").replace(/Καὶ/g, "Ϗ̀").replace(/ϰαι/g, "ϗ").replace(/ϰαί/g, "ϗ́").replace(/ϰαὶ/g, "ϗ̀");
         } else {
           // Turning ligature OFF: check what style of sigma we need to return to
           if (currentLiveKappaStyle === "cursive") {
