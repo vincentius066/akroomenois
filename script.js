@@ -53,6 +53,13 @@ document.addEventListener("DOMContentLoaded", () => {
          </select>
       </label>
       <br><br>
+      <label>Kai: 
+         <select id="kaiStyleControl">
+           <option value="standard">καί (Standard)</option>
+           <option value="cursive">ϗ́ (Ligature)</option>
+         </select>
+      </label>
+      <br><br>
       <label>Pi: 
          <select id="piStyleControl">
            <option value="standard">π (Standard)</option>
@@ -164,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const piStyleControl = document.getElementById("piStyleControl");
   const kappaStyleControl = document.getElementById("kappaStyleControl");
   const stigmaStyleControl = document.getElementById("stigmaStyleControl");
+  const kaiStyleControl = document.getElementById("kaiStyleControl");
 
   let wasPlaying = false;
   let currentActive = null;
@@ -631,7 +639,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Create a totally isolated variable for the dictionary display
         let dictionaryLookupTerm = word.textContent;
         // 2. Normalize lunate sigmas to standard mid-sigmas
-        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ").replace(/ϖ/g, "π").replace(/ϰ/g, "κ").replace(/ϛ/g, "στ").replace(/Ϛ/g, "Στ").replace(/ϐ/g, "β");
+        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ").replace(/ϖ/g, "π").replace(/ϰ/g, "κ").replace(/ϛ/g, "στ").replace(/Ϛ/g, "Στ").replace(/ϐ/g, "β").replace(/ϗ/g, "και").replace(/ϗ́/g, "καί").replace(/ϗ̀/g, "καὶ").replace(/Ϗ/g, "Και").replace(/Ϗ́/g, "Καί").replace(/Ϗ̀/g, "Καὶ");
         // 3. Flip to a final sigma ONLY if it sits at the end of the clean word string
         if (dictionaryLookupTerm.endsWith("σ")) {
           dictionaryLookupTerm = dictionaryLookupTerm.slice(0, -1) + "ς";
@@ -959,6 +967,54 @@ document.addEventListener("DOMContentLoaded", () => {
       const selectedStyle = betaStyleControl.value;
       localStorage.setItem("reader_betaStyle", selectedStyle);
       updateDocumentBetaStyle(selectedStyle);
+    });
+  }
+  // ==========================================
+  // ΚΑΙ GLYPH VARIANT SELECTION CONTROL
+  // ==========================================replace(/ϗ/g, "και").replace(/ϗ́/g, "καί").replace(/ϗ̀/g, "καὶ").replace(/Ϗ/g, "Και").replace(/Ϗ́/g, "Καί").replace(/Ϗ̀/g, "Καὶ");
+  if (kaiStyleControl) {
+    const greekWordsList = document.querySelectorAll("#text span.word");
+
+    const updateDocumentKaiStyle = (style) => {
+      // DYNAMIC CHECK: Look up exactly what the sigma select is currently set to right now
+      const currentLiveKappaStyle = kappaStyleControl ? kappaStyleControl.value : "standard";
+
+      greekWordsList.forEach(wordElement => {
+        let currentText = wordElement.textContent;
+
+        if (style === "ligature" && word.length === 3) {
+          // Turn both standard and lunate combinations into the ligature ligatures
+          wordElement.textContent = currentText.replace(/και/g, "ϗ")
+                                               .replace(/καί/g, "ϗ́")
+                                               .replace(/καὶ/g, "ϗ̀")
+                                               .replace(/Και/g, "Ϗ")
+                                               .replace(/Καί/g, "Ϗ́")
+                                               .replace(/Καὶ/g, "Ϗ̀")
+                                               .replace(/ϰαι/g, "ϗ")
+                                               .replace(/ϰαί/g, "ϗ́")
+                                               .replace(/ϰαὶ/g, "ϗ̀");
+        } else {
+          // Turning ligature OFF: check what style of sigma we need to return to
+          if (currentLiveKappaStyle === "cursive") {
+            wordElement.textContent = currentText.replace(/ϗ/g, "ϰαι").replace(/ϗ́/g, "ϰαί").replace(/ϗ̀/g, "ϰαὶ").replace(/Ϗ/g, "Και").replace(/Ϗ́/g, "Καί").replace(/Ϗ̀/g, "Καὶ");
+          } else {
+            wordElement.textContent = currentText.replace(/ϗ/g, "και").replace(/ϗ́/g, "καί").replace(/ϗ̀/g, "καὶ").replace(/Ϗ/g, "Και").replace(/Ϗ́/g, "Καί").replace(/Ϗ̀/g, "Καὶ");
+          }
+        }
+      });
+    };
+
+    const savedKaiStyle = localStorage.getItem("reader_kaiStyle") || "standard";
+    kaiStyleControl.value = savedKaiStyle;
+    
+    if (savedKaiStyle === "ligature") {
+      updateDocumentStigmaStyle("ligature");
+    }
+
+    kaiStyleControl.addEventListener("change", () => {
+      const selectedStyle = kaiStyleControl.value;
+      localStorage.setItem("reader_kaiStyle", selectedStyle);
+      updateDocumentKaiStyle(selectedStyle);
     });
   }
   // ==========================================
