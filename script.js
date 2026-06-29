@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 8)</div>
+      <div id="title">${document.title}(test 9)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -869,6 +869,39 @@ document.addEventListener("DOMContentLoaded", () => {
       const selectedStyle = kappaStyleControl.value;
       localStorage.setItem("reader_kappaStyle", selectedStyle);
       updateDocumentKappaStyle(selectedStyle);
+    });
+  }
+  //==========================================
+  // STIGMA GLYPH VARIANT SELECTION CONTROL
+  // ==========================================
+  if (stigmaStyleControl) {
+    const greekWordsList = document.querySelectorAll("#text span.word");
+
+    const updateDocumentStigmaStyle = (style) => {
+      greekWordsList.forEach(wordElement => {
+        let currentText = wordElement.textContent; // Don't strip trailing spaces/punctuation with trim()
+
+        if (style === "monograph") {
+          wordElement.textContent = currentText.replace(/στ/g, "ϛ").replace(/Στ/g, "Ϛ");
+        } else {
+          // ONLY target the stigma characters when turning it off,
+          // leaving whatever the sigma controller did completely untouched!
+          wordElement.textContent = currentText.replace(/ϛ/g, "στ").replace(/Ϛ/g, "Στ");
+        }
+      });
+    };
+
+    const savedStigmaStyle = localStorage.getItem("reader_stigmaStyle") || "standard";
+    stigmaStyleControl.value = saveStigmaStyle;
+    
+    if (savedStigmaStyle === "monograph") {
+      updateDocumentStigmaStyle("monograph"); // Fixed the function name typo here
+    }
+
+    stigmaStyleControl.addEventListener("change", () => {
+      const selectedStyle = stigmaStyleControl.value;
+      localStorage.setItem("reader_stigmaStyle", selectedStyle);
+      updateDocumentStigmaStyle(selectedStyle);
     });
   }
   // ==========================================
