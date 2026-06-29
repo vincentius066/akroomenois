@@ -127,6 +127,7 @@ span {
   border-radius: 6px;        /* Softens the highlight edges slightly */
   color: #000000;
   background-color: transparent;
+  font-style: normal !important;
 }
 
 /* Standard Desktop Rules */
