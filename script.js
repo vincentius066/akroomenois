@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <div id="advancedFontPopup">
       <button id="closeAdvancedFont">✕</button>
       <h3>Advanced Font Settings</h3>
-      <label>Betta: 
+      <label>Beta: 
          <select id="betaStyleControl">
            <option value="standard">β (Standard)</option>
            <option value="cursive">ϐ (Cursive)</option>
