@@ -55,8 +55,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <br><br>
       <label>Kai: 
          <select id="kaiStyleControl">
-           <option value="standard">κα\u03af (Standard)</option>
-           <option value="ligature">ϗ\u0301 (Ligature)</option>
+           <option value="standard">Κα\u03af κα\u03af (Standard)</option>
+           <option value="ligature">Ϗ\u0301 ϗ\u0301 (Ligature)</option>
+           <option value="minuscule">Κα\u03af ϗ\u0301 (Minuscule Ligature Only)</option>
          </select>
       </label>
       <br><br>
@@ -76,8 +77,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <br><br>
       <label>Stigma: 
          <select id="stigmaStyleControl">
-           <option value="standard">στ (Standard)</option>
-           <option value="ligature">ϛ (Ligature)</option>
+           <option value="standard"> Στ στ (Standard)</option>
+           <option value="ligature">Ϛ ϛ (Ligature)</option>
+           <option value="minuscule">Στ ϛ (Minuscule Ligature Only)</option>
          </select>
       </label>
     </div>
