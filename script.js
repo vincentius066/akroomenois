@@ -907,6 +907,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                                .replace(/ϲτ/g, "ϛ")
                                                .replace(/Στ/g, "Ϛ")
                                                .replace(/Ϲτ/g, "Ϛ");
+        }
         else if (style === "minuscule") {
           // Turn both standard and lunate combinations into the ligature ligatures
           if (currentLiveSigmaStyle === "lunate") {
@@ -931,6 +932,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
     if (savedStigmaStyle === "ligature") {
       updateDocumentStigmaStyle("ligature");
+    }
+    else if (savedStigmaStyle === "minuscule") {
+      updateDocumentStigmaStyle("minuscule");
     }
 
     stigmaStyleControl.addEventListener("change", () => {
