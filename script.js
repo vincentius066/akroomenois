@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 20)</div>
+      <div id="title">${document.title}(test 21)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -983,9 +983,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let currentText = wordElement.textContent;
         let cleanText = currentText.trim();
 
-        if (style === "ligature" && (currentText.length === 3 || currentText.length === 4)) {
+        const trueLength = [...currentText.replace(/[\u0300-\u0301]/g, "")].length;
+
+        if (style === "ligature" && trueLength === 3) {
           // Turn both standard and cursive combinations into the ligature ligatures
-          wordElement.textContent = currentText.replace(/και/g, "ϗ").replace(/κα\u03af/g, "ϗ\u0301").replace(/κα\u1f76|κα\u03b9\u0300/g, "ϗ\u0300").replace(/Και/g, "Ϗ").replace(/Κα\u03af/g, "Ϗ\u0301").replace(/Κα\u1f76/g, "Ϗ\u0300").replace(/ϰαι/g, "ϗ").replace(/ϰα\u03af/g, "ϗ\u0301").replace(/ϰα\u1f76/g, "ϗ\u0300");
+          wordElement.textContent = currentText.replace(/και/g, "ϗ").replace(/κα\u03af|κα\u03b9\u0301/g, "ϗ\u0301").replace(/κα\u1f76|κα\u03b9\u0300/g, "ϗ\u0300").replace(/Και/g, "Ϗ").replace(/Κα\u03af|Κα\u03b9\u0301/g, "Ϗ\u0301").replace(/Κα\u1f76|Κα\u03b9\u0300/g, "Ϗ\u0300").replace(/ϰαι/g, "ϗ").replace(/ϰα\u03af|ϰα\u03b9\u0301/g, "ϗ\u0301").replace(/ϰα\u1f76|ϰα\u03b9\u0300/g, "ϗ\u0300");
         } else {
           // Turning ligature OFF: check what style of sigma we need to return to
           if (currentLiveKappaStyle === "cursive") {
