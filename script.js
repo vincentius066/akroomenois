@@ -907,6 +907,14 @@ document.addEventListener("DOMContentLoaded", () => {
                                                .replace(/ϲτ/g, "ϛ")
                                                .replace(/Στ/g, "Ϛ")
                                                .replace(/Ϲτ/g, "Ϛ");
+        else if (style === "minuscule") {
+          // Turn both standard and lunate combinations into the ligature ligatures
+          if (currentLiveSigmaStyle === "lunate") {
+            wordElement.textContent = currentText.replace(/στ/g, "ϛ").replace(/ϲτ/g, "ϛ").replace(/Ϛ/g, "Ϲτ");
+          } else {
+            wordElement.textContent = currentText.replace(/στ/g, "ϛ").replace(/ϲτ/g, "ϛ").replace(/Ϛ/g, "Στ");
+          }
+          
         } else {
           // Turning ligature OFF: check what style of sigma we need to return to
           if (currentLiveSigmaStyle === "lunate") {
