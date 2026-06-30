@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 23)</div>
+      <div id="title">${document.title}(test 24)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -592,7 +592,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-//==========================================
+  //==========================================
   // RESILIENT PROGRESS AND METADATA RESTORATION
   // ==========================================
 
@@ -998,7 +998,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Strip combining diacritics to get visual character count
         const trueLength = [...currentText.replace(/[\u0300-\u0301]/g, "")].length;
 
-        if (style === "ligature" && trueLength === 3) {
+        if (style === "ligature" && (trueLength === 3 || trueLength === 1)) {
           wordElement.textContent = currentText
             // 1. Accented Majuscules First
             .replace(/Κα\u03af|Κα\u03b9\u0301/g, "Ϗ\u0301")
@@ -1011,7 +1011,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/και/g, "ϗ")
             .replace(/ϰαι/g, "ϗ");
         }
-        else if (style === "minuscule" && trueLength === 3) {
+        else if (style === "minuscule" && (trueLength === 3 || trueLength === 1)) {
           wordElement.textContent = currentText
             // 1. Turn accented uppercase ligatures into standard uppercase text first
             .replace(/Ϗ\u0301/g, "Κα\u03af")
@@ -1023,7 +1023,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/και/g, "ϗ")
             .replace(/ϰαι/g, "ϗ");
         } 
-        else if (style === "default" && trueLength === 3) {
+        else if (style === "default" && (trueLength === 3 || trueLength === 1)) {
           // Turning ligature completely OFF: return everything to full text 
           if (currentLiveKappaStyle === "cursive") {
             wordElement.textContent = currentText
