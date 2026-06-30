@@ -55,8 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <br><br>
       <label>Kai: 
          <select id="kaiStyleControl">
-           <option value="standard">καί (Standard)</option>
-           <option value="ligature">ϗ́ (Ligature)</option>
+           <option value="standard">κα\u03af (Standard)</option>
+           <option value="ligature">ϗ\u0301 (Ligature)</option>
          </select>
       </label>
       <br><br>
@@ -639,7 +639,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Create a totally isolated variable for the dictionary display
         let dictionaryLookupTerm = word.textContent;
         // 2. Normalize lunate sigmas to standard mid-sigmas
-        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ").replace(/ϖ/g, "π").replace(/ϰ/g, "κ").replace(/ϛ/g, "στ").replace(/Ϛ/g, "Στ").replace(/ϐ/g, "β").replace(/ϗ/g, "και").replace(/ϗ́/g, "καί").replace(/ϗ̀/g, "καὶ").replace(/Ϗ/g, "Και").replace(/Ϗ́/g, "Καί").replace(/Ϗ̀/g, "Καὶ");
+        dictionaryLookupTerm = dictionaryLookupTerm.replace(/ϲ/g, "σ").replace(/Ϲ/g, "Σ").replace(/ϖ/g, "π").replace(/ϰ/g, "κ").replace(/ϛ/g, "στ").replace(/Ϛ/g, "Στ").replace(/ϐ/g, "β").replace(/ϗ/g, "και").replace(/ϗ\u0301/g, "κα\u03af").replace(/ϗ\u0300/g, "κα\u1f76").replace(/Ϗ/g, "Και").replace(/Ϗ\u0301/g, "Κα\u03af").replace(/Ϗ\u0300/g, "Κα\u1f76");
         // 3. Flip to a final sigma ONLY if it sits at the end of the clean word string
         if (dictionaryLookupTerm.endsWith("σ")) {
           dictionaryLookupTerm = dictionaryLookupTerm.slice(0, -1) + "ς";
@@ -971,7 +971,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   // ==========================================
   // ΚΑΙ GLYPH VARIANT SELECTION CONTROL
-  // ==========================================replace(/ϗ/g, "και").replace(/ϗ́/g, "καί").replace(/ϗ̀/g, "καὶ").replace(/Ϗ/g, "Και").replace(/Ϗ́/g, "Καί").replace(/Ϗ̀/g, "Καὶ");
+  // ==========================================replace(/ϗ/g, "και").replace(/ϗ\u0301/g, "κα\u03af").replace(/ϗ\u0300/g, "κα\u1f76").replace(/Ϗ/g, "Και").replace(/Ϗ\u0301/g, "Κα\u03af").replace(/Ϗ\u0300/g, "Κα\u1f76");
   if (kaiStyleControl) {
     const greekWordsList = document.querySelectorAll("#text span.word");
 
@@ -985,13 +985,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (style === "ligature" && currentText.length === 3) {
           // Turn both standard and cursive combinations into the ligature ligatures
-          wordElement.textContent = currentText.replace(/και/g, "ϗ").replace(/καί/g, "ϗ́").replace(/καὶ/g, "ϗ̀").replace(/Και/g, "Ϗ").replace(/Καί/g, "Ϗ́").replace(/Καὶ/g, "Ϗ̀").replace(/ϰαι/g, "ϗ").replace(/ϰαί/g, "ϗ́").replace(/ϰαὶ/g, "ϗ̀");
+          wordElement.textContent = currentText.replace(/και/g, "ϗ").replace(/κα\u03af/g, "ϗ\u0301").replace(/κα\u1f76/g, "ϗ\u0300").replace(/Και/g, "Ϗ").replace(/Κα\u03af/g, "Ϗ\u0301").replace(/Κα\u1f76/g, "Ϗ\u0300").replace(/ϰαι/g, "ϗ").replace(/ϰα\u03af/g, "ϗ\u0301").replace(/ϰα\u1f76/g, "ϗ\u0300");
         } else {
           // Turning ligature OFF: check what style of sigma we need to return to
           if (currentLiveKappaStyle === "cursive") {
-            wordElement.textContent = currentText.replace(/ϗ/g, "ϰαι").replace(/ϗ́/g, "ϰαί").replace(/ϗ̀/g, "ϰαὶ").replace(/Ϗ/g, "Και").replace(/Ϗ́/g, "Καί").replace(/Ϗ̀/g, "Καὶ");
+            wordElement.textContent = currentText.replace(/ϗ/g, "ϰαι").replace(/ϗ\u0301/g, "ϰα\u03af").replace(/ϗ\u0300/g, "ϰα\u1f76").replace(/Ϗ/g, "Και").replace(/Ϗ\u0301/g, "Κα\u03af").replace(/Ϗ\u0300/g, "Κα\u1f76");
           } else {
-            wordElement.textContent = currentText.replace(/ϗ/g, "και").replace(/ϗ́/g, "καί").replace(/ϗ̀/g, "καὶ").replace(/Ϗ/g, "Και").replace(/Ϗ́/g, "Καί").replace(/Ϗ̀/g, "Καὶ");
+            wordElement.textContent = currentText.replace(/ϗ/g, "και").replace(/ϗ\u0301/g, "κα\u03af").replace(/ϗ\u0300/g, "κα\u1f76").replace(/Ϗ/g, "Και").replace(/Ϗ\u0301/g, "Κα\u03af").replace(/Ϗ\u0300/g, "Κα\u1f76");
           }
         }
       });
@@ -1169,7 +1169,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================
   // MASTER CLASSICAL GREEK HYPHENATOR
   // ==========================================
-  const ALL_GREEK_VOWELS = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", "ϋ", "ἀ", "ἐ", "ἰ", "ὀ", "ὐ", "ᾱ̓", "ἠ", "ῑ̓", "ὠ", "ῡ̓", "αἰ", "αὐ", "εἰ", "εὐ", "οἰ", "οὐ", "υἰ", "ᾀ", "ᾱὐ", "ᾐ", "ηὐ", "ᾠ", "ωὐ", "ῡἰ", "ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ", "ά", "έ", "ί", "ό", "ύ", "ᾱ́", "ή", "ῑ́", "ώ", "ῡ́", "αί", "αύ", "εί", "εύ", "οί", "ού", "υί", "ᾴ", "ᾱύ", "ῄ", "ηύ", "ῴ", "ωύ", "ῡί", "ΐ", "ΰ", "ἄ", "ἔ", "ἴ", "ὄ", "ὔ", "ᾱ̓́", "ἤ", "ῑ̓́", "ὤ", "ῡ̓́", "αἴ", "αὔ", "εἴ", "εὔ", "οἴ", "οὔ", "υἴ", "ᾄ", "ᾱὔ", "ᾔ", "ηὔ", "ᾤ", "ωὔ", "ῡἴ", "ἅ", "ἕ", "ἵ", "ὅ", "ὕ", "ᾱ̔́", "ἥ", "ῑ̔́", "ὥ", "ῡ̔́", "αἵ", "αὕ", "εἵ", "εὕ", "οἵ", "οὕ", "υἵ", "ᾅ", "ᾱὕ", "ᾕ", "ηὕ", "ᾥ", "ωὕ", "ῡἵ", "ὰ", "ὲ", "ὶ", "ὸ", "ὺ", "ᾱ̀", "ὴ", "ῑ̀", "ὼ", "ῡ̀", "αὶ", "αὺ", "εὶ", "εὺ", "οὶ", "οὺ", "υὶ", "ᾲ", "ᾱὺ", "ῂ", "ηὺ", "ῲ", "ωὺ", "ῡὶ", "ῒ", "ῢ", "ἂ", "ἒ", "ἲ", "ὂ", "ὒ", "ᾱ̓̀", "ἢ", "ῑ̓̀", "ὢ", "ῡ̓̀", "αἲ", "αὒ", "εἲ", "εὒ", "οἲ", "οὒ", "υἲ", "ᾂ", "ᾱὒ", "ᾒ", "ηὒ", "ᾢ", "ωὒ", "ῡἲ", "ἃ", "ἓ", "ἳ", "ὃ", "ὓ", "ᾱ̔̀", "ἣ", "ῑ̔̀", "ὣ", "ῡ̔̀", "αἳ", "αὓ", "εἳ", "εὓ", "οἳ", "οὓ", "υἳ", "ᾃ", "ᾱὓ", "ᾓ", "ηὓ", "ᾣ", "ωὓ", "ῡἳ", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "αῖ", "αῦ", "εῖ", "εῦ", "οῖ", "οῦ", "υῖ", "ᾷ", "ᾱῦ", "ῇ", "ηῦ", "ῷ", "ωῦ", "ῡῖ", "ἆ", "ἦ", "ἶ", "ὦ", "ὖ", "αἶ", "αὖ", "εἶ", "εὖ", "οἶ", "οὖ", "υἶ", "ᾆ", "ᾱὖ", "ᾖ", "ηὖ", "ᾦ", "ωὖ", "ῡἶ", "ἇ", "ἧ", "ἷ", "ὧ", "ὗ", "αἷ", "αὗ", "εἷ", "εὗ", "οἷ", "οὗ", "υἷ", "ᾇ", "ᾱὗ", "ᾗ", "ηὗ", "ᾧ", "ωὗ", "ῡἷ"];
+  const ALL_GREEK_VOWELS = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", "ϋ", "ἀ", "ἐ", "ἰ", "ὀ", "ὐ", "ᾱ̓", "ἠ", "ῑ̓", "ὠ", "ῡ̓", "αἰ", "αὐ", "εἰ", "εὐ", "οἰ", "οὐ", "υἰ", "ᾀ", "ᾱὐ", "ᾐ", "ηὐ", "ᾠ", "ωὐ", "ῡἰ", "ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ", "ά", "έ", "\u03af", "ό", "ύ", "ᾱ́", "ή", "ῑ́", "ώ", "ῡ́", "α\u03af", "αύ", "ε\u03af", "εύ", "ο\u03af", "ού", "υ\u03af", "ᾴ", "ᾱύ", "ῄ", "ηύ", "ῴ", "ωύ", "ῡ\u03af", "ΐ", "ΰ", "ἄ", "ἔ", "ἴ", "ὄ", "ὔ", "ᾱ̓́", "ἤ", "ῑ̓́", "ὤ", "ῡ̓́", "αἴ", "αὔ", "εἴ", "εὔ", "οἴ", "οὔ", "υἴ", "ᾄ", "ᾱὔ", "ᾔ", "ηὔ", "ᾤ", "ωὔ", "ῡἴ", "ἅ", "ἕ", "ἵ", "ὅ", "ὕ", "ᾱ̔́", "ἥ", "ῑ̔́", "ὥ", "ῡ̔́", "αἵ", "αὕ", "εἵ", "εὕ", "οἵ", "οὕ", "υἵ", "ᾅ", "ᾱὕ", "ᾕ", "ηὕ", "ᾥ", "ωὕ", "ῡἵ", "ὰ", "ὲ", "\u1f76", "ὸ", "ὺ", "ᾱ̀", "ὴ", "ῑ̀", "ὼ", "ῡ̀", "α\u1f76", "αὺ", "ε\u1f76", "εὺ", "ο\u1f76", "οὺ", "υ\u1f76", "ᾲ", "ᾱὺ", "ῂ", "ηὺ", "ῲ", "ωὺ", "ῡ\u1f76", "ῒ", "ῢ", "ἂ", "ἒ", "ἲ", "ὂ", "ὒ", "ᾱ̓̀", "ἢ", "ῑ̓̀", "ὢ", "ῡ̓̀", "αἲ", "αὒ", "εἲ", "εὒ", "οἲ", "οὒ", "υἲ", "ᾂ", "ᾱὒ", "ᾒ", "ηὒ", "ᾢ", "ωὒ", "ῡἲ", "ἃ", "ἓ", "ἳ", "ὃ", "ὓ", "ᾱ̔̀", "ἣ", "ῑ̔̀", "ὣ", "ῡ̔̀", "αἳ", "αὓ", "εἳ", "εὓ", "οἳ", "οὓ", "υἳ", "ᾃ", "ᾱὓ", "ᾓ", "ηὓ", "ᾣ", "ωὓ", "ῡἳ", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "αῖ", "αῦ", "εῖ", "εῦ", "οῖ", "οῦ", "υῖ", "ᾷ", "ᾱῦ", "ῇ", "ηῦ", "ῷ", "ωῦ", "ῡῖ", "ἆ", "ἦ", "ἶ", "ὦ", "ὖ", "αἶ", "αὖ", "εἶ", "εὖ", "οἶ", "οὖ", "υἶ", "ᾆ", "ᾱὖ", "ᾖ", "ηὖ", "ᾦ", "ωὖ", "ῡἶ", "ἇ", "ἧ", "ἷ", "ὧ", "ὗ", "αἷ", "αὗ", "εἷ", "εὗ", "οἷ", "οὗ", "υἷ", "ᾇ", "ᾱὗ", "ᾗ", "ηὗ", "ᾧ", "ωὗ", "ῡἷ"];
 
   // Sort by length descending to match clusters like "αἷ" completely before breaking them into "α"
   const sortedVowels = [...ALL_GREEK_VOWELS].sort((a, b) => b.length - a.length);
