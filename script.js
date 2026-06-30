@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <label>Ou: 
          <select id="ouStyleControl">
            <option value="standard">Ού ού (Standard)</option>
-           <option value="ligature">Ȣ\u03af ȣ\u0301 (Ligature)</option>
+           <option value="ligature">Ȣ\u0301 ȣ\u0301 (Ligature)</option>
          </select>
       </label>
       <br><br>
