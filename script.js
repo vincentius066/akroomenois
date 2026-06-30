@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const interfaceHTML = `
     <div id="topBar">
       <button id="homeBtn"><img src="icon/arrow-left.svg" alt="Play" width="32" height="32"></button>
-      <div id="title">${document.title}(test 25)</div>
+      <div id="title">${document.title}(test 26)</div>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
           <button id="freqBtn" title="Word Frequency" style="cursor: pointer; z-index: 10;"><img src="icon/insights.svg" alt="Settings" width="32" height="32"></button>
@@ -1084,7 +1084,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let currentText = wordElement.textContent.trim();
         
         if (style === "ligature") {
-          wordElement.textContent = currentText.replace();
+          wordElement.textContent = currentText.replace(/οὗ/g, “ȣ\u0314\u0342”).replace(/οὖ/g, “ȣ\u0313\u0342”).replace(/οῦ/g, “ȣ\u0342”).replace(/οὓ/g, “ȣ\u0314\u0300”).replace(/οὒ/g, “ȣ\u0313\u0300”).replace(/οὺ/g, “ȣ\u0300”).replace(/οὕ/g, “ȣ\u0314\u0301”).replace(/οὔ/g, “ȣ\u0313\u0301”).replace(/ού/g, “ȣ\u0301”).replace(/οὑ/g, “ȣ\u0314”).replace(/οὐ/g, “ȣ\u0313”).replace(/Οὗ/g, “Ȣ\u0314\u0342”).replace(/Οὖ/g, “Ȣ\u0313\u0342”).replace(/Οῦ/g, “Ȣ\u0342”).replace(/Οὓ/g, “Ȣ\u0314\u0300”).replace(/Οὒ/g, “Ȣ\u0313\u0300”).replace(/Οὺ/g, “Ȣ\u0300”).replace(/Οὕ/g, “Ȣ\u0314\u0301”).replace(/Οὔ/g, “Ȣ\u0313\u0301”).replace(/Ού/g, “Ȣ\u0301”).replace(/Οὑ/g, “Ȣ\u0314”).replace(/Οὐ/g, “Ȣ\u0313”);
         } else {
           wordElement.textContent = currentText.replace();
         }
