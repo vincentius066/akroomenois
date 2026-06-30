@@ -1072,6 +1072,37 @@ document.addEventListener("DOMContentLoaded", () => {
       updateDocumentKaiStyle(selectedStyle);
     });
   }
+
+  // ==========================================
+  // OU GLYPH VARIANT SELECTION CONTROL
+  // ==========================================
+  if (ouStyleControl) {
+    const greekWordsList = document.querySelectorAll("#text span.word");
+
+    const updateDocumentOuStyle = (style) => {
+      greekWordsList.forEach(wordElement => {
+        let currentText = wordElement.textContent.trim();
+        
+        if (style === "ligature") {
+          wordElement.textContent = currentText.replace();
+        } else {
+          wordElement.textContent = currentText.replace();
+        }
+      });
+    };
+
+    const savedOuStyle = localStorage.getItem("reader_ouStyle") || "standard";
+    ouStyleControl.value = savedOuStyle;
+    if (savedOuStyle === "ligature") {
+      updateDocumentOuStyle("ligature");
+    }
+
+    ouStyleControl.addEventListener("change", () => {
+      const selectedStyle = ouStyleControl.value;
+      localStorage.setItem("reader_ouStyle", selectedStyle);
+      updateDocumentOuStyle(selectedStyle);
+    });
+  }
   // ==========================================
   // SLIDERS & CONTROLS OPERATIONAL EVENT LISTENERS
   // ==========================================
