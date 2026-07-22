@@ -1,0 +1,16 @@
+/books/anabasis/audio/*.webm
+  Accept-Ranges: bytes
+  Content-Type: audio/webm
+  Cache-Control: public, max-age=31536000
+/books/anabasis/audio/*.mp3
+  Accept-Ranges: bytes
+  Content-Type: audio/mpeg
+  Cache-Control: public, max-age=31536000
+/books/cyropaedia/audio/*.webm
+  Accept-Ranges: bytes
+  Content-Type: audio/webm
+  Cache-Control: public, max-age=31536000
+/books/cyropaedia/audio/*.mp3
+  Accept-Ranges: bytes
+  Content-Type: audio/mpeg
+  Cache-Control: public, max-age=31536000

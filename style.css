@@ -1,0 +1,526 @@
+  @font-face {
+  font-family: "SBL";
+  src: url("font/SBL_BLit.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+  @font-face {
+  font-family: "Noto";
+  src: url("font/NotoSans-Medium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+  @font-face {
+  font-family: "NAU";
+  src: url("font/new_athena_unicode.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0370-03FF, U+1F00-1FFF;
+}
+
+  @font-face {
+  font-family: "NAU";
+  src: url("font/newathuBold5_5.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0370-03FF, U+1F00-1FFF;
+}
+
+  @font-face {
+  font-family: "Anaktoria";
+  src: url("font/Anaktoria.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+  @font-face {
+  font-family: "EB Garamond", serif;
+  src: url("font/EBGaramond12-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+  @font-face {
+  font-family: "EB Garamond", serif;
+  src: url("font/EBGaramond12-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+  @font-face {
+  font-family: "EB Garamond", serif;
+  src: url("font/Adobe-Garamond-LT-Semibold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  /* Reserves the scrollbar space globally, preventing layout jumping */
+  scrollbar-gutter: stable;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+/* Loading screen container */
+#loadingScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #1a1a1e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity 0.5s ease;
+  font-family: "Noto", sans-serif;
+}
+
+/* Hidden state */
+#loadingScreen.hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Spinner element – you can give it an ID or class */
+#loadingSpinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 215, 150, 0.15);
+  border-top-color: #d4a373;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+/* Keyframes – only the rotation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading text (if you use an element with this ID) */
+#loadingText {
+  color: #d4a373;
+  margin-top: 24px;
+  font-size: 1.1rem;
+  font-family: "Noto";
+}
+
+.text_title {
+  display: block !important;
+	text-align: center !important;
+	margin-bottom: 12px;
+}
+
+.chapter-body {
+  display: none;
+}
+.chapter-body.active {
+  display: block;
+}
+
+body {
+  font-family: "EB Garamond", serif;
+  padding: 60px 80px 100px;
+  color: #111926;
+}
+
+#progressBar {
+  flex: 1;
+  accent-color:#e06e04; /* Changes the thumb and progress fill automatically */
+  cursor: pointer;
+}
+	
+p {
+  line-height: 1.7; 
+}
+
+ital-small {
+  font-size: 15px;
+  font-family: "EB Garamond", serif;
+  font-style: italic;
+  color: #11192680;
+}
+
+/*currently used with ital-small, hence the transparency*/
+.link {
+  color: #007bff80;
+  text-decoration: none;
+}
+
+.text {
+  font-family: SBL;
+  font-size: 70px;
+  line-height: 1.6;
+  text-align: justify;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  text-wrap: pretty;
+  display: block;
+  pointer-events: auto;
+}
+
+.text_en {
+  font-family: "EB Garamond", serif;
+  font-size: 70px;
+  line-height: 1.6;
+  text-align: justify;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  text-wrap: pretty;
+  display: none;
+}
+
+.text_en :not(.note-marker) {
+  pointer-events: none;
+}
+
+.text_en .note-marker {
+  pointer-events: auto;
+  text-align: justify;
+}
+
+.tiny_text {
+  font-family: "EB Garamond", serif;
+  font-size: 20px;
+  line-height: 1;
+  text-align: center;
+  color: #111926;
+}
+
+span {
+  padding: 0px;
+  cursor: pointer;
+}
+
+	
+/* 1. Base phrase state */
+.phrase {
+  border-radius: 6px;        /* Softens the highlight edges slightly */
+  color: #111926;
+  background-color: transparent;
+  box-shadow: 0 7px 0 3px transparent, 0 -7px 0 3px transparent;
+  transition: background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
+  box-decoration-break: clone;   /*Ensures the shadow wraps nicely on multi-line phrases */
+  -webkit-box-decoration-break: clone;
+}
+
+/* 2. Active highlighted state */
+.phrase.active {
+  background-color: #aae4f0;
+  box-shadow: 0 7px 0 3px #aae4f0, 0 -7px 0 3px #aae4f0;
+}
+
+/* 1. Base phrase state */
+.phrase_en {
+  border-radius: 6px;        /* Softens the highlight edges slightly */
+  color: #111926;
+  background-color: transparent;
+  box-shadow: 0 7px 0 3px transparent, 0 -7px 0 3px transparent;
+  transition: background-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
+
+  box-decoration-break: clone;   /*Ensures the shadow wraps nicely on multi-line phrases */
+  -webkit-box-decoration-break: clone;
+}
+
+/* 2. Active highlighted state */
+.phrase_en.active {
+  background-color: #aae4f080;
+  box-shadow: 0 7px 0 3px #aae4f080, 0 -7px 0 3px #aae4f080;
+}
+
+/* Standard Desktop Rules */
+#playerBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+
+  background: #ffffff;
+  color: #ffffff;
+  z-index: 1000;
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  gap: 10px;
+}
+
+#timeDisplay {
+  color: #111926;
+  font-family: monospace !important;
+  margin: 0 10px;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+#playerBar button {
+  background: #eef2f8;
+  border: none;
+  color: #4b5466;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#playerBar button:hover {
+  background: #eef2f8;
+}
+
+#freqBtn,
+#contentsBtn,
+#settingsBtn {
+  cursor: pointer;
+  z-index: 10;
+  border: 1px solid #ccc;
+}
+
+#topBar {
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  background: #ffffff;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px;
+  box-sizing: border-box;
+
+  z-index: 1000;
+
+  position: fixed;
+}
+
+#title {
+  cursor: default !important;
+  overflow: hidden;
+  white-space: normal;
+  display: inline-block;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  font-weight: normal;
+  font-family: "Noto", serif;
+  color: #4b5466;
+
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+}
+
+.title.hiddenIfOnMobile {
+  display: flex !important;
+}
+
+#title {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: default !important;
+  font-weight: normal;
+}
+
+#title .title-small {
+  display: none;
+}
+#title .title-medium {
+  display: none;
+}
+#title .title-large {
+  display: inline-block;
+}
+
+#topBarPrevChapBtn,
+#topBarNextChapBtn {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  cursor: pointer;
+  display: flex;
+}
+
+/* match your bottom bar style */
+#topBar button {
+  background: transparent;
+  border: none;
+  color: #4b5466;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+#topBar button:hover {
+  background: transparent;
+}
+	
+.note-marker {
+  color: #a52a2a;      /* A nice deep classical red/burgundy color */
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 4px;      /* Makes it slightly easier to tap on mobile screens */
+  user-select: none;   /* Prevents accidentally selecting the text when clicking */
+}
+
+.note-marker:hover {
+  color: #ff4500;      /* Lights up bright red-orange on mouse hover */
+}
+
+/* all the stuff that was in the div id's section of the code */
+
+#popupOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9998; }
+
+/* settings pop up */
+
+#settingsPopup,
+#advancedFontPopup,
+#popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  z-index: 9999;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  font-family: "NAU", "Noto", serif;
+
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+#closeSettings,
+#closeAdvancedFont,
+#closePopup {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  filter: invert(32%) sepia(16%) saturate(692%) hue-rotate(182deg) brightness(91%) contrast(85%);
+}
+
+#bottomBarPrevChapBtn {
+  background: #e06e04;
+  border: none;
+  color: #ffffff;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: "Noto", sans-serif;
+  display: block;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+/* =========================================================
+   TABLET LAYOUT RULES (TRIGGERS ON SCREEN SIZE OR MANUAL OVERRIDE)
+   ========================================================= */
+@media (min-width: 768px) and (max-width: 1023px) {
+  body { padding: 60px 40px 100px !important; }
+  #title .title-small { display: none; }
+  #title .title-medium { display: inline-block; }
+  #title .title-large { display: none; }
+  .title.hiddenIfOnMobile { display: flex !important; }
+}
+
+	
+/* =========================================================
+   MOBILE LAYOUT RULES (TRIGGERS ON SCREEN SIZE OR MANUAL OVERRIDE)
+   ========================================================= */
+@media (max-width: 768px) {
+  #popup, #settingsPopup { width: 85% !important; max-width: 400px !important; padding: 25px !important; box-sizing: border-box !important; }
+  #progressBar, #timeDisplay { display: none; }
+  #playerBar { justify-content: center !important; gap: 0; }
+  #playerBar > button:not(#langBtn) { margin: 0 10px; }
+  #langBtn { position: absolute; right: 15px; margin: 0; }
+  body { padding: 60px 20px 100px !important; }
+  /*.btn-icon { width: 50px !important; height: 50px !important;}*/
+  #title .title-small { display: inline-block; }
+  #title .title-medium { display: none; }
+  #title .title-large { display: none; }
+  .title.hiddenIfOnMobile { display: none !important; }
+
+}
+
+/* Manual Debug Rules: Forces the rules above even on a giant desktop monitor */
+body.layout-small #popup, 
+body.layout-small #settingsPopup { width: 85% !important; max-width: 400px !important; padding: 25px !important; box-sizing: border-box !important; }
+body.layout-small #progressBar, 
+body.layout-small #timeDisplay { display: none !important; }
+body.layout-small #playerBar { justify-content: center !important; gap: 0 !important; }
+body.layout-small #playerBar > button:not(#langBtn) { margin: 0 10px !important; }
+body.layout-small #langBtn { position: absolute !important; right: 15px !important; margin: 0 !important; }
+/*body.layout-small .btn-icon { width: 50px !important; height: 50px !important; }*/
+body.layout-small { padding: 60px 20px 100px !important; }
+body.layout-small #title .title-small { display: inline-block; }
+body.layout-small #title .title-medium { display: none; }
+body.layout-small #title .title-large { display: none; }
+body.layout-small .title.hiddenIfOnMobile { display: none !important; }
+
+/* Manual Debug Rules: Forces desktop parameters even if you are testing on a mobile device */
+body.layout-medium #progressBar, 
+body.layout-medium #timeDisplay { display: inline-block !important; }
+body.layout-medium #playerBar { justify-content: space-between !important; gap: 10px !important; }
+body.layout-medium #langBtn { position: static !important; margin: 0 !important; }
+/*body.layout-large .btn-icon { width: 32px !important; height: 32px !important; }*/
+body.layout-medium { padding: 60px 40px 100px !important; }
+body.layout-medium #title .title-small { display: none; }
+body.layout-medium #title .title-medium { display: inline-block; }
+body.layout-medium #title .title-large { display: none; }
+body.layout-medium .title.hiddenIfOnMobile { display: flex !important; }
+
+/* Manual Debug Rules: Forces desktop parameters even if you are testing on a mobile device */
+body.layout-large #progressBar, 
+body.layout-large #timeDisplay { display: inline-block !important; }
+body.layout-large #playerBar { justify-content: space-between !important; gap: 10px !important; }
+body.layout-large #langBtn { position: static !important; margin: 0 !important; }
+/*body.layout-large .btn-icon { width: 32px !important; height: 32px !important; }*/
+body.layout-large { padding: 60px 80px 100px !important; }
+body.layout-large #title .title-small { display: none; }
+body.layout-large #title .title-medium { display: none; }
+body.layout-large #title .title-large { display: inline-block; }
+body.layout-large .title.hiddenIfOnMobile { display: flex !important; }
