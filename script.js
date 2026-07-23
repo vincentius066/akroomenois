@@ -288,6 +288,38 @@ document.addEventListener('generator-ready', function() {
     scrollToTop(activeWord);
     }
   }
+
+  // ==========================================
+  // RELIABLE SEEKING HELPER
+  // ==========================================
+  function seekToChapterStart(targetTime) {
+    return new Promise((resolve) => {
+      // If already exactly at target, resolve immediately
+      if (Math.abs(audio.currentTime - targetTime) < 0.1) {
+        resolve();
+        return;
+      }
+  
+      const onSeeked = () => {
+        audio.removeEventListener('seeked', onSeeked);
+        resolve();
+      };
+      audio.addEventListener('seeked', onSeeked);
+  
+      // Set the new time
+      audio.currentTime = targetTime;
+  
+      // Safety net: if seeked doesn't fire within 2 seconds, resolve anyway
+      setTimeout(() => {
+        audio.removeEventListener('seeked', onSeeked);
+        resolve();
+      }, 2000);
+    });
+  }
+
+  // ==========================================
+  // OTHER STUFF
+  // ==========================================
   
   function getCurrentPhraseIndex() {
     const time = audio.currentTime;
@@ -682,18 +714,18 @@ document.addEventListener('generator-ready', function() {
   });
 
   // 2. Safely capture data availability to restore historical relative playback offsets
-  audio.addEventListener('canplay', function onCanPlay() {
-      console.log('[canplay] fired, currentTime before set:', audio.currentTime);
-      let targetTime = chapterMinTime;
-      if (window._savedStartTime !== undefined) {
-          targetTime = window._savedStartTime;
-          window._savedStartTime = undefined;
-      }
-      console.log('[canplay] setting currentTime to:', targetTime);
-      audio.currentTime = targetTime;
-      progressBar.value = targetTime - chapterMinTime;
-      audio.removeEventListener('canplay', onCanPlay);
-  }, { once: true });
+  //audio.addEventListener('canplay', function onCanPlay() {
+      //console.log('[canplay] fired, currentTime before set:', audio.currentTime);
+      //let targetTime = chapterMinTime;
+      //if (window._savedStartTime !== undefined) {
+          //targetTime = window._savedStartTime;
+          //window._savedStartTime = undefined;
+      //}
+      //console.log('[canplay] setting currentTime to:', targetTime);
+      //audio.currentTime = targetTime;
+      //progressBar.value = targetTime - chapterMinTime;
+      ///audio.removeEventListener('canplay', onCanPlay);
+  //}, { once: true });
 
   async function handleWordClick(e) {
     e.stopPropagation();
@@ -1553,6 +1585,20 @@ document.addEventListener('generator-ready', function() {
         audio.src = chapterAudioSrc;
       }
       audio.load(); // Force reload the media element with the new track
+      
+      // Wait for metadata, then seek
+      audio.addEventListener('loadedmetadata', async function onMeta() {
+        audio.removeEventListener('loadedmetadata', onMeta);
+        await seekToChapterStart(chapterMinTime);
+        progressBar.value = 0;
+        const relDur = chapterMaxTime - chapterMinTime;
+        timeDisplay.innerHTML = formatAudioTime(0, relDur, useGreekNumerals);
+        
+        // Auto-play if the user was actively listening before switching
+        if (wasPlaying) {
+          audio.play().catch(err => console.log("Auto-play prevented: ", err));
+        }
+      });
     }
     
     // 8. Auto-play if the user was actively listening before switching
@@ -1734,25 +1780,36 @@ document.addEventListener('generator-ready', function() {
   }
 
   // BOOT STEP 1: Process and populate elements inside our active container.
-  // This defines the active 'text', 'textEn', and 'words' arrays.
   if (startingChapter) {
-    updateActiveChapterElements(startingChapter); // This also internally runs recalculateAudioBoundaries()
+    updateActiveChapterElements(startingChapter);
     
-    if (audio) {
-      const initialSrc = startingChapter.getAttribute("data-audio-src");
-      if (initialSrc) {
-        audio.src = initialSrc;
-        audio.load();
+    const initialSrc = startingChapter.getAttribute('data-audio-src');
+    if (initialSrc) {
+      audio.src = initialSrc;
+      audio.load();
+  
+      // Wait for metadata to be loaded before seeking
+      audio.addEventListener('loadedmetadata', async function onMetadata() {
+        audio.removeEventListener('loadedmetadata', onMetadata);
         
-        // FALLBACK: If canplay doesn't fire within 3 seconds, force the time
-        setTimeout(() => {
-          if (audio.currentTime < chapterMinTime - 1) {
-            console.warn('[fallback] canplay did not fire or seek failed, forcing time to', chapterMinTime);
-            audio.currentTime = chapterMinTime;
-            progressBar.value = 0;
+        // Determine target time: either saved time or chapterMinTime
+        let targetTime = chapterMinTime;
+        const savedTime = localStorage.getItem('reader_currentTime');
+        if (savedTime) {
+          const t = parseFloat(savedTime);
+          if (t >= chapterMinTime && t <= chapterMaxTime) {
+            targetTime = t;
           }
-        }, 3000);
-      }
+        }
+        
+        await seekToChapterStart(targetTime);
+        progressBar.value = targetTime - chapterMinTime;
+        
+        // Update time display immediately
+        const relDur = chapterMaxTime - chapterMinTime;
+        timeDisplay.innerHTML = formatAudioTime(targetTime - chapterMinTime, relDur, useGreekNumerals);
+        console.log('Initial seek complete, currentTime:', audio.currentTime);
+      });
     }
   }
 
