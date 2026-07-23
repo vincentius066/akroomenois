@@ -518,12 +518,6 @@ document.addEventListener('generator-ready', function() {
     }
     
     // 1. Enforce active chapter playback bounds
-    if (audio.currentTime < chapterMinTime - SEEK_TOLERANCE && !isBoundarySeeking) {
-      isBoundarySeeking = true;
-      seekToChapterStart(chapterMinTime).finally(() => {
-        isBoundarySeeking = false;
-      });
-    }
     if (audio.currentTime > chapterMaxTime + SEEK_TOLERANCE) {
       audio.pause();
       audio.currentTime = chapterMaxTime;
@@ -1598,9 +1592,9 @@ document.addEventListener('generator-ready', function() {
     
     // 5. Reset progress playheads and load the new chapter's audio track
     localStorage.removeItem("reader_currentTime"); // Clear previous saved time offset
-    audio.currentTime = chapterMinTime;
     progressBar.value = 0;
 
+    // Dynamically update the audio source if your chapters use different audio files
     // Dynamically update the audio source if your chapters use different audio files
     const chapterAudioSrc = targetChapter.dataset.audioSrc;
     if (chapterAudioSrc) {
@@ -1610,11 +1604,12 @@ document.addEventListener('generator-ready', function() {
       } else {
         audio.src = chapterAudioSrc;
       }
+      audio.preload = "auto";    // 👈 Added
       audio.load();
-    
-      // Wait for metadata, then use the reliable seeker
-      audio.addEventListener('loadedmetadata', async function onMeta() {
-        audio.removeEventListener('loadedmetadata', onMeta);
+      
+      // Wait for loadeddata, then use the reliable seeker
+      audio.addEventListener('loadeddata', async function onData() {   // 👈 Changed to loadeddata
+        audio.removeEventListener('loadeddata', onData);
         await seekToChapterStart(chapterMinTime);
         progressBar.value = 0;
         const relDur = chapterMaxTime - chapterMinTime;
@@ -1627,33 +1622,26 @@ document.addEventListener('generator-ready', function() {
       });
     } else {
       // fallback (no audio source)
-      //audio.currentTime = chapterMinTime;
       progressBar.value = 0;
     }
-    
-    // 8. Auto-play if the user was actively listening before switching
-    //if (wasPlaying) {
-      //audio.play().catch(err => console.log("Auto-play prevented: ", err));
-    //}
-  }
   
-  function recalculateAudioBoundaries() {
-    const validWords = Array.from(words).filter(w => {
-      const s = parseFloat(w.dataset.wordStart);
-      const e = parseFloat(w.dataset.wordEnd);
-      return !isNaN(s) && !isNaN(e);
-    });
-
-    if (validWords.length > 0) {
-      chapterMinTime = parseFloat(validWords[0].dataset.wordStart);
-      chapterMaxTime = parseFloat(validWords[validWords.length - 1].dataset.wordEnd);
-    } else {
-      chapterMinTime = 0;
-      chapterMaxTime = audio.duration || Infinity;
-    }
-
-    const relDuration = chapterMaxTime - chapterMinTime;
-    progressBar.max = isFinite(relDuration) ? relDuration : 100;
+    function recalculateAudioBoundaries() {
+      const validWords = Array.from(words).filter(w => {
+        const s = parseFloat(w.dataset.wordStart);
+        const e = parseFloat(w.dataset.wordEnd);
+        return !isNaN(s) && !isNaN(e);
+      });
+  
+      if (validWords.length > 0) {
+        chapterMinTime = parseFloat(validWords[0].dataset.wordStart);
+        chapterMaxTime = parseFloat(validWords[validWords.length - 1].dataset.wordEnd);
+      } else {
+        chapterMinTime = 0;
+        chapterMaxTime = audio.duration || Infinity;
+      }
+  
+      const relDuration = chapterMaxTime - chapterMinTime;
+      progressBar.max = isFinite(relDuration) ? relDuration : 100;
   }
 
   // ==========================================
@@ -1701,16 +1689,17 @@ document.addEventListener('generator-ready', function() {
       } else {
         audio.src = chapterAudioSrc;
       }
+      audio.preload = "auto";
       audio.load();
-  
-      // Wait for metadata, then use the reliable seeker
-      audio.addEventListener('loadedmetadata', async function onMeta() {
-        audio.removeEventListener('loadedmetadata', onMeta);
+    
+      // Wait for loadeddata, then use the reliable seeker
+      audio.addEventListener('loadeddata', async function onData() {
+        audio.removeEventListener('loadeddata', onData);
         await seekToChapterStart(chapterMinTime);
         progressBar.value = 0;
         const relDur = chapterMaxTime - chapterMinTime;
         timeDisplay.innerHTML = formatAudioTime(0, relDur, useGreekNumerals);
-  
+    
         // Auto-play if it was playing before
         if (wasPlaying) {
           audio.play().catch(err => console.log("Auto-play prevented: ", err));
@@ -1826,12 +1815,13 @@ document.addEventListener('generator-ready', function() {
     
     const initialSrc = startingChapter.getAttribute('data-audio-src');
     if (initialSrc) {
+      audio.preload = "auto";
       audio.src = initialSrc;
       audio.load();
   
       // Wait for metadata to be loaded before seeking
-      audio.addEventListener('loadedmetadata', async function onMetadata() {
-        audio.removeEventListener('loadedmetadata', onMetadata);
+      audio.addEventListener('loadeddata', async function onData() {
+        audio.removeEventListener('loadeddata', onData);
         
         // Determine target time: either saved time or chapterMinTime
         let targetTime = chapterMinTime;
