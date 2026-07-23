@@ -245,6 +245,7 @@ document.addEventListener('generator-ready', function() {
   let chapterMaxTime = Infinity;
   let isChapterTransitioning = false;
   let isReadingModeGreek = true;
+  let isBoundarySeeking = false;
 
   // ==========================================
   // ==========================================
@@ -517,8 +518,11 @@ document.addEventListener('generator-ready', function() {
     }
     
     // 1. Enforce active chapter playback bounds
-    if (audio.currentTime < chapterMinTime - SEEK_TOLERANCE) {
-      audio.currentTime = chapterMinTime;
+    if (audio.currentTime < chapterMinTime - SEEK_TOLERANCE && !isBoundarySeeking) {
+      isBoundarySeeking = true;
+      seekToChapterStart(chapterMinTime).finally(() => {
+        isBoundarySeeking = false;
+      });
     }
     if (audio.currentTime > chapterMaxTime + SEEK_TOLERANCE) {
       audio.pause();
@@ -864,11 +868,11 @@ document.addEventListener('generator-ready', function() {
   if (document.getElementById("closePopup")) document.getElementById("closePopup").addEventListener("click", closePopup);
 
   // Controls UI Action
-  playBtn.addEventListener("click", () => {
+  playBtn.addEventListener("click", async () => {
     if (isPopupActive()) return; 
     if (audio.paused) {
       if (audio.currentTime >= chapterMaxTime || audio.currentTime < chapterMinTime) {
-        audio.currentTime = chapterMinTime;
+        await seekToChapterStart(chapterMinTime);
       }
       audio.play();
       playBtn.innerHTML = '<img class="btn-icon" src="icon/play-pause.svg" alt="Pause">';
