@@ -290,33 +290,54 @@ document.addEventListener('generator-ready', function() {
   }
 
   // ==========================================
-  // RELIABLE SEEKING HELPER
+  // RELIABLE SEEKING HELPER (with probe)
   // ==========================================
   function seekToChapterStart(targetTime) {
     return new Promise((resolve) => {
-      // If already exactly at target, resolve immediately
-      if (Math.abs(audio.currentTime - targetTime) < 0.1) {
-        resolve();
-        return;
-      }
-  
-      const onSeeked = () => {
-        audio.removeEventListener('seeked', onSeeked);
-        resolve();
+      const PROBE_TIME = 35; // seconds – tune this if needed (30–40 works well)
+      
+      // Helper that does the actual seek and waits for 'seeked'
+      const performSeek = (time) => {
+        return new Promise((res) => {
+          // If we're already within 0.2s, resolve immediately
+          if (Math.abs(audio.currentTime - time) < 0.2) {
+            res();
+            return;
+          }
+          
+          const onSeeked = () => {
+            audio.removeEventListener('seeked', onSeeked);
+            res();
+          };
+          audio.addEventListener('seeked', onSeeked);
+          
+          audio.currentTime = time;
+          
+          // Safety net: if 'seeked' doesn't fire within 2s, resolve anyway
+          setTimeout(() => {
+            audio.removeEventListener('seeked', onSeeked);
+            res();
+          }, 2000);
+        });
       };
-      audio.addEventListener('seeked', onSeeked);
   
-      // Set the new time
-      audio.currentTime = targetTime;
-  
-      // Safety net: if seeked doesn't fire within 2 seconds, resolve anyway
-      setTimeout(() => {
-        audio.removeEventListener('seeked', onSeeked);
-        resolve();
-      }, 2000);
+      // If the target is early in the file, do a "probe" seek first
+      if (targetTime < PROBE_TIME && targetTime > 5) {
+        performSeek(PROBE_TIME).then(() => {
+          // Now the seek table is loaded – seek to the real target
+          performSeek(targetTime).then(() => {
+            resolve();
+          });
+        });
+      } else {
+        // For later targets, a single seek is enough
+        performSeek(targetTime).then(() => {
+          resolve();
+        });
+      }
     });
   }
-
+  
   // ==========================================
   // OTHER STUFF
   // ==========================================
@@ -823,7 +844,8 @@ document.addEventListener('generator-ready', function() {
       let targetStart = parseFloat(phrase.dataset.start);
       if (!isNaN(targetStart)) {
         // Enforce boundaries
-        audio.currentTime = Math.max(chapterMinTime, Math.min(chapterMaxTime, targetStart + SEEK_EPSILON));
+        const target = Math.max(chapterMinTime, Math.min(chapterMaxTime, targetStart + SEEK_EPSILON));
+        await seekToChapterStart(target);
       }
     }
   }
@@ -1576,7 +1598,7 @@ document.addEventListener('generator-ready', function() {
     progressBar.value = 0;
 
     // Dynamically update the audio source if your chapters use different audio files
-    const chapterAudioSrc = targetChapter.dataset.audioSrc; 
+    const chapterAudioSrc = targetChapter.dataset.audioSrc;
     if (chapterAudioSrc) {
       const mainAudioSource = audio.querySelector("source");
       if (mainAudioSource) {
@@ -1584,27 +1606,31 @@ document.addEventListener('generator-ready', function() {
       } else {
         audio.src = chapterAudioSrc;
       }
-      audio.load(); // Force reload the media element with the new track
-      
-      // Wait for metadata, then seek
+      audio.load();
+    
+      // Wait for metadata, then use the reliable seeker
       audio.addEventListener('loadedmetadata', async function onMeta() {
         audio.removeEventListener('loadedmetadata', onMeta);
         await seekToChapterStart(chapterMinTime);
         progressBar.value = 0;
         const relDur = chapterMaxTime - chapterMinTime;
         timeDisplay.innerHTML = formatAudioTime(0, relDur, useGreekNumerals);
-        
-        // Auto-play if the user was actively listening before switching
+    
+        // Auto-play if it was playing before
         if (wasPlaying) {
           audio.play().catch(err => console.log("Auto-play prevented: ", err));
         }
       });
+    } else {
+      // fallback (no audio source)
+      //audio.currentTime = chapterMinTime;
+      progressBar.value = 0;
     }
     
     // 8. Auto-play if the user was actively listening before switching
-    if (wasPlaying) {
-      audio.play().catch(err => console.log("Auto-play prevented: ", err));
-    }
+    //if (wasPlaying) {
+      //audio.play().catch(err => console.log("Auto-play prevented: ", err));
+    //}
   }
   
   function recalculateAudioBoundaries() {
