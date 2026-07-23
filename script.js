@@ -295,26 +295,18 @@ document.addEventListener('generator-ready', function() {
   // ==========================================
   function seekToChapterStart(targetTime) {
     return new Promise((resolve) => {
-      const PROBE_TIME = 35; // seconds – tune this if needed (30–40 works well)
-      
-      // Helper that does the actual seek and waits for 'seeked'
       const performSeek = (time) => {
         return new Promise((res) => {
-          // If we're already within 0.2s, resolve immediately
           if (Math.abs(audio.currentTime - time) < 0.2) {
             res();
             return;
           }
-          
           const onSeeked = () => {
             audio.removeEventListener('seeked', onSeeked);
             res();
           };
           audio.addEventListener('seeked', onSeeked);
-          
           audio.currentTime = time;
-          
-          // Safety net: if 'seeked' doesn't fire within 2s, resolve anyway
           setTimeout(() => {
             audio.removeEventListener('seeked', onSeeked);
             res();
@@ -322,19 +314,18 @@ document.addEventListener('generator-ready', function() {
         });
       };
   
-      // If the target is early in the file, do a "probe" seek first
-      if (targetTime < PROBE_TIME && targetTime > 5) {
-        performSeek(PROBE_TIME).then(() => {
-          // Now the seek table is loaded – seek to the real target
-          performSeek(targetTime).then(() => {
-            resolve();
-          });
+      const duration = audio.duration;
+      // For very early targets (< 30s), first seek near the end to build the full seek table
+      if (isFinite(duration) && targetTime < 30 && targetTime > 5) {
+        const probeTime = Math.max(0, duration - 1); // 1 second before end
+        performSeek(probeTime).then(() => {
+          // Small delay to let the browser finish populating the table
+          setTimeout(() => {
+            performSeek(targetTime).then(resolve);
+          }, 100);
         });
       } else {
-        // For later targets, a single seek is enough
-        performSeek(targetTime).then(() => {
-          resolve();
-        });
+        performSeek(targetTime).then(resolve);
       }
     });
   }
@@ -1595,7 +1586,6 @@ document.addEventListener('generator-ready', function() {
     progressBar.value = 0;
 
     // Dynamically update the audio source if your chapters use different audio files
-    // Dynamically update the audio source if your chapters use different audio files
     const chapterAudioSrc = targetChapter.dataset.audioSrc;
     if (chapterAudioSrc) {
       const mainAudioSource = audio.querySelector("source");
@@ -1604,11 +1594,11 @@ document.addEventListener('generator-ready', function() {
       } else {
         audio.src = chapterAudioSrc;
       }
-      audio.preload = "auto";    // 👈 Added
+      audio.preload = "auto";
       audio.load();
       
       // Wait for loadeddata, then use the reliable seeker
-      audio.addEventListener('loadeddata', async function onData() {   // 👈 Changed to loadeddata
+      audio.addEventListener('loadeddata', async function onData() {
         audio.removeEventListener('loadeddata', onData);
         await seekToChapterStart(chapterMinTime);
         progressBar.value = 0;
