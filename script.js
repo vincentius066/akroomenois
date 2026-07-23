@@ -1665,7 +1665,6 @@ document.addEventListener('generator-ready', function() {
   
     if (targetIndex === -1 || targetIndex === currentIndex) return;
   
-    // --- Same logic as navigateChapter, but without direction ---
     isChapterTransitioning = true;
   
     // Pause
@@ -1685,9 +1684,8 @@ document.addEventListener('generator-ready', function() {
     // Update active elements
     updateActiveChapterElements(targetChapter);
   
-    // Reset progress
+    // Reset progress (but do NOT set audio.currentTime yet)
     localStorage.removeItem("reader_currentTime");
-    audio.currentTime = chapterMinTime;
     progressBar.value = 0;
   
     // Update audio source
@@ -1700,6 +1698,24 @@ document.addEventListener('generator-ready', function() {
         audio.src = chapterAudioSrc;
       }
       audio.load();
+  
+      // Wait for metadata, then use the reliable seeker
+      audio.addEventListener('loadedmetadata', async function onMeta() {
+        audio.removeEventListener('loadedmetadata', onMeta);
+        await seekToChapterStart(chapterMinTime);
+        progressBar.value = 0;
+        const relDur = chapterMaxTime - chapterMinTime;
+        timeDisplay.innerHTML = formatAudioTime(0, relDur, useGreekNumerals);
+  
+        // Auto-play if it was playing before
+        if (wasPlaying) {
+          audio.play().catch(err => console.log("Auto-play prevented: ", err));
+        }
+      });
+    } else {
+      // Fallback: no audio source – just set the time
+      audio.currentTime = chapterMinTime;
+      progressBar.value = 0;
     }
   
     // Apply saved language preference
@@ -1714,11 +1730,6 @@ document.addEventListener('generator-ready', function() {
       textEn.style.display = "none";
     }
     updateTitle();
-  
-    // Auto-play if was playing
-    if (wasPlaying) {
-      audio.play().catch(err => console.log("Auto-play prevented: ", err));
-    }
   
     // Save chapter
     const chapterNum = targetChapter.getAttribute("data-chapter");
