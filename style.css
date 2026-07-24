@@ -165,6 +165,10 @@ ital-small {
   text-decoration: none;
 }
 
+.punctuation {
+  cursor: default !important;
+}
+
 .text {
   font-family: SBL;
   font-size: 70px;
