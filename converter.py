@@ -170,7 +170,7 @@ def split_punctuation(word):
         j -= 1
     return word[:i], word[i:j], word[j:]
 
-def align_and_generate_html(greek_text, english_text, textgrid_text):
+def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=False):
     """Run cross-source text matching with recursive strict symmetry checks (Section -> Sentence -> Sub-phrase)."""
     greek_sections = parse_source_text_with_sentences(greek_text)
     english_sections = parse_source_text_with_sentences(english_text)
@@ -309,7 +309,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                         word_span += f'<span class="punctuation">{html.escape(trail)}</span>'
                     o2_words_str += word_span + " "
                 
-                prefix = f"  [{sec}] " if is_first_phrase else "  "
+                if use_tabs:
+                    prefix = "\t"
+                else:
+                    prefix = f"  [{sec}] " if is_first_phrase else "  "
                 is_first_phrase = False
                 
                 output_1_lines.append(f'{prefix}<span data-start="{phrase_start_time:.2f}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span>\n')
@@ -341,7 +344,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                     else:
                         ts_val = f"{coordinate_timestamps.get(('sentence', s_num), section_start_timestamp):.2f}"
                     
-                    prefix = f"  [{sec}] " if (s_idx == 0 and ss_idx == 0) else "  "
+                    if use_tabs:
+                        prefix = "\t"
+                    else:
+                        prefix = f"  [{sec}] " if (s_idx == 0 and ss_idx == 0) else "  "
                     output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
         else:
             if sec_sentences_eng:
