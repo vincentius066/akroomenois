@@ -219,10 +219,10 @@
     }
   
     const greekContent = getChapterContent(greekText, sectionId);
-    const englishContent = getChapterContent(englishText, sectionId);
+    const englishContent = getChapterContent(englishText, sectionId) || '';
   
-    if (!greekContent || !englishContent) {
-      console.warn(`Missing content for chapter ${sectionId}, skipping.`);
+    if (!greekContent) {
+      console.warn(`Missing Greek content for chapter ${sectionId}, skipping.`);
       continue;
     }
   
