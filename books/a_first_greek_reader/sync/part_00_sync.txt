@@ -7476,10 +7476,10 @@ item []:
             text = "ἀπέθανεν"
         intervals [1822]:
             xmin = 1162.000000
-            xmax = 1169.200000
+            xmax = 1168.700000
             text = ""
         intervals [1823]:
-            xmin = 1169.200000
+            xmin = 1168.700000
             xmax = 1170.080000
             text = "Ὀρφεὺς"
         intervals [1824]:
