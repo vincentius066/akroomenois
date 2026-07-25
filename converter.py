@@ -310,7 +310,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                     o2_words_str += word_span + " "
                 
                 if use_tabs:
-                    prefix = "&emsp;"
+                    prefix = "&emsp;" if is_first_phrase else "  "
                 else:
                     prefix = f"  [{sec}] " if is_first_phrase else "  "
                 is_first_phrase = False
@@ -345,7 +345,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         ts_val = f"{coordinate_timestamps.get(('sentence', s_num), section_start_timestamp):.2f}"
                     
                     if use_tabs:
-                        prefix = "&emsp;"
+                        prefix = "&emsp;" if is_first_phrase else "  "
                     else:
                         prefix = f"  [{sec}] " if (s_idx == 0 and ss_idx == 0) else "  "
                     output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
