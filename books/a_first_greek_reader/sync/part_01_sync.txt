@@ -7188,10 +7188,10 @@ item []:
             text = "ὑπακούειν"
         intervals [1763]:
             xmin = 975.830000
-            xmax = 980.290000
+            xmax = 979.80000
             text = ""
         intervals [1764]:
-            xmin = 980.290000
+            xmin = 979.80000
             xmax = 981.020000
             text = "Ἀχιλλεὺς"
         intervals [1765]:
