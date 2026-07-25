@@ -224,6 +224,14 @@ span {
   cursor: pointer;
 }
 
+button {
+  font-family: "Inter";
+}
+
+select {
+  font-family: "Inter";
+}
+
 	
 /* 1. Base phrase state */
 .phrase {
