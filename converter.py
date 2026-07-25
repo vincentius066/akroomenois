@@ -187,9 +187,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
     output_2_lines = []
     output_3_lines = []
     
-    all_sections = sorted(list(set(greek_sections.keys()).intersection(set(english_sections.keys()))))
-    if not all_sections:
-        all_sections = sorted(list(greek_sections.keys()))
+    #all_sections = sorted(list(set(greek_sections.keys()).intersection(set(english_sections.keys()))))
+    #if not all_sections:
+        #all_sections = sorted(list(greek_sections.keys()))
+    all_sections = sorted(greek_sections.keys())
         
     for idx, sec in enumerate(all_sections):
         sec_sentences_grc = greek_sections.get(sec, [])
@@ -343,10 +344,13 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                     prefix = f"  [{sec}] " if (s_idx == 0 and ss_idx == 0) else "  "
                     output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
         else:
-            full_english_block = " ".join([item["visual"] for item in sec_sentences_eng])
-            escaped_eng = html.escape(full_english_block, quote=False)
-            ts_val = f"{section_start_timestamp:.2f}"
-            output_3_lines.append(f'  [{sec}] <span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
+            if sec_sentences_eng:
+                full_english_block = " ".join([item["visual"] for item in sec_sentences_eng])
+                escaped_eng = html.escape(full_english_block, quote=False)
+                ts_val = f"{section_start_timestamp:.2f}"
+                output_3_lines.append(f'  [{sec}] <span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
+            else:
+                pass
             
         if idx < len(all_sections) - 1:
             output_1_lines.append("  <br><br>\n")
