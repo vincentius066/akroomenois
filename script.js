@@ -1002,6 +1002,33 @@ document.addEventListener('generator-ready', function() {
   window.addEventListener("beforeunload", () => {
     localStorage.setItem("reader_currentTime", audio.currentTime);
   });
+
+  //helper function to detect if the current chapter has an english translation or not
+  function hasEnglishContent() {
+      const activeChapter = getActiveChapter();
+      if (!activeChapter) return false;
+      const enContainer = activeChapter.querySelector('.text_en');
+      if (!enContainer) return false;
+      const spans = enContainer.querySelectorAll('.phrase_en');
+      for (const span of spans) {
+          if (span.textContent.trim().length > 0) {
+              return true;
+          }
+      }
+      return false;
+  }
+
+  //helper function change the visibility of the language btn
+  function updateLanguageToggleVisibility() {
+    const btn = document.getElementById('langBtn');
+    if (!btn) return;
+    if (!hasEnglishContent()) {
+      btn.style.display = 'none';
+      localStorage.setItem("reader_languageMode", "greek");
+    } else {
+      btn.style.display = '';
+    }
+  }
   
   // ==========================================
   // AUTOMATIC & MANUAL LAYOUT SYNC ENGINE
@@ -1526,6 +1553,7 @@ document.addEventListener('generator-ready', function() {
     // 3. Re-bind and update active DOM elements to reference the new active chapter
     updateActiveChapterElements(targetChapter);
 
+    updateLanguageToggleVisibility(); //Makes sure it changes the language mode before fetching it
     const currentLang = localStorage.getItem("reader_languageMode") || "greek";
       if (currentLang === "english") {
         langBtn.textContent = "GR";
@@ -1631,6 +1659,7 @@ document.addEventListener('generator-ready', function() {
     }
   
     // Apply saved language preference
+    updateLanguageToggleVisibility(); //Makes sure it changes the language mode before fetching it
     const currentLang = localStorage.getItem("reader_languageMode") || "greek";
     if (currentLang === "english") {
       langBtn.textContent = "GR";
@@ -1757,6 +1786,7 @@ document.addEventListener('generator-ready', function() {
   }
 
   //one time language mode change based off the last recorded language mode switch from the last session
+  updateLanguageToggleVisibility(); //Makes sure it changes the language mode before fetching it
   const initialLang = localStorage.getItem("reader_languageMode") || "greek";
   if (initialLang === "english") {
     langBtn.textContent = "GR";
@@ -1767,7 +1797,6 @@ document.addEventListener('generator-ready', function() {
     text.style.display = "block";
     textEn.style.display = "none";
   }
-
   updateTitle();
   
   // BOOT STEP 2: Configure timeline constraints & playback ranges
