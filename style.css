@@ -147,7 +147,7 @@ html {
   margin: 0 auto;
 }
 
-.float-image {
+.float_image {
   float: right;           /* or right */
   width: 50%;            /* takes half the container width */
   margin: 0 20px 20px 0; /* spacing around the image */
