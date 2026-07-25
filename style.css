@@ -140,6 +140,7 @@ html {
 .textual_image {
     max-width: 100%;
     height: auto;
+	display: block;
 }
 
 .container {
