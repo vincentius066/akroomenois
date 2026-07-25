@@ -7,6 +7,14 @@
 }
 
   @font-face {
+  font-family: "Inter";
+  src: url("font/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+  @font-face {
   font-family: "Noto";
   src: url("font/NotoSans-Medium.ttf") format("truetype");
   font-weight: normal;
@@ -419,7 +427,7 @@ span {
   z-index: 9999;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  font-family: "NAU", "Noto", serif;
+  font-family: "NAU", "Inter", serif;
 
   width: 90%;
   max-width: 500px;
