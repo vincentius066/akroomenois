@@ -137,6 +137,11 @@ html {
 	margin-bottom: 12px;
 }
 
+.textual_image {
+    max-width: 100%;
+    height: auto;
+}
+
 .chapter-body {
   display: none;
 }
