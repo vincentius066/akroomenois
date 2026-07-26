@@ -143,8 +143,8 @@ def parse_source_text_with_sentences(raw_text, keep_notes=False):
             brace_content = match.group(2)
             return brace_content
 
-        structural_line = re.sub(r'(.)\{(.*?)\}', structural_replacer, structural_line)
-        visual_line = re.sub(r'(.)\{(.*?)\}', r'\1', visual_line)
+        structural_line = re.sub(r'(.)\{(?!(?:note(?:-marker)?|commentary)\s*[:=])(.*?)\}', structural_replacer, structural_line)
+        visual_line = re.sub(r'(.)\{(?!(?:note(?:-marker)?|commentary)\s*[:=])(.*?)\}', r'\1', visual_line)
 
         # ----- Sentence splitting -----
         sentence_ends = [m.end() for m in re.finditer(r'(?<=[.·;:•!?])\s+', structural_line)]
