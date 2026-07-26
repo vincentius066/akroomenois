@@ -8,7 +8,7 @@ Book 1, Chapter 2, Section 1.
 
 Book 1, Chapter 3.
 Book 1, Chapter 3, Section 1.
-Ὁ ὁπλίτης ὅπλα ἔφερε πολλὰ καὶ βαρέα. Αἱ κνημῖδες{note-marker:ᵃ; note:see the image above} φυλάσσουσι τὰς κνήμας. Χαλξοῦς θώραξ{note-marker:ᵇ; note:see the image above} σώζει τὸ στέρνον. Ἡ κεφαλὴ φέρει κράνος{note-marker:ᶜ; note:see the image above} χαλκοῦν. Ἵππιοι λόφοι ἐπινεύουσιν ἐπὶ τῷ κράνει. Ἡ ἀριστερὰ ἔχει τὴν λαμπρὰν ἀσπίδα{note-marker:ᵈ; note:see the image above}. Πάντες οἱ ὁπλῖται δόρατα{note-marker:ᵉ; note:see the image above} φέρουσιν. Ζωστήρ{note-marker:ᶠ; note:see the image above} τις σκύτινος ἀνείχει τὸ ξίφος. Τὸ ξίφος{note-marker:ᵍ; note:see the image above} ὀξύ ἐστιν.
+Ὁ ὁπλίτης ὅπλα ἔφερε πολλὰ καὶ βαρέα. Αἱ κνημῖδες {note-marker:ᵃ; note:see the image above} φυλάσσουσι τὰς κνήμας. Χαλξοῦς θώραξ {note-marker:ᵇ; note:see the image above} σώζει τὸ στέρνον. Ἡ κεφαλὴ φέρει κράνος {note-marker:ᶜ; note:see the image above} χαλκοῦν. Ἵππιοι λόφοι ἐπινεύουσιν ἐπὶ τῷ κράνει. Ἡ ἀριστερὰ ἔχει τὴν λαμπρὰν ἀσπίδα {note-marker:ᵈ; note:see the image above}. Πάντες οἱ ὁπλῖται δόρατα {note-marker:ᵉ; note:see the image above} φέρουσιν. Ζωστήρ {note-marker:ᶠ; note:see the image above} τις σκύτινος ἀνείχει τὸ ξίφος. Τὸ ξίφος {note-marker:ᵍ; note:see the image above} ὀξύ ἐστιν.
 
 Book 1, Chapter 4.
 Book 1, Chapter 4, Section 1.
