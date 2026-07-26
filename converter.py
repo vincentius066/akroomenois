@@ -14,9 +14,9 @@ import html
     #return cleaned
 
 def clean_for_matching(text):
-    """Keep only Greek letters (lowercased), strip everything else."""
-    cleaned = re.sub(r'[^\u0370-\u03FF\u1F00-\u1FFF]+', '', text)
-    return cleaned.lower()
+    """Remove Latin letters, digits, punctuation, and symbols; keep Greek letters and diacritics."""
+    cleaned = re.sub(r'[a-zA-Z\d\W_]+', '', text.lower())
+    return cleaned
 
 def parse_textgrid_intervals(textgrid_content):
     parts = re.split(r'item\s*\[\s*2\s*\]\s*:', textgrid_content)
