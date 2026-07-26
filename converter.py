@@ -44,6 +44,8 @@ def get_anchor_words(sections_dict, n=4, position="start"):
         for item in sections_dict[sec]:
             phrase_words = item["visual"].split()
             for w in phrase_words:
+                if re.match(r'⸨NOTE_\d+⸩', w):
+                    continue
                 clean_w = clean_for_matching(w)
                 if clean_w:
                     words.append(clean_w)
@@ -137,7 +139,7 @@ def parse_source_text_with_sentences(raw_text, collect_notes=False):
             note = "No note provided."
 
         notes_list.append((marker, note))
-        placeholder = f"[[NOTE_{note_counter}]]"
+        placeholder = f" ⸨NOTE_{note_counter}⸩ "
         note_counter += 1
         return placeholder
 
@@ -182,7 +184,7 @@ def parse_source_text_with_sentences(raw_text, collect_notes=False):
 
         # Remove any leftover note placeholders from the structural line
         if collect_notes:
-            structural_line = re.sub(r'\[\[NOTE_\d+\]\]', '', structural_line)
+            structural_line = re.sub(r'⸨NOTE_\d+⸩', '', structural_line)
 
         # ----- Sentence splitting -----
         sentence_ends = [m.end() for m in re.finditer(r'(?<=[.·;:•!?])\s+', structural_line)]
@@ -266,14 +268,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
             
             for ss_idx, phrase_visual in enumerate(raw_sub_grc_visual):
                 ss_num = ss_idx + 1
-
-                def replace_note_placeholder(match):
-                    note_idx = int(match.group(1))
-                    return f" ⸨NOTE_{note_idx}⸩ "
                 
-                phrase_visual_fixed = re.sub(r'\[\[NOTE_(\d+)\]\]', replace_note_placeholder, phrase_visual)
-                
-                words = phrase_visual_fixed.split()
+                words = phrase_visual.split()
                 matched_words_data = []
                 phrase_start_time = None
                 
