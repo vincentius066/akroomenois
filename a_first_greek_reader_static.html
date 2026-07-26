@@ -4,8 +4,6 @@
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
-  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
-  
   <script>
     window.APP_CONFIG = {
       dictionaryJsonPath: "books/a_first_greek_reader/dictionary_data/data.json",
@@ -34,11 +32,11 @@
   </script>
 </head>
 <body data-book-id="a_first_greek_reader" class="layout-large" style="overflow: hidden;">
-<div id="loadingScreen" class="hidden">
+<div id="loadingScreen">
   <div id="loadingSpinner"></div>
-  <p id="loadingText">Chapters generated: 52/52</p>
+  <p id="loadingText">Loading...</p>
 </div>
-<audio id="audio" preload="auto" src="https://pub-9b2a263d7ddd434487b199f0aa873731.r2.dev/part_02_cbr.mp3?t=20260123"></audio>
+<audio id="audio" preload="auto"></audio>
   
 <!-- ============================== -->
 <!-- ============================== -->
