@@ -100,6 +100,7 @@ def anchor_textgrid(tg_intervals, start_anchor, end_anchor):
     return tg_intervals[start_idx:end_idx]
 
 def parse_source_text_with_sentences(raw_text, collect_notes=False):
+    raw_text = raw_text.replace('\u00AD', '')
     lines = raw_text.split('\n')
     sections_dict = {}
     notes_list = []
