@@ -268,7 +268,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
 
                 def replace_note_placeholder(match):
                     note_idx = int(match.group(1))
-                    return f"⸨NOTE_{note_idx}⸩"
+                    return f" ⸨NOTE_{note_idx}⸩ "
                 
                 phrase_visual_fixed = re.sub(r'\[\[NOTE_(\d+)\]\]', replace_note_placeholder, phrase_visual)
                 
