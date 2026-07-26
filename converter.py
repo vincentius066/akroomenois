@@ -14,8 +14,7 @@ import html
     #return cleaned
 
 def clean_for_matching(text):
-    """Keep only Greek letters (Unicode ranges); strip Latin, digits, punctuation, symbols."""
-    # Greek basic: U+0370–U+03FF, extended: U+1F00–U+1FFF
+    """Keep only Greek letters; strip everything else (Latin, digits, punctuation, symbols)."""
     cleaned = re.sub(r'[^\u0370-\u03FF\u1F00-\u1FFF]+', '', text)
     return cleaned.lower()
 
