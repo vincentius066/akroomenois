@@ -132,7 +132,7 @@ def parse_source_text_with_sentences(raw_text, keep_notes=False):
         # ----- Create structural and visual lines -----
         # Structural: remove note blocks entirely
         structural_line = re.sub(r'\{((?:note(?:-marker)?|commentary)\s*[:=][^}]*)\}', '', line)
-        # Visual: keep note blocks (if keep_notes is True) or remove them (if False)
+        # Visual: keep note blocks
         if keep_notes:
             visual_line = line
         else:
@@ -142,7 +142,8 @@ def parse_source_text_with_sentences(raw_text, keep_notes=False):
         def structural_replacer(match):
             brace_content = match.group(2)
             return brace_content
-
+        
+        # Skip note blocks when stripping alignment markup
         structural_line = re.sub(r'(.)\{(?!(?:note(?:-marker)?|commentary)\s*[:=])(.*?)\}', structural_replacer, structural_line)
         visual_line = re.sub(r'(.)\{(?!(?:note(?:-marker)?|commentary)\s*[:=])(.*?)\}', r'\1', visual_line)
 
