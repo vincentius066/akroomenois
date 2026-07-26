@@ -1,22 +1,12 @@
 import re
 import html
 
-#def clean_for_matching(text):
-    #pattern = r'[a-zA-Z\d\W_\u2070-\u209F\u00B2\u00B3\u00B9\u02B0-\u02FF\u1D00-\u1D7F]+' # Removes the note metadata for matching, but keeps it in the final HTML
-    #cleaned = re.sub(pattern, '', text)
-    #return cleaned.lower()
-
-#def clean_for_matching(text):
-    #"""Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
-    #cleaned = re.sub(r'[\d\W_]+', '', text.lower())
-    #cleaned_for_metadata = re.sub(r'[a-zA-Z\u2070-\u209F\u00B2\u00B3\u00B9\u02B0-\u02FF\u1D00-\u1D7F]+', '', cleaned)
-    #cleaned_for_metadata = re.sub(r'[a-zA-Z]+', '', cleaned)
-    #return cleaned
-
 def clean_for_matching(text):
-    """Keep only Greek letters; strip everything else (Latin, digits, punctuation, symbols)."""
-    cleaned = re.sub(r'[^\u0370-\u03FF\u1F00-\u1FFF]+', '', text)
-    return cleaned.lower()
+    """Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
+    cleaned = re.sub(r'[\d\W_]+', '', text.lower())
+    cleaned_for_metadata = re.sub(r'[a-zA-Z\u2070-\u209F\u00B2\u00B3\u00B9\u02B0-\u02FF\u1D00-\u1D7F]+', '', cleaned)
+    cleaned_for_metadata = re.sub(r'[a-zA-Z]+', '', cleaned)
+    return cleaned
 
 def parse_textgrid_intervals(textgrid_content):
     parts = re.split(r'item\s*\[\s*2\s*\]\s*:', textgrid_content)
