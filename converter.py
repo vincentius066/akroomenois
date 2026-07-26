@@ -36,6 +36,7 @@ def parse_textgrid_intervals(textgrid_content):
     return intervals
 
 def get_anchor_words(sections_dict, n=4, position="start"):
+    """Extract the first or last n clean words from the parsed Greek sections."""
     words = []
     
     # Gather all clean words in sequence
@@ -43,8 +44,6 @@ def get_anchor_words(sections_dict, n=4, position="start"):
         for item in sections_dict[sec]:
             phrase_words = item["visual"].split()
             for w in phrase_words:
-                if re.search(r'\{note(?:-marker)?|commentary', w):
-                    continue
                 clean_w = clean_for_matching(w)
                 if clean_w:
                     words.append(clean_w)
@@ -100,61 +99,52 @@ def anchor_textgrid(tg_intervals, start_anchor, end_anchor):
     # 3. Slice the intervals to only include what is inside the bounding box
     return tg_intervals[start_idx:end_idx]
 
-def parse_source_text_with_sentences(raw_text, keep_notes=False):
-    raw_text = raw_text.replace('\u00AD', '')
+def parse_source_text_with_sentences(raw_text):
+    #"""
+    #Parses raw text into sections, applying the universal custom alignment markup X{Y}.
+    #Returns a dictionary of section numbers mapped to bundles of parallel string tracks:
+    #- "struct": Modified text used for punctuation and layout boundary matching.
+    #- "visual": Cleaned presentation text displayed on the webpage.
+    #"""
     lines = raw_text.split('\n')
     sections_dict = {}
     current_section = None
-
+    
     for line in lines:
         line = line.strip()
         if not line or "Event Date:" in line:
             continue
-
-        # ----- Section detection -----
+            
         diogenes_match = re.search(r'Section\s+(\d+)\.', line, re.IGNORECASE)
         topos_match = re.search(r'(?:§\s*\d+\.\d+\.(\d+)|\[(\d+)\])', line)
-
+        
         if diogenes_match:
             current_section = int(diogenes_match.group(1))
-            continue
+            continue 
         elif topos_match:
             sec_num = topos_match.group(1) or topos_match.group(2)
             current_section = int(sec_num)
             line = re.sub(r'(?:§\s*\d+\.\d+\.\d+|\[\d+\])\s*(?:Book_\d+)?', '', line).strip()
-
+            
         if current_section is None:
             continue
-
+            
         if current_section not in sections_dict:
             sections_dict[current_section] = []
-
-        # ----- Create structural and visual lines -----
-        # Structural: remove note blocks entirely
-        structural_line = re.sub(r'\{((?:note(?:-marker)?|commentary)\s*[:=][^}]*)\}', '', line)
-        # Visual: keep note blocks
-        if keep_notes:
-            visual_line = line
-        else:
-            visual_line = re.sub(r'\{((?:note(?:-marker)?|commentary)\s*[:=][^}]*)\}', '', line)
-
-        if keep_notes:
-            # Protect spaces inside note blocks to prevent splitting on them later
-            def protect_spaces(match):
-                return match.group(0).replace(' ', '\x01')
-            visual_line = re.sub(r'\{((?:note(?:-marker)?|commentary)\s*[:=][^}]*)\}', protect_spaces, visual_line)
-        
-        # ----- Alignment markup processing -----
+            
+        # --- UNIVERSAL ALIGNMENT MARKUP PARSER ---
         def structural_replacer(match):
             brace_content = match.group(2)
-            return brace_content
-        
-        # Skip note blocks when stripping alignment markup
-        structural_line = re.sub(r'(.)\{(?!(?:note(?:-marker)?|commentary)\s*[:=])(.*?)\}', structural_replacer, structural_line)
-        visual_line = re.sub(r'(.)\{(?!(?:note(?:-marker)?|commentary)\s*[:=])(.*?)\}', r'\1', visual_line)
+            return brace_content  # If empty, deletes preceding character
 
-        # ----- Sentence splitting -----
+        # Track A: Structural logic (X turns to Y or drops)
+        structural_line = re.sub(r'(.)\{(.*?)\}', structural_replacer, line)
+        # Track B: Visual display logic (keeps X, completely deletes brace block)
+        visual_line = re.sub(r'(.)\{(.*?)\}', r'\1', line)
+            
+        # Map sentence split boundaries based exclusively on the structural track rules
         sentence_ends = [m.end() for m in re.finditer(r'(?<=[.·;:•!?])\s+', structural_line)]
+        
         start_pos = 0
         for end_pos in sentence_ends:
             s_struct = structural_line[start_pos:end_pos].strip()
@@ -162,12 +152,12 @@ def parse_source_text_with_sentences(raw_text, keep_notes=False):
             if s_struct or s_visual:
                 sections_dict[current_section].append({"struct": s_struct, "visual": s_visual})
             start_pos = end_pos
-
+            
         s_struct_tail = structural_line[start_pos:].strip()
         s_visual_tail = visual_line[start_pos:].strip()
         if s_struct_tail or s_visual_tail:
             sections_dict[current_section].append({"struct": s_struct_tail, "visual": s_visual_tail})
-
+                
     return sections_dict
 
 def split_punctuation(word):
@@ -180,37 +170,10 @@ def split_punctuation(word):
         j -= 1
     return word[:i], word[i:j], word[j:]
 
-def parse_note_from_token(token):
-    # Find a note block: {note:...}, {commentary:...}, {note-marker:...}
-    match = re.search(r'\{((?:note(?:-marker)?|commentary)\s*[:=][^}]*)\}', token)
-    if not match:
-        return token, None, None
-    note_block = match.group(1)
-    word_part = token[:match.start()] + token[match.end():]
-    # Parse marker and note from note_block (same logic as before)
-    full_content = note_block.strip()
-    marker = "*"
-    note = ""
-    marker_match = re.search(r'marker\s*[:=]\s*["\']?([^"\';]+)["\']?', full_content)
-    if marker_match:
-        marker = marker_match.group(1).strip()
-        remaining = re.sub(r'marker\s*[:=]\s*["\']?[^"\';]+["\']?\s*;?\s*', '', full_content)
-    else:
-        remaining = full_content
-    note_match = re.search(r'note\s*[:=]\s*["\']?([^"\';]+)["\']?', remaining)
-    if note_match:
-        note = note_match.group(1).strip()
-    else:
-        note = remaining.strip()
-    if not note:
-        note = "No note provided."
-    note = note.replace('\x01', ' ')
-    return word_part, marker, note
-
 def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=False):
     """Run cross-source text matching with recursive strict symmetry checks (Section -> Sentence -> Sub-phrase)."""
-    greek_sections = parse_source_text_with_sentences(greek_text, keep_notes=True)
-    english_sections = parse_source_text_with_sentences(english_text, keep_notes=False)
+    greek_sections = parse_source_text_with_sentences(greek_text)
+    english_sections = parse_source_text_with_sentences(english_text)
     tg_intervals = parse_textgrid_intervals(textgrid_text)
 
     start_anchor = get_anchor_words(greek_sections, n=4, position="start")
@@ -266,68 +229,15 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 phrase_start_time = None
                 
                 for word in words:
-                    # --- Parse note from token ---
-                    word_part, marker, note_text = parse_note_from_token(word)
-                    if marker is not None:
-                        # This token contains a note block.
-                        # 1. Process the word part (if any) as a normal word.
-                        if word_part:
-                            clean_w = clean_for_matching(word_part)
-                            if clean_w:
-                                # Match against TextGrid (same code as before)
-                                word_start, word_end = 0.0, 0.0
-                                found_match = False
-                                attempts = 0
-                                while tg_idx < num_intervals and attempts < 15:
-                                    tg_clean = tg_intervals[tg_idx]["clean"]
-                                    if tg_clean == clean_w or clean_w in tg_clean or tg_clean in clean_w:
-                                        word_start = tg_intervals[tg_idx]["start"]
-                                        word_end = tg_intervals[tg_idx]["end"]
-                                        if phrase_start_time is None:
-                                            phrase_start_time = word_start
-                                        tg_idx += 1
-                                        found_match = True
-                                        break
-                                    else:
-                                        tg_idx += 1
-                                        attempts += 1
-                                if not found_match:
-                                    word_start = tg_intervals[tg_idx-1]["end"] if tg_idx > 0 else 0.0
-                                    word_end = word_start + 0.5
-                                    if phrase_start_time is None:
-                                        phrase_start_time = word_start
-                                # Add the word item
-                                matched_words_data.append({
-                                    "text": word_part,
-                                    "start": word_start,
-                                    "end": word_end,
-                                    "is_punc": False
-                                })
-                            else:
-                                # word_part is only punctuation
-                                matched_words_data.append({"text": word_part, "start": None, "end": None, "is_punc": True})
-                        # 2. Add the note marker item right after the word (or immediately if no word part)
-                        matched_words_data.append({
-                            "text": word,
-                            "start": None,
-                            "end": None,
-                            "is_punc": False,
-                            "is_note": True,
-                            "note_marker": marker,
-                            "note_text": note_text
-                        })
-                        continue
-                
-                    # --- No note: normal processing ---
                     clean_w = clean_for_matching(word)
                     if not clean_w:
                         matched_words_data.append({"text": word, "start": None, "end": None, "is_punc": True})
                         continue
-                
-                    # (existing matching code for normal words)
+                    
                     word_start, word_end = 0.0, 0.0
                     found_match = False
                     attempts = 0
+                    
                     while tg_idx < num_intervals and attempts < 15:
                         tg_clean = tg_intervals[tg_idx]["clean"]
                         if tg_clean == clean_w or clean_w in tg_clean or tg_clean in clean_w:
@@ -341,16 +251,15 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         else:
                             tg_idx += 1
                             attempts += 1
+                    
                     if not found_match:
                         word_start = tg_intervals[tg_idx-1]["end"] if tg_idx > 0 else 0.0
                         word_end = word_start + 0.5
                         if phrase_start_time is None:
                             phrase_start_time = word_start
+                    
                     matched_words_data.append({
-                        "text": word,
-                        "start": word_start,
-                        "end": word_end,
-                        "is_punc": False
+                        "text": word, "start": word_start, "end": word_end, "is_punc": False
                     })
                 
                 if phrase_start_time is None:
@@ -372,12 +281,6 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 
                 o1_words_str = ""
                 for w_item in matched_words_data:
-
-                    if w_item.get("is_note"):
-                        marker = html.escape(w_item["note_marker"])
-                        note_text = html.escape(w_item["note_text"], quote=False)
-                        o1_words_str += f'<span class="note-marker" data-note="{note_text}">{marker}</span> '
-                        continue
                     if w_item["is_punc"]:
                         o1_words_str += f'<span class="punctuation">{html.escape(w_item["text"])}</span> '
                         continue
@@ -395,12 +298,6 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 
                 o2_words_str = ""
                 for w_item in matched_words_data:
-
-                    if w_item.get("is_note"):
-                        marker = html.escape(w_item["note_marker"])
-                        note_text = html.escape(w_item["note_text"], quote=False)
-                        o2_words_str += f'<span class="note-marker" data-note="{note_text}">{marker}</span> '
-                        continue
                     if w_item["is_punc"]:
                         o2_words_str += f'<span class="punctuation">{html.escape(w_item["text"])}</span> '
                         continue
