@@ -137,6 +137,12 @@ def parse_source_text_with_sentences(raw_text, keep_notes=False):
             visual_line = line
         else:
             visual_line = re.sub(r'\{((?:note(?:-marker)?|commentary)\s*[:=][^}]*)\}', '', line)
+
+        if keep_notes:
+            # Protect spaces inside note blocks to prevent splitting on them later
+            def protect_spaces(match):
+                return match.group(0).replace(' ', '\x01')
+            visual_line = re.sub(r'\{((?:note(?:-marker)?|commentary)\s*[:=][^}]*)\}', protect_spaces, visual_line)
         
         # ----- Alignment markup processing -----
         def structural_replacer(match):
@@ -198,6 +204,7 @@ def parse_note_from_token(token):
         note = remaining.strip()
     if not note:
         note = "No note provided."
+    note = note.replace('\x01', ' ')
     return word_part, marker, note
 
 def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=False):
