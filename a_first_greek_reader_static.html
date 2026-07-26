@@ -28,7 +28,10 @@
   </script>
   <script src="secondaryScripts/dictionary.js" defer=""></script>
   <script src="secondaryScripts/advancedFontSettings.js" defer=""></script>
-  <script src="script.js" defer=""></script> 
+  <script src="script.js" defer=""></script>
+  <script defer="">
+  document.dispatchEvent(new CustomEvent('generator-ready'));
+  </script>
 </head>
 <body data-book-id="a_first_greek_reader" class="layout-large" style="overflow: hidden;">
 <div id="loadingScreen" class="hidden">
