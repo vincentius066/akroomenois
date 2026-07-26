@@ -169,6 +169,9 @@ document.addEventListener('generator-ready', function() {
       <label>HTML: 
         <button id="copyHtml" class="settings-btn" style="cursor: pointer;">Copy</button>
       </label>
+      <label>Full Page HTML: 
+        <button id="copyFullHtml" class="settings-btn" style="cursor: pointer;">Copy</button>
+      </label>
     </div>
         
     <div id="playerBar">
@@ -1126,6 +1129,27 @@ document.addEventListener('generator-ready', function() {
       } else {
         alert("No active chapter found to copy.");
       }
+    });
+  }
+
+  if (document.getElementById('copyFullHtml')) {
+    document.getElementById('copyFullHtml').addEventListener('click', () => {
+      const fullHtml = document.documentElement.outerHTML;
+      navigator.clipboard.writeText(fullHtml)
+        .then(() => {
+          const btn = document.getElementById('copyFullHtml');
+          const original = btn.textContent;
+          btn.textContent = "Copied!";
+          btn.style.backgroundColor = "#4caf50";
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.style.backgroundColor = "";
+          }, 1500);
+        })
+        .catch(err => {
+          console.error("Failed to copy full HTML:", err);
+          alert("Could not copy full HTML.");
+        });
     });
   }
   
