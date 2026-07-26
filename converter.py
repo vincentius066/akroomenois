@@ -265,14 +265,20 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
             
             for ss_idx, phrase_visual in enumerate(raw_sub_grc_visual):
                 ss_num = ss_idx + 1
+
+                def replace_note_placeholder(match):
+                    note_idx = int(match.group(1))
+                    return f"⸨NOTE_{note_idx}⸩"
                 
-                words = phrase_visual.split()
+                phrase_visual_fixed = re.sub(r'\[\[NOTE_(\d+)\]\]', replace_note_placeholder, phrase_visual)
+                
+                words = phrase_visual_fixed.split()
                 matched_words_data = []
                 phrase_start_time = None
                 
                 for word in words:
 
-                    note_match = re.match(r'^\[\[NOTE_(\d+)\]\]$', word)
+                    note_match = re.match(r'^⸨NOTE_(\d+)⸩$', word)
                     if note_match:
                         note_idx = int(note_match.group(1))
                         marker, note_text = greek_notes[note_idx] if note_idx < len(greek_notes) else ("*", "No note")
