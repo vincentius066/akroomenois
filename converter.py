@@ -9,7 +9,8 @@ import html
 def clean_for_matching(text):
     """Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
     cleaned = re.sub(r'[\d\W_]+', '', text.lower())
-    return cleaned
+    cleaned_for_metadata = re.sub(r'[a-zA-Z\u2070-\u209F\u00B2\u00B3\u00B9\u02B0-\u02FF\u1D00-\u1D7F]+', '', cleaned)
+    return cleaned_for_metadata
 
 def parse_textgrid_intervals(textgrid_content):
     parts = re.split(r'item\s*\[\s*2\s*\]\s*:', textgrid_content)
