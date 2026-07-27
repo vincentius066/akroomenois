@@ -1238,18 +1238,35 @@ document.addEventListener('generator-ready', function() {
     });
   }
 
-  // Placeholder listeners for your new feature pathways
   if (contentsBtn) {
     contentsBtn.addEventListener("click", () => {
+      // 1. Pause audio and remember state
+      wasPlaying = !audio.paused;
+      audio.pause();
+
       // Build the list of chapters
       const chapters = getAllChapters();
       if (chapters.length === 0) return;
   
       let html = `<h3 style="margin-top:0;">Table of Contents</h3><ul style="list-style:none; padding:0; margin:0;">`;
       chapters.forEach((chapter, index) => {
-        const section = chapter.dataset.section || `Chapter ${chapter.dataset.chapter}`;
-        const parts = section.split('.');
-        const label = `Book ${parts[0]}, Chapter ${parts[1]}`;
+        const section = chapter.dataset.section;
+        let label = "";
+        
+        // Check for Preface
+        if (section === "0" || section === 0) {
+          label = "Preface";
+        } 
+        // Check for standard sections (e.g., "1.1")
+        else if (section) {
+          const parts = section.split('.');
+          label = `Book ${parts[0]}, Chapter ${parts[1]}`;
+        } 
+        // Fallback if dataset.section is missing entirely
+        else {
+          label = `Chapter ${chapter.dataset.chapter}`;
+        }
+        
         html += `<li style="padding:6px 0; border-bottom:1px solid #eee; cursor:pointer;" data-index="${index}">${label}</li>`;
       });
       html += `</ul>`;
@@ -1270,6 +1287,13 @@ document.addEventListener('generator-ready', function() {
             popup.style.display = "none";
             document.body.style.overflow = '';
             popupOverlay.style.display = "none";
+
+            // 2. Briefly resume audio if it was playing, so goToChapter captures the correct state
+            if (wasPlaying) { 
+              audio.play(); 
+              wasPlaying = false; 
+            }
+            
             // Jump to the chapter
             goToChapter(targetChapter);
           }
