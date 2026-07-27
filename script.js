@@ -641,6 +641,10 @@ document.addEventListener('generator-ready', function() {
       document.title = `Chapter ${ch}`;
       return;
     }
+    if (section === "0" || section === 0) {
+      document.title = `Preface`
+      return;
+    }
   
     const parts = section.split('.');
     const book = parseInt(parts[0], 10);
