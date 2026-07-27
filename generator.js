@@ -199,7 +199,11 @@
     return;
   }
   
-  const totalChapters = chapters.length;
+  // Calculate total regular chapters (excluding the preface where data-section === "0")
+  const totalChapters = Array.from(chapters).filter(
+    ch => ch.getAttribute('data-section') !== "0"
+  ).length;
+
   const loadingTextEl = document.getElementById('loadingText');
   console.log('loadingTextEl:', loadingTextEl);
   
@@ -208,6 +212,8 @@
     loadingTextEl.textContent = `Chapters generated: 0/${totalChapters}`;
   }
   
+  let done = 0; // Separate counter for completed regular chapters
+
   for (let i = 0; i < chapters.length; i++) {
     const chapter = chapters[i];
     const sectionId = chapter.getAttribute('data-section');
@@ -270,10 +276,12 @@
       console.error(`Alignment failed for chapter ${sectionId}:`, err);
     }
   
-    // Update loading progress after each chapter (success or failure)
-    const done = i + 1;
-    if (loadingTextEl) {
-      loadingTextEl.textContent = `Chapters generated: ${done}/${totalChapters}`;
+    // Update loading progress ONLY for non-preface chapters
+    if (sectionId !== "0") {
+      done++;
+      if (loadingTextEl) {
+        loadingTextEl.textContent = `Chapters generated: ${done}/${totalChapters}`;
+      }
     }
   }
   
