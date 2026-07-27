@@ -166,7 +166,7 @@ html {
 }
 
 body {
-  font-family: "EB Garamond", serif;
+  font-family: "EB_Garamond", serif;
   padding: 60px 80px 100px;
   color: #111926;
 }
@@ -183,7 +183,7 @@ p {
 
 ital-small {
   font-size: 15px;
-  font-family: "EB Garamond", serif;
+  font-family: "Inter", serif;
   font-style: italic;
   color: #11192680;
 }
@@ -212,7 +212,7 @@ ital-small {
 }
 
 .text_en {
-  font-family: "EB Garamond", serif;
+  font-family: SBL;
   font-size: 70px;
   line-height: 1.6;
   text-align: justify;
@@ -233,7 +233,7 @@ ital-small {
 }
 
 .tiny_text {
-  font-family: "EB Garamond", serif;
+  font-family: "EB_Garamond", serif;
   font-size: 20px;
   line-height: 1;
   text-align: center;
