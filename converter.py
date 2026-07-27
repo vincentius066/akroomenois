@@ -1,6 +1,21 @@
 import re
 import html
 
+def convert_notes(html_string):
+    pattern = re.compile(r'1111([0-9A-Fa-f]+?)2222([0-9A-Fa-f]+?)3333')
+    def repl(match):
+        display_hex = match.group(1)
+        note_hex = match.group(2)
+        # Decode hex pairs into Unicode characters (each code point is 4 hex digits)
+        display_text = ''.join(chr(int(display_hex[i:i+4], 16)) for i in range(0, len(display_hex), 4))
+        note_text = ''.join(chr(int(note_hex[i:i+4], 16)) for i in range(0, len(note_hex), 4))
+        # Escape the note content for safe HTML insertion
+        safe_note = html.escape(note_text)
+        safe_display = html.escape(display_text)
+        # Return the note-marker span. It will be inserted inside the word span.
+        return f'</span><span class="note-marker" data-note="{safe_note}">{safe_display}'
+    return pattern.sub(repl, html_string)
+
 def clean_for_matching(text):
     cleaned = re.sub(r'[ABCDEFGHIJKLMNOPQRSTUVWXYZ\d\W_]+', '', text.lower())
     return cleaned
@@ -364,8 +379,17 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
             output_1_lines.append("  <br><br>\n")
             output_2_lines.append("  <br><br>\n")
             output_3_lines.append("  <br><br>\n")
-        
-    return "".join(output_1_lines), "".join(output_2_lines), "".join(output_3_lines)
+
+    greek_output1 = "".join(output_1_lines)
+    greek_output2 = "".join(output_2_lines)
+    english_output = "".join(output_3_lines)
+
+    greek_output1 = convert_notes(greek_output1)
+    greek_output2 = convert_notes(greek_output2)
+
+    return greek_output1, greek_output2, english_output
+    
+    #return "".join(output_1_lines), "".join(output_2_lines), "".join(output_3_lines)
 
 def prepare_readalong_studio_text(raw_text):
     """Extracts pure text content from raw web-scraped outputs, removing structural headers."""
