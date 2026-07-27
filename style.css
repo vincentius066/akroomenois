@@ -49,7 +49,7 @@
 }
 
   @font-face {
-  font-family: "EB_Garamond", serif;
+  font-family: "EB_Garamond";
   src: url("font/EBGaramond12-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
@@ -57,7 +57,7 @@
 }
 
   @font-face {
-  font-family: "EB_Garamond", serif;
+  font-family: "EB_Garamond";
   src: url("font/EBGaramond12-Italic.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
@@ -65,7 +65,7 @@
 }
 
   @font-face {
-  font-family: "EB_Garamond", serif;
+  font-family: "EB_Garamond";
   src: url("font/Adobe-Garamond-LT-Semibold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
@@ -166,7 +166,7 @@ html {
 }
 
 body {
-  font-family: "EB_Garamond", serif;
+  font-family: "EB_Garamond";
   padding: 60px 80px 100px;
   color: #111926;
 }
@@ -233,7 +233,7 @@ ital-small {
 }
 
 .tiny_text {
-  font-family: "EB_Garamond", serif;
+  font-family: "EB_Garamond";
   font-size: 20px;
   line-height: 1;
   text-align: center;
