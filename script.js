@@ -1280,11 +1280,14 @@ document.addEventListener('generator-ready', function() {
         // Check for standard sections (e.g., "1.1")
         else if (section) {
           const parts = section.split('.');
-          label = `Book ${parts[0]}, Chapter ${parts[1]}`;
+          const bookName = window.APP_CONFIG?.customBookName || "Book";
+          const chapName = window.APP_CONFIG?.customChapterName || "Chapter";
+          label = `${bookName} ${parts[0]}, ${chapName} ${parts[1]}`;
         } 
         // Fallback if dataset.section is missing entirely
         else {
-          label = `Chapter ${chapter.dataset.chapter}`;
+          const chapName = window.APP_CONFIG?.customChapterName || "Chapter";
+          label = `${chapName} ${chapter.dataset.chapter}`;
         }
         
         html += `<li style="padding:6px 0; border-bottom:1px solid #eee; cursor:pointer;" data-index="${index}">${label}</li>`;
