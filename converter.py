@@ -2,7 +2,7 @@ import re
 import html
 
 def clean_for_matching(text):
-    cleaned = re.sub(r'[\d\W_]+', '', text.lower())
+    cleaned = re.sub(r'[ABCDEFGHIJKLMNOPQRSTUVWXYZ\d\W_]+', '', text.lower())
     return cleaned
 
 def parse_textgrid_intervals(textgrid_content):
