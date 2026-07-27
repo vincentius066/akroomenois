@@ -13,7 +13,10 @@
       dictionaryJsonPath: "books/a_first_greek_reader/dictionary_data/data.json",
       sourceGreekPath: "books/a_first_greek_reader/text/diog.txt",
       sourceEnglishPath: "books/a_first_greek_reader/text/topos.txt",
-      sectionDisplayType: "tabs"
+      sectionDisplayType: "tabs",
+
+      customContentsTitle: 'Part {book}.{chapter}',
+      customLoadingText: 'Chapters generated: 0/${totalChapters}'
     };
     window.BOOK_TITLE = {
       greek: {
@@ -39,6 +42,28 @@
   <p id="loadingText">Loading…</p>
 </div>
 <audio id="audio" preload="auto"></audio>
+
+<!-- ============================== -->
+<!-- ============================== -->
+<!-- ==PREFACE== -->
+<!-- ============================== -->
+<!-- ============================== -->
+
+<div class="chapter-body active" data-chapter="0" data-section="0">
+<p class="text" lang="grc">
+  <span class="text_title">
+  <span data-start="n/a" data-section="0.1" class="phrase"><span class="punctuation">Preface</span></span>
+  </span>
+
+  <span class="phrase">
+  The book, as its name implies, is intended to meet the needs of beginners; it has consequently been carefully graduated, and the transition from single sentences to consecutive pieces made as easy as possible. The text is mainly original, the subject-matter following the lines of Greek mythology and history. No notes of any kind have been added; the explainations of construction and reference being left entirely to the teacher. Augments and compound verbs have been printed with a hyphen until the last few pieces, to facilitate the use of the vocabulary. In the vocabulary only such principal parts of verbs as are considered necessary are given, and those of the compound verbs will be found under the headings of their simple forms. It may be mentioned that σσ has been used throughout for ττ and ξυν for συν, for reasons which it is beyond the scope of this preface to discuss. The plentiful illustrations are, as in the First Latin Reader, a notable feature of the book; the object being to interest the mind of the pupilo through the eye. We take this opportunity of thanking the Rev. H. A. Rhodes, Headmaster of the Preparatory School of Christ's Hospital, for his kindness in revising the proofs.<br>R. A. A. Beresford, Robert N. Douglas
+  </span>
+</p>
+
+<p class="text_en" lang="en">
+  <span data-start="n/a" class="phrase_en"></span>
+</p>
+</div>
   
 <!-- ============================== -->
 <!-- ============================== -->
@@ -46,7 +71,7 @@
 <!-- ============================== -->
 <!-- ============================== -->
 
-<div class="chapter-body active" data-chapter="1" data-section="1.1" data-audio-src="https://pub-9b2a263d7ddd434487b199f0aa873731.r2.dev/part_00_cbr.mp3?t=20260123" data-textgrid-src="books/a_first_greek_reader/sync/part_00_sync.txt">
+<div class="chapter-body" data-chapter="1" data-section="1.1" data-audio-src="https://pub-9b2a263d7ddd434487b199f0aa873731.r2.dev/part_00_cbr.mp3?t=20260123" data-textgrid-src="books/a_first_greek_reader/sync/part_00_sync.txt">
 
 <p class="text" lang="grc">
   <span class="text_title">
