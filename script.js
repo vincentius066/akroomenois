@@ -660,7 +660,17 @@ document.addEventListener('generator-ready', function() {
     const isGreek = isGreekDisplayed();
     const language = isGreek ? 'greek' : 'english';
   
-    const templates = window.BOOK_TITLE?.[language];
+    // 1. Try to fetch the configuration for the active language.
+    // 2. Fallback to English if Greek is missing (or Greek if English is missing).
+    let templates = window.BOOK_TITLE?.[language] 
+                 || window.BOOK_TITLE?.english 
+                 || window.BOOK_TITLE?.greek;
+                 
+    // 3. Fallback if BOOK_TITLE is just a flat object without language keys.
+    if (!templates && window.BOOK_TITLE && window.BOOK_TITLE.medium) {
+      templates = window.BOOK_TITLE;
+    }
+  
     if (!templates) return;
   
     const bookStr = isGreek ? greekNumeralForTitle(book) : book.toString();
