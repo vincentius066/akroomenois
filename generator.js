@@ -208,8 +208,11 @@
   console.log('loadingTextEl:', loadingTextEl);
   
   // Set initial progress text
+  const chapText = config.customChapterName ? config.customChapterName + "s" : "Chapters";
+
+  // Set initial progress text
   if (loadingTextEl) {
-    loadingTextEl.textContent = `Chapters generated: 0/${totalChapters}`;
+    loadingTextEl.textContent = `${chapText} generated: 0/${totalChapters}`;
   }
   
   let done = 0; // Separate counter for completed regular chapters
@@ -280,7 +283,7 @@
     if (sectionId !== "0") {
       done++;
       if (loadingTextEl) {
-        loadingTextEl.textContent = `Chapters generated: ${done}/${totalChapters}`;
+        loadingTextEl.textContent = `${chapText} generated: ${done}/${totalChapters}`;
       }
     }
   }
