@@ -57,7 +57,7 @@
 }
 
   @font-face {
-  font-family: "EB Garamond", serif;
+  font-family: "EB_Garamond", serif;
   src: url("font/EBGaramond12-Italic.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
@@ -65,7 +65,7 @@
 }
 
   @font-face {
-  font-family: "EB Garamond", serif;
+  font-family: "EB_Garamond", serif;
   src: url("font/Adobe-Garamond-LT-Semibold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
