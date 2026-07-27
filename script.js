@@ -631,6 +631,7 @@ document.addEventListener('generator-ready', function() {
   
   function updateTitle() {
     const activeChapter = getActiveChapter();
+    const playerBar = document.getElementById("playerBar");
     if (!activeChapter) return;
   
     const section = activeChapter.dataset.section;
@@ -639,6 +640,7 @@ document.addEventListener('generator-ready', function() {
       const titleEl = document.getElementById('title');
       if (titleEl) titleEl.textContent = `Chapter ${ch}`;
       document.title = `Chapter ${ch}`;
+      if (playerBar) playerBar.style.display = '';
       return;
     }
     if (section === "0" || section === 0) {
@@ -647,10 +649,10 @@ document.addEventListener('generator-ready', function() {
         titleEl.textContent = 'Preface';
       }
       document.title = 'Preface';
-      playerBar.style = 'hidden';
+      if (playerBar) playerBar.style.display = 'none';
       return;
     }
-    playerBar.style = '';
+    if (playerBar) playerBar.style.display = '';
   
     const parts = section.split('.');
     const book = parseInt(parts[0], 10);
