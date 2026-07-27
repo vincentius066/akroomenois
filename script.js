@@ -642,9 +642,15 @@ document.addEventListener('generator-ready', function() {
       return;
     }
     if (section === "0" || section === 0) {
-      document.title = `Preface`
+      const titleEl = document.getElementById('title');
+      if (titleEl) {
+        titleEl.textContent = 'Preface';
+      }
+      document.title = 'Preface';
+      playerBar.style = 'hidden';
       return;
     }
+    playerBar.style = '';
   
     const parts = section.split('.');
     const book = parseInt(parts[0], 10);
