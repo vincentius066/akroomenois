@@ -154,7 +154,7 @@ document.addEventListener('generator-ready', function() {
       <label>Font: 
         <select id="fontFamilyControl">
           <option value="SBL">SBL</option>
-          <option value="EB Garamond">EB Garamond</option>
+          <option value="EB_Garamond">EB Garamond</option>
           <option value="Anaktoria">Anaktoria</option>
         </select>
         <button id="advancedFontBtn" class="settings-btn" style="cursor: pointer;">Advanced</button>
