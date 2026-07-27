@@ -661,20 +661,30 @@ document.addEventListener('generator-ready', function() {
     const language = isGreek ? 'greek' : 'english';
   
     // 1. Try to fetch the configuration for the active language.
-    // 2. Fallback to English if Greek is missing (or Greek if English is missing).
-    let templates = window.BOOK_TITLE?.[language] 
-                 || window.BOOK_TITLE?.english 
-                 || window.BOOK_TITLE?.greek;
-                 
-    // 3. Fallback if BOOK_TITLE is just a flat object without language keys.
-    if (!templates && window.BOOK_TITLE && window.BOOK_TITLE.medium) {
-      templates = window.BOOK_TITLE;
+    let templates = window.BOOK_TITLE?.[language];
+    let activeTemplateLang = templates ? language : null;
+  
+    // 2. Fallbacks if the target language is missing
+    if (!templates) {
+      if (window.BOOK_TITLE?.english) {
+        templates = window.BOOK_TITLE.english;
+        activeTemplateLang = 'english';
+      } else if (window.BOOK_TITLE?.greek) {
+        templates = window.BOOK_TITLE.greek;
+        activeTemplateLang = 'greek';
+      } else if (window.BOOK_TITLE && window.BOOK_TITLE.medium) {
+        templates = window.BOOK_TITLE; // Fallback for flat structure without language keys
+        activeTemplateLang = 'english'; // Default to Arabic numerals
+      }
     }
   
     if (!templates) return;
   
-    const bookStr = isGreek ? greekNumeralForTitle(book) : book.toString();
-    const chapStr = isGreek ? greekNumeralForTitle(chapter) : chapter.toString();
+    // 3. Only use Greek numerals if we actually loaded a Greek template.
+    const useGreekNumerals = (activeTemplateLang === 'greek');
+  
+    const bookStr = useGreekNumerals ? greekNumeralForTitle(book) : book.toString();
+    const chapStr = useGreekNumerals ? greekNumeralForTitle(chapter) : chapter.toString();
   
     // Build all three title variants
     const smallTitle = templates.small.replace(/\{book\}/g, bookStr).replace(/\{chapter\}/g, chapStr);
