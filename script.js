@@ -1267,7 +1267,23 @@ document.addEventListener('generator-ready', function() {
       // Build the list of chapters
       const chapters = getAllChapters();
       if (chapters.length === 0) return;
-  
+
+      // NEW: Check how many unique books exist, completely ignoring the Preface ("0")
+      const uniqueBooks = new Set();
+      chapters.forEach(ch => {
+        const sec = ch.dataset.section;
+        if (sec) {
+          const bookNum = sec.split('.')[0]; // Grab the book number before the period
+          
+          // If the book number is "0" (Preface), it counts 0 towards the total
+          if (bookNum !== "0") {
+            uniqueBooks.add(bookNum);
+          }
+        }
+      });
+      // If the Set only contains 1 item (or 0), it's a single book document
+      const isSingleBook = uniqueBooks.size <= 1;
+      
       let html = `<h3 style="margin-top:0;">Table of Contents</h3><ul style="list-style:none; padding:0; margin:0;">`;
       chapters.forEach((chapter, index) => {
         const section = chapter.dataset.section;
@@ -1282,7 +1298,13 @@ document.addEventListener('generator-ready', function() {
           const parts = section.split('.');
           const bookName = window.APP_CONFIG?.customBookName || "Book";
           const chapName = window.APP_CONFIG?.customChapterName || "Chapter";
-          label = `${bookName} ${parts[0]}, ${chapName} ${parts[1]}`;
+          
+          // Conditionally format based on our uniqueBooks count
+          if (isSingleBook) {
+            label = `${chapName} ${parts[1]}`;
+          } else {
+            label = `${bookName} ${parts[0]}, ${chapName} ${parts[1]}`;
+          }
         } 
         // Fallback if dataset.section is missing entirely
         else {
