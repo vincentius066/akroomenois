@@ -258,7 +258,8 @@
     
     try {
       const useTabs = config.sectionDisplayType === "tabs";
-      const result = alignAndGenerateHTML(greekContent, englishContent, textgridContent, useTabs);
+      const useNothing = config.sectionDisplayType === "nothing";
+      const result = alignAndGenerateHTML(greekContent, englishContent, textgridContent, useTabs, useNothing);
       
       const greekHtml = result[0];
       const englishHtml = result[2];
