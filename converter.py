@@ -201,12 +201,16 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
     output_2_lines = []
     output_3_lines = []
     
+    #all_sections = sorted(list(set(greek_sections.keys()).intersection(set(english_sections.keys()))))
+    #if not all_sections:
+        #all_sections = sorted(list(greek_sections.keys()))
     all_sections = sorted(greek_sections.keys())
         
     for idx, sec in enumerate(all_sections):
         sec_sentences_grc = greek_sections.get(sec, [])
         sec_sentences_eng = english_sections.get(sec, [])
         
+        # Guard 1: Do the two languages have the exact same number of main sentences in this section?
         match_sentences = len(sec_sentences_grc) == len(sec_sentences_eng)
         
         section_start_timestamp = None
@@ -218,13 +222,17 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
         for s_idx, grc_item in enumerate(sec_sentences_grc):
             s_num = s_idx + 1
             
+            # Extract English equivalent dictionary block safely
             eng_item = sec_sentences_eng[s_idx] if (match_sentences and s_idx < len(sec_sentences_eng)) else {"struct": "", "visual": ""}
             
+            # Sub-phrase Slicing 1: Layout tracking engine splits using structural lines
             raw_sub_grc_struct = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_item["struct"]) if p.strip()]
             raw_sub_eng_struct = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_item["struct"]) if p.strip()]
             
+            # Sub-phrase Slicing 2: Content layout engine splits using pure visual strings
             raw_sub_grc_visual = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_item["visual"]) if p.strip()]
             
+            # Guard 2: Symmetry evaluation relies strictly on modified structural tokens
             match_sub_phrases = match_sentences and (len(raw_sub_grc_struct) == len(raw_sub_eng_struct))
             
             for ss_idx, phrase_visual in enumerate(raw_sub_grc_visual):
@@ -240,7 +248,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         matched_words_data.append({"text": word, "start": None, "end": None, "is_punc": True})
                         continue
                     
-                    word_start, word_end = "n/a", "n/a"
+                    word_start, word_end = 0.0, 0.0
                     found_match = False
                     attempts = 0
                     
@@ -259,9 +267,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                             attempts += 1
                     
                     if not found_match:
-                        # Assign "n/a" when word is not found in TextGrid
-                        word_start = "n/a"
-                        word_end = "n/a"
+                        word_start = tg_intervals[tg_idx-1]["end"] if tg_idx > 0 else 0.0
+                        word_end = word_start + 0.5
+                        if phrase_start_time is None:
+                            phrase_start_time = word_start
                     
                     matched_words_data.append({
                         "text": word, "start": word_start, "end": word_end, "is_punc": False
@@ -282,10 +291,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 else:
                     data_sec_label = f"{sec}"
                 
-                # Construct HTML outputs using helper function for safe attribute formatting
-                def format_time(val):
-                    return f"{val:.2f}" if isinstance(val, (int, float)) else str(val)
-
+                # Construct HTML outputs using visual items
+                
                 o1_words_str = ""
                 for w_item in matched_words_data:
                     if w_item["is_punc"]:
@@ -293,12 +300,12 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         continue
                 
                     lead, core, trail = split_punctuation(w_item["text"])
-                    start_str = format_time(w_item["start"])
-                    end_str = format_time(w_item["end"])
-
-                    word_span = f'<span class="word" data-word-start="{start_str}" data-word-end="{end_str}">{html.escape(core)}</span>'
+                    # Build the core word span
+                    word_span = f'<span class="word" data-word-start="{w_item["start"]:.2f}" data-word-end="{w_item["end"]:.2f}">{html.escape(core)}</span>'
+                    # Prepend leading punctuation
                     if lead:
                         word_span = f'<span class="punctuation">{html.escape(lead)}</span>' + word_span
+                    # Append trailing punctuation
                     if trail:
                         word_span += f'<span class="punctuation">{html.escape(trail)}</span>'
                     o1_words_str += word_span + " "
@@ -310,10 +317,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         continue
                 
                     lead, core, trail = split_punctuation(w_item["text"])
-                    start_str = format_time(w_item["start"])
-                    end_str = format_time(w_item["end"])
-
-                    word_span = f'<span class="word" data-word-start="{start_str}" data-word-end="{end_str}">{html.escape(core)}</span>'
+                    word_span = f'<span class="word" data-word-start="{w_item["start"]:.2f}" data-word-end="{w_item["end"]:.2f}">{html.escape(core)}</span>'
                     if lead:
                         word_span = f'<span class="punctuation">{html.escape(lead)}</span>' + word_span
                     if trail:
@@ -340,6 +344,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 
                 raw_sub_grc_struct = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_item["struct"]) if p.strip()]
                 raw_sub_eng_struct = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_item["struct"]) if p.strip()]
+                
                 raw_sub_eng_visual = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_item["visual"]) if p.strip()]
                 
                 match_sub_phrases = len(raw_sub_grc_struct) == len(raw_sub_eng_struct)
@@ -367,7 +372,9 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 escaped_eng = html.escape(full_english_block, quote=False)
                 ts_val = f"{section_start_timestamp:.2f}"
                 output_3_lines.append(f'  [{sec}] <span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
-
+            else:
+                pass
+            
         if idx < len(all_sections) - 1:
             output_1_lines.append("  <br><br>\n")
             output_2_lines.append("  <br><br>\n")
@@ -381,6 +388,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
     greek_output2 = convert_notes(greek_output2)
 
     return greek_output1, greek_output2, english_output
+    
+    #return "".join(output_1_lines), "".join(output_2_lines), "".join(output_3_lines)
 
 def prepare_readalong_studio_text(raw_text):
     """Extracts pure text content from raw web-scraped outputs, removing structural headers."""
