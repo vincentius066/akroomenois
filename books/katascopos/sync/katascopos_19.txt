@@ -1,0 +1,660 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.000000
+xmax = 62.560000
+tiers? <exists>
+size = 2
+item []:
+    item [1]:
+        class = "IntervalTier"
+        name = "Sentence"
+        xmin = 0.000000
+        xmax = 62.560000
+        intervals: size = 20
+        intervals [1]:
+            xmin = 0.000000
+            xmax = 0.170000
+            text = ""
+        intervals [2]:
+            xmin = 0.170000
+            xmax = 2.250000
+            text = "kephalaion to enaton kai dekaton"
+        intervals [3]:
+            xmin = 2.250000
+            xmax = 2.670000
+            text = ""
+        intervals [4]:
+            xmin = 2.670000
+            xmax = 4.150000
+            text = "meta tous muthous"
+        intervals [5]:
+            xmin = 4.150000
+            xmax = 4.690000
+            text = ""
+        intervals [6]:
+            xmin = 4.690000
+            xmax = 8.770000
+            text = "τοῦτον τὸν μύθον ἀκούσας, ὁ Διογένης μοι τάδε λέγει"
+        intervals [7]:
+            xmin = 8.770000
+            xmax = 9.410000
+            text = ""
+        intervals [8]:
+            xmin = 9.410000
+            xmax = 14.330000
+            text = "ὦ φίλε μου, νύκτος ἤδη γενομένης καθεύδωμεν μένε τὴν νύκτα ἐν ἐμῷ οἴκῳ"
+        intervals [9]:
+            xmin = 14.330000
+            xmax = 15.250000
+            text = ""
+        intervals [10]:
+            xmin = 15.250000
+            xmax = 18.110000
+            text = "ἐν οὖν τῷ τοῦ Διογένους οἴκῳ μένω"
+        intervals [11]:
+            xmin = 18.110000
+            xmax = 19.130000
+            text = ""
+        intervals [12]:
+            xmin = 19.130000
+            xmax = 23.450000
+            text = "ἡμέρας γενομένης, πόρρω ἀλλήλοις λέγομεν"
+        intervals [13]:
+            xmin = 23.450000
+            xmax = 24.300000
+            text = ""
+        intervals [14]:
+            xmin = 24.300000
+            xmax = 28.900000
+            text = "τήμερον, ἐγώ φημι, εἰς τὴν ἀγορὰν ἰέναι βούλομαι"
+        intervals [15]:
+            xmin = 28.900000
+            xmax = 29.940000
+            text = ""
+        intervals [16]:
+            xmin = 29.940000
+            xmax = 37.460000
+            text = "εἰς τὴν ἀγορὰν διὰ τὶ εἶ ἐὰν σίτου δεῖς, σοι δώσω τὸν σῖτον ὃν ἐν τῷ ἐμῷ οἴκῳ ἤδη ἔχω"
+        intervals [17]:
+            xmin = 37.460000
+            xmax = 38.640000
+            text = ""
+        intervals [18]:
+            xmin = 38.640000
+            xmax = 54.310000
+            text = "οὐ σίτου δέω, ἀλλ ἐπιστολῶν ὁ γὰρ ἐν τῇ ἀγορᾷ κλέπτης σὺν τοῖς χρήμασι καὶ τὰς τοῖς Λακεδαιμονίοις ἐπιστολὰς ἔλαβεν εἶμι οὖν εἰς τὴν ἀγορὰν ἵνα ἐπιστολὰς ὠνῶμαι καὶ πολλὰ ἄλλα"
+        intervals [19]:
+            xmin = 54.310000
+            xmax = 55.730000
+            text = ""
+        intervals [20]:
+            xmin = 55.730000
+            xmax = 62.560000
+            text = "ἐμοῖ οὖν ὁ Διογένης δύο δραχμὰς δίδωσι, καὶ αὐτὰς λαβὼν ἐκ τοῦ οἴκου ἐξέρχομαι"
+    item [2]:
+        class = "IntervalTier"
+        name = "Word"
+        xmin = 0.000000
+        xmax = 62.560000
+        intervals: size = 140
+        intervals [1]:
+            xmin = 0.000000
+            xmax = 0.170000
+            text = ""
+        intervals [2]:
+            xmin = 0.170000
+            xmax = 0.840000
+            text = "kephalaion"
+        intervals [3]:
+            xmin = 0.840000
+            xmax = 1.040000
+            text = "to"
+        intervals [4]:
+            xmin = 1.040000
+            xmax = 1.420000
+            text = "enaton"
+        intervals [5]:
+            xmin = 1.420000
+            xmax = 1.650000
+            text = "kai"
+        intervals [6]:
+            xmin = 1.650000
+            xmax = 2.250000
+            text = "dekaton"
+        intervals [7]:
+            xmin = 2.250000
+            xmax = 2.670000
+            text = ""
+        intervals [8]:
+            xmin = 2.670000
+            xmax = 2.860000
+            text = "meta"
+        intervals [9]:
+            xmin = 2.860000
+            xmax = 3.220000
+            text = "tous"
+        intervals [10]:
+            xmin = 3.220000
+            xmax = 4.150000
+            text = "muthous"
+        intervals [11]:
+            xmin = 4.150000
+            xmax = 4.690000
+            text = ""
+        intervals [12]:
+            xmin = 4.690000
+            xmax = 5.200000
+            text = "τοῦτον"
+        intervals [13]:
+            xmin = 5.200000
+            xmax = 5.370000
+            text = "τὸν"
+        intervals [14]:
+            xmin = 5.370000
+            xmax = 5.930000
+            text = "μύθον"
+        intervals [15]:
+            xmin = 5.930000
+            xmax = 6.960000
+            text = "ἀκούσας,"
+        intervals [16]:
+            xmin = 6.960000
+            xmax = 7.260000
+            text = ""
+        intervals [17]:
+            xmin = 7.260000
+            xmax = 7.300000
+            text = "ὁ"
+        intervals [18]:
+            xmin = 7.300000
+            xmax = 7.900000
+            text = "Διογένης"
+        intervals [19]:
+            xmin = 7.900000
+            xmax = 8.080000
+            text = "μοι"
+        intervals [20]:
+            xmin = 8.080000
+            xmax = 8.330000
+            text = "τάδε"
+        intervals [21]:
+            xmin = 8.330000
+            xmax = 8.770000
+            text = "λέγει"
+        intervals [22]:
+            xmin = 8.770000
+            xmax = 9.410000
+            text = ""
+        intervals [23]:
+            xmin = 9.410000
+            xmax = 9.470000
+            text = "ὦ"
+        intervals [24]:
+            xmin = 9.470000
+            xmax = 9.680000
+            text = "φίλε"
+        intervals [25]:
+            xmin = 9.680000
+            xmax = 9.910000
+            text = "μου,"
+        intervals [26]:
+            xmin = 9.910000
+            xmax = 10.380000
+            text = "νύκτος"
+        intervals [27]:
+            xmin = 10.380000
+            xmax = 10.770000
+            text = "ἤδη"
+        intervals [28]:
+            xmin = 10.770000
+            xmax = 11.460000
+            text = "γενομένης"
+        intervals [29]:
+            xmin = 11.460000
+            xmax = 12.240000
+            text = "καθεύδωμεν"
+        intervals [30]:
+            xmin = 12.240000
+            xmax = 12.560000
+            text = ""
+        intervals [31]:
+            xmin = 12.560000
+            xmax = 12.740000
+            text = "μένε"
+        intervals [32]:
+            xmin = 12.740000
+            xmax = 12.960000
+            text = "τὴν"
+        intervals [33]:
+            xmin = 12.960000
+            xmax = 13.360000
+            text = "νύκτα"
+        intervals [34]:
+            xmin = 13.360000
+            xmax = 13.550000
+            text = "ἐν"
+        intervals [35]:
+            xmin = 13.550000
+            xmax = 13.740000
+            text = "ἐμῷ"
+        intervals [36]:
+            xmin = 13.740000
+            xmax = 14.330000
+            text = "οἴκῳ"
+        intervals [37]:
+            xmin = 14.330000
+            xmax = 15.250000
+            text = ""
+        intervals [38]:
+            xmin = 15.250000
+            xmax = 15.330000
+            text = "ἐν"
+        intervals [39]:
+            xmin = 15.330000
+            xmax = 15.480000
+            text = "οὖν"
+        intervals [40]:
+            xmin = 15.480000
+            xmax = 15.640000
+            text = "τῷ"
+        intervals [41]:
+            xmin = 15.640000
+            xmax = 16.110000
+            text = "τοῦ"
+        intervals [42]:
+            xmin = 16.110000
+            xmax = 17.230000
+            text = "Διογένους"
+        intervals [43]:
+            xmin = 17.230000
+            xmax = 17.700000
+            text = "οἴκῳ"
+        intervals [44]:
+            xmin = 17.700000
+            xmax = 18.110000
+            text = "μένω"
+        intervals [45]:
+            xmin = 18.110000
+            xmax = 19.130000
+            text = ""
+        intervals [46]:
+            xmin = 19.130000
+            xmax = 19.840000
+            text = "ἡμέρας"
+        intervals [47]:
+            xmin = 19.840000
+            xmax = 21.030000
+            text = "γενομένης,"
+        intervals [48]:
+            xmin = 21.030000
+            xmax = 21.360000
+            text = ""
+        intervals [49]:
+            xmin = 21.360000
+            xmax = 22.040000
+            text = "πόρρω"
+        intervals [50]:
+            xmin = 22.040000
+            xmax = 22.120000
+            text = ""
+        intervals [51]:
+            xmin = 22.120000
+            xmax = 22.830000
+            text = "ἀλλήλοις"
+        intervals [52]:
+            xmin = 22.830000
+            xmax = 23.450000
+            text = "λέγομεν"
+        intervals [53]:
+            xmin = 23.450000
+            xmax = 24.300000
+            text = ""
+        intervals [54]:
+            xmin = 24.300000
+            xmax = 25.030000
+            text = "τήμερον,"
+        intervals [55]:
+            xmin = 25.030000
+            xmax = 25.260000
+            text = "ἐγώ"
+        intervals [56]:
+            xmin = 25.260000
+            xmax = 25.680000
+            text = "φημι,"
+        intervals [57]:
+            xmin = 25.680000
+            xmax = 26.580000
+            text = ""
+        intervals [58]:
+            xmin = 26.580000
+            xmax = 26.850000
+            text = "εἰς"
+        intervals [59]:
+            xmin = 26.850000
+            xmax = 27.180000
+            text = "τὴν"
+        intervals [60]:
+            xmin = 27.180000
+            xmax = 27.720000
+            text = "ἀγορὰν"
+        intervals [61]:
+            xmin = 27.720000
+            xmax = 28.240000
+            text = "ἰέναι"
+        intervals [62]:
+            xmin = 28.240000
+            xmax = 28.900000
+            text = "βούλομαι"
+        intervals [63]:
+            xmin = 28.900000
+            xmax = 29.940000
+            text = ""
+        intervals [64]:
+            xmin = 29.940000
+            xmax = 30.100000
+            text = "εἰς"
+        intervals [65]:
+            xmin = 30.100000
+            xmax = 30.290000
+            text = "τὴν"
+        intervals [66]:
+            xmin = 30.290000
+            xmax = 30.820000
+            text = "ἀγορὰν"
+        intervals [67]:
+            xmin = 30.820000
+            xmax = 31.000000
+            text = "διὰ"
+        intervals [68]:
+            xmin = 31.000000
+            xmax = 31.380000
+            text = "τὶ"
+        intervals [69]:
+            xmin = 31.380000
+            xmax = 31.500000
+            text = "εἶ"
+        intervals [70]:
+            xmin = 31.500000
+            xmax = 32.170000
+            text = ""
+        intervals [71]:
+            xmin = 32.170000
+            xmax = 32.330000
+            text = "ἐὰν"
+        intervals [72]:
+            xmin = 32.330000
+            xmax = 32.710000
+            text = "σίτου"
+        intervals [73]:
+            xmin = 32.710000
+            xmax = 33.280000
+            text = "δεῖς,"
+        intervals [74]:
+            xmin = 33.280000
+            xmax = 33.630000
+            text = ""
+        intervals [75]:
+            xmin = 33.630000
+            xmax = 33.870000
+            text = "σοι"
+        intervals [76]:
+            xmin = 33.870000
+            xmax = 34.390000
+            text = "δώσω"
+        intervals [77]:
+            xmin = 34.390000
+            xmax = 34.630000
+            text = "τὸν"
+        intervals [78]:
+            xmin = 34.630000
+            xmax = 35.200000
+            text = "σῖτον"
+        intervals [79]:
+            xmin = 35.200000
+            xmax = 35.590000
+            text = "ὃν"
+        intervals [80]:
+            xmin = 35.590000
+            xmax = 35.720000
+            text = "ἐν"
+        intervals [81]:
+            xmin = 35.720000
+            xmax = 36.000000
+            text = "τῷ"
+        intervals [82]:
+            xmin = 36.000000
+            xmax = 36.280000
+            text = "ἐμῷ"
+        intervals [83]:
+            xmin = 36.280000
+            xmax = 36.750000
+            text = "οἴκῳ"
+        intervals [84]:
+            xmin = 36.750000
+            xmax = 37.030000
+            text = "ἤδη"
+        intervals [85]:
+            xmin = 37.030000
+            xmax = 37.460000
+            text = "ἔχω"
+        intervals [86]:
+            xmin = 37.460000
+            xmax = 38.640000
+            text = ""
+        intervals [87]:
+            xmin = 38.640000
+            xmax = 38.750000
+            text = "οὐ"
+        intervals [88]:
+            xmin = 38.750000
+            xmax = 39.250000
+            text = "σίτου"
+        intervals [89]:
+            xmin = 39.250000
+            xmax = 39.620000
+            text = "δέω,"
+        intervals [90]:
+            xmin = 39.620000
+            xmax = 40.220000
+            text = ""
+        intervals [91]:
+            xmin = 40.220000
+            xmax = 40.360000
+            text = "ἀλλ"
+        intervals [92]:
+            xmin = 40.360000
+            xmax = 41.210000
+            text = "ἐπιστολῶν"
+        intervals [93]:
+            xmin = 41.210000
+            xmax = 41.640000
+            text = ""
+        intervals [94]:
+            xmin = 41.640000
+            xmax = 41.690000
+            text = "ὁ"
+        intervals [95]:
+            xmin = 41.690000
+            xmax = 41.980000
+            text = "γὰρ"
+        intervals [96]:
+            xmin = 41.980000
+            xmax = 42.150000
+            text = "ἐν"
+        intervals [97]:
+            xmin = 42.150000
+            xmax = 42.470000
+            text = "τῇ"
+        intervals [98]:
+            xmin = 42.470000
+            xmax = 42.920000
+            text = "ἀγορᾷ"
+        intervals [99]:
+            xmin = 42.920000
+            xmax = 43.630000
+            text = "κλέπτης"
+        intervals [100]:
+            xmin = 43.630000
+            xmax = 43.840000
+            text = "σὺν"
+        intervals [101]:
+            xmin = 43.840000
+            xmax = 44.200000
+            text = "τοῖς"
+        intervals [102]:
+            xmin = 44.200000
+            xmax = 44.880000
+            text = "χρήμασι"
+        intervals [103]:
+            xmin = 44.880000
+            xmax = 45.110000
+            text = ""
+        intervals [104]:
+            xmin = 45.110000
+            xmax = 45.340000
+            text = "καὶ"
+        intervals [105]:
+            xmin = 45.340000
+            xmax = 45.650000
+            text = "τὰς"
+        intervals [106]:
+            xmin = 45.650000
+            xmax = 46.120000
+            text = "τοῖς"
+        intervals [107]:
+            xmin = 46.120000
+            xmax = 47.280000
+            text = "Λακεδαιμονίοις"
+        intervals [108]:
+            xmin = 47.280000
+            xmax = 48.220000
+            text = "ἐπιστολὰς"
+        intervals [109]:
+            xmin = 48.220000
+            xmax = 48.690000
+            text = "ἔλαβεν"
+        intervals [110]:
+            xmin = 48.690000
+            xmax = 49.650000
+            text = ""
+        intervals [111]:
+            xmin = 49.650000
+            xmax = 50.000000
+            text = "εἶμι"
+        intervals [112]:
+            xmin = 50.000000
+            xmax = 50.290000
+            text = "οὖν"
+        intervals [113]:
+            xmin = 50.290000
+            xmax = 50.480000
+            text = "εἰς"
+        intervals [114]:
+            xmin = 50.480000
+            xmax = 50.740000
+            text = "τὴν"
+        intervals [115]:
+            xmin = 50.740000
+            xmax = 51.320000
+            text = "ἀγορὰν"
+        intervals [116]:
+            xmin = 51.320000
+            xmax = 51.650000
+            text = ""
+        intervals [117]:
+            xmin = 51.650000
+            xmax = 51.760000
+            text = "ἵνα"
+        intervals [118]:
+            xmin = 51.760000
+            xmax = 52.500000
+            text = "ἐπιστολὰς"
+        intervals [119]:
+            xmin = 52.500000
+            xmax = 53.090000
+            text = "ὠνῶμαι"
+        intervals [120]:
+            xmin = 53.090000
+            xmax = 53.530000
+            text = ""
+        intervals [121]:
+            xmin = 53.530000
+            xmax = 53.650000
+            text = "καὶ"
+        intervals [122]:
+            xmin = 53.650000
+            xmax = 54.020000
+            text = "πολλὰ"
+        intervals [123]:
+            xmin = 54.020000
+            xmax = 54.310000
+            text = "ἄλλα"
+        intervals [124]:
+            xmin = 54.310000
+            xmax = 55.730000
+            text = ""
+        intervals [125]:
+            xmin = 55.730000
+            xmax = 55.980000
+            text = "ἐμοῖ"
+        intervals [126]:
+            xmin = 55.980000
+            xmax = 56.270000
+            text = "οὖν"
+        intervals [127]:
+            xmin = 56.270000
+            xmax = 56.380000
+            text = "ὁ"
+        intervals [128]:
+            xmin = 56.380000
+            xmax = 57.130000
+            text = "Διογένης"
+        intervals [129]:
+            xmin = 57.130000
+            xmax = 57.310000
+            text = "δύο"
+        intervals [130]:
+            xmin = 57.310000
+            xmax = 58.060000
+            text = "δραχμὰς"
+        intervals [131]:
+            xmin = 58.060000
+            xmax = 58.670000
+            text = "δίδωσι,"
+        intervals [132]:
+            xmin = 58.670000
+            xmax = 59.200000
+            text = ""
+        intervals [133]:
+            xmin = 59.200000
+            xmax = 59.310000
+            text = "καὶ"
+        intervals [134]:
+            xmin = 59.310000
+            xmax = 59.970000
+            text = "αὐτὰς"
+        intervals [135]:
+            xmin = 59.970000
+            xmax = 60.460000
+            text = "λαβὼν"
+        intervals [136]:
+            xmin = 60.460000
+            xmax = 60.930000
+            text = ""
+        intervals [137]:
+            xmin = 60.930000
+            xmax = 61.120000
+            text = "ἐκ"
+        intervals [138]:
+            xmin = 61.120000
+            xmax = 61.230000
+            text = "τοῦ"
+        intervals [139]:
+            xmin = 61.230000
+            xmax = 61.660000
+            text = "οἴκου"
+        intervals [140]:
+            xmin = 61.660000
+            xmax = 62.560000
+            text = "ἐξέρχομαι"

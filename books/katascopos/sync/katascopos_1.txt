@@ -1,0 +1,552 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0.000000
+xmax = 66.990000
+tiers? <exists>
+size = 2
+item []:
+    item [1]:
+        class = "IntervalTier"
+        name = "Sentence"
+        xmin = 0.000000
+        xmax = 66.990000
+        intervals: size = 14
+        intervals [1]:
+            xmin = 0.000000
+            xmax = 0.180000
+            text = ""
+        intervals [2]:
+            xmin = 0.180000
+            xmax = 1.410000
+            text = "o katascopos"
+        intervals [3]:
+            xmin = 1.410000
+            xmax = 2.470000
+            text = ""
+        intervals [4]:
+            xmin = 2.470000
+            xmax = 3.930000
+            text = "kephalaion to proton"
+        intervals [5]:
+            xmin = 3.930000
+            xmax = 5.140000
+            text = ""
+        intervals [6]:
+            xmin = 5.140000
+            xmax = 6.400000
+            text = "katascopos eimi"
+        intervals [7]:
+            xmin = 6.400000
+            xmax = 8.340000
+            text = ""
+        intervals [8]:
+            xmin = 8.340000
+            xmax = 15.370000
+            text = "τὸ ὄνομά μού ἐστι Γρηγόριος Λακεδαιμόνιός εἰμι, γεγονὼς εἴκοσι καὶ δύο ἔτη"
+        intervals [9]:
+            xmin = 15.370000
+            xmax = 16.590000
+            text = ""
+        intervals [10]:
+            xmin = 16.590000
+            xmax = 27.410000
+            text = "Λακεδαιμόνιος μέν εἰμι, ἐν δὲ ταῖς Ἀθήναις οἰκῶ διὰ τὶ ἐν ταῖς Ἀθήναις οἰκῶ διότι κατάσκοπός εἰμι"
+        intervals [11]:
+            xmin = 27.410000
+            xmax = 28.470000
+            text = ""
+        intervals [12]:
+            xmin = 28.470000
+            xmax = 50.010000
+            text = "οἱ Λακεδαιμόνιοι φοβοῦνται τοὺς Ἀθηναίους, καὶ φοβοῦνται οἱ Ἀθηναῖοι τοὺς Λακεδαιμονίους διὰ τὶ οἱ Λακεδαιμόνιοί τε καὶ Ἀθηναῖοι ἀλλήλους φοβοῦνται οἱ Λακεδαιμόνιοι τὰς τῶν Ἀθηναίων ναῦς φοβοῦνται, καὶ φοβοῦνται οἱ Ἀθηναῖοι τοὺς Λακεδαιμονίους στρατιώτας"
+        intervals [13]:
+            xmin = 50.010000
+            xmax = 51.310000
+            text = ""
+        intervals [14]:
+            xmin = 51.310000
+            xmax = 66.990000
+            text = "ἐγὼ οὖν ἐν ταῖς Ἀθήναις οἰκῶ ἵνα τὰ γενόμενα ἀγγέλλω τοῖς Λακεδαιμονίοις πολὺ φοβοῦμαι, κατάσκοπος ὢν, ἀλλὰ τὰ ἐν ταῖς Ἀθήναις γενόμενα τοῖς Λακεδαιμονίοις ἀεὶ ἀγγέλλω"
+    item [2]:
+        class = "IntervalTier"
+        name = "Word"
+        xmin = 0.000000
+        xmax = 66.990000
+        intervals: size = 119
+        intervals [1]:
+            xmin = 0.000000
+            xmax = 0.180000
+            text = ""
+        intervals [2]:
+            xmin = 0.180000
+            xmax = 0.290000
+            text = "o"
+        intervals [3]:
+            xmin = 0.290000
+            xmax = 1.410000
+            text = "katascopos"
+        intervals [4]:
+            xmin = 1.410000
+            xmax = 2.470000
+            text = ""
+        intervals [5]:
+            xmin = 2.470000
+            xmax = 3.080000
+            text = "kephalaion"
+        intervals [6]:
+            xmin = 3.080000
+            xmax = 3.160000
+            text = "to"
+        intervals [7]:
+            xmin = 3.160000
+            xmax = 3.930000
+            text = "proton"
+        intervals [8]:
+            xmin = 3.930000
+            xmax = 5.140000
+            text = ""
+        intervals [9]:
+            xmin = 5.140000
+            xmax = 5.970000
+            text = "katascopos"
+        intervals [10]:
+            xmin = 5.970000
+            xmax = 6.400000
+            text = "eimi"
+        intervals [11]:
+            xmin = 6.400000
+            xmax = 8.340000
+            text = ""
+        intervals [12]:
+            xmin = 8.340000
+            xmax = 8.420000
+            text = "τὸ"
+        intervals [13]:
+            xmin = 8.420000
+            xmax = 8.770000
+            text = "ὄνομά"
+        intervals [14]:
+            xmin = 8.770000
+            xmax = 9.000000
+            text = "μού"
+        intervals [15]:
+            xmin = 9.000000
+            xmax = 9.250000
+            text = "ἐστι"
+        intervals [16]:
+            xmin = 9.250000
+            xmax = 10.920000
+            text = "Γρηγόριος"
+        intervals [17]:
+            xmin = 10.920000
+            xmax = 11.890000
+            text = "Λακεδαιμόνιός"
+        intervals [18]:
+            xmin = 11.890000
+            xmax = 12.260000
+            text = "εἰμι,"
+        intervals [19]:
+            xmin = 12.260000
+            xmax = 13.180000
+            text = ""
+        intervals [20]:
+            xmin = 13.180000
+            xmax = 13.980000
+            text = "γεγονὼς"
+        intervals [21]:
+            xmin = 13.980000
+            xmax = 14.410000
+            text = "εἴκοσι"
+        intervals [22]:
+            xmin = 14.410000
+            xmax = 14.610000
+            text = "καὶ"
+        intervals [23]:
+            xmin = 14.610000
+            xmax = 14.800000
+            text = "δύο"
+        intervals [24]:
+            xmin = 14.800000
+            xmax = 15.370000
+            text = "ἔτη"
+        intervals [25]:
+            xmin = 15.370000
+            xmax = 16.590000
+            text = ""
+        intervals [26]:
+            xmin = 16.590000
+            xmax = 17.510000
+            text = "Λακεδαιμόνιος"
+        intervals [27]:
+            xmin = 17.510000
+            xmax = 17.720000
+            text = "μέν"
+        intervals [28]:
+            xmin = 17.720000
+            xmax = 18.130000
+            text = "εἰμι,"
+        intervals [29]:
+            xmin = 18.130000
+            xmax = 19.050000
+            text = ""
+        intervals [30]:
+            xmin = 19.050000
+            xmax = 19.170000
+            text = "ἐν"
+        intervals [31]:
+            xmin = 19.170000
+            xmax = 19.270000
+            text = "δὲ"
+        intervals [32]:
+            xmin = 19.270000
+            xmax = 19.670000
+            text = "ταῖς"
+        intervals [33]:
+            xmin = 19.670000
+            xmax = 20.260000
+            text = "Ἀθήναις"
+        intervals [34]:
+            xmin = 20.260000
+            xmax = 20.920000
+            text = "οἰκῶ"
+        intervals [35]:
+            xmin = 20.920000
+            xmax = 22.150000
+            text = ""
+        intervals [36]:
+            xmin = 22.150000
+            xmax = 22.420000
+            text = "διὰ"
+        intervals [37]:
+            xmin = 22.420000
+            xmax = 22.700000
+            text = "τὶ"
+        intervals [38]:
+            xmin = 22.700000
+            xmax = 22.850000
+            text = "ἐν"
+        intervals [39]:
+            xmin = 22.850000
+            xmax = 23.180000
+            text = "ταῖς"
+        intervals [40]:
+            xmin = 23.180000
+            xmax = 23.810000
+            text = "Ἀθήναις"
+        intervals [41]:
+            xmin = 23.810000
+            xmax = 24.550000
+            text = "οἰκῶ"
+        intervals [42]:
+            xmin = 24.550000
+            xmax = 25.140000
+            text = ""
+        intervals [43]:
+            xmin = 25.140000
+            xmax = 25.850000
+            text = "διότι"
+        intervals [44]:
+            xmin = 25.850000
+            xmax = 26.220000
+            text = ""
+        intervals [45]:
+            xmin = 26.220000
+            xmax = 27.040000
+            text = "κατάσκοπός"
+        intervals [46]:
+            xmin = 27.040000
+            xmax = 27.410000
+            text = "εἰμι"
+        intervals [47]:
+            xmin = 27.410000
+            xmax = 28.470000
+            text = ""
+        intervals [48]:
+            xmin = 28.470000
+            xmax = 28.780000
+            text = "οἱ"
+        intervals [49]:
+            xmin = 28.780000
+            xmax = 29.870000
+            text = "Λακεδαιμόνιοι"
+        intervals [50]:
+            xmin = 29.870000
+            xmax = 30.530000
+            text = "φοβοῦνται"
+        intervals [51]:
+            xmin = 30.530000
+            xmax = 30.790000
+            text = "τοὺς"
+        intervals [52]:
+            xmin = 30.790000
+            xmax = 31.760000
+            text = "Ἀθηναίους,"
+        intervals [53]:
+            xmin = 31.760000
+            xmax = 32.300000
+            text = ""
+        intervals [54]:
+            xmin = 32.300000
+            xmax = 32.440000
+            text = "καὶ"
+        intervals [55]:
+            xmin = 32.440000
+            xmax = 32.950000
+            text = "φοβοῦνται"
+        intervals [56]:
+            xmin = 32.950000
+            xmax = 33.110000
+            text = "οἱ"
+        intervals [57]:
+            xmin = 33.110000
+            xmax = 33.870000
+            text = "Ἀθηναῖοι"
+        intervals [58]:
+            xmin = 33.870000
+            xmax = 34.170000
+            text = "τοὺς"
+        intervals [59]:
+            xmin = 34.170000
+            xmax = 35.410000
+            text = "Λακεδαιμονίους"
+        intervals [60]:
+            xmin = 35.410000
+            xmax = 35.970000
+            text = ""
+        intervals [61]:
+            xmin = 35.970000
+            xmax = 36.120000
+            text = "διὰ"
+        intervals [62]:
+            xmin = 36.120000
+            xmax = 36.280000
+            text = "τὶ"
+        intervals [63]:
+            xmin = 36.280000
+            xmax = 36.450000
+            text = "οἱ"
+        intervals [64]:
+            xmin = 36.450000
+            xmax = 37.230000
+            text = "Λακεδαιμόνιοί"
+        intervals [65]:
+            xmin = 37.230000
+            xmax = 37.340000
+            text = "τε"
+        intervals [66]:
+            xmin = 37.340000
+            xmax = 37.490000
+            text = "καὶ"
+        intervals [67]:
+            xmin = 37.490000
+            xmax = 38.160000
+            text = "Ἀθηναῖοι"
+        intervals [68]:
+            xmin = 38.160000
+            xmax = 38.640000
+            text = "ἀλλήλους"
+        intervals [69]:
+            xmin = 38.640000
+            xmax = 39.380000
+            text = "φοβοῦνται"
+        intervals [70]:
+            xmin = 39.380000
+            xmax = 40.210000
+            text = ""
+        intervals [71]:
+            xmin = 40.210000
+            xmax = 40.330000
+            text = "οἱ"
+        intervals [72]:
+            xmin = 40.330000
+            xmax = 41.160000
+            text = "Λακεδαιμόνιοι"
+        intervals [73]:
+            xmin = 41.160000
+            xmax = 41.580000
+            text = "τὰς"
+        intervals [74]:
+            xmin = 41.580000
+            xmax = 41.860000
+            text = "τῶν"
+        intervals [75]:
+            xmin = 41.860000
+            xmax = 42.580000
+            text = "Ἀθηναίων"
+        intervals [76]:
+            xmin = 42.580000
+            xmax = 43.240000
+            text = "ναῦς"
+        intervals [77]:
+            xmin = 43.240000
+            xmax = 44.150000
+            text = "φοβοῦνται,"
+        intervals [78]:
+            xmin = 44.150000
+            xmax = 44.660000
+            text = ""
+        intervals [79]:
+            xmin = 44.660000
+            xmax = 44.860000
+            text = "καὶ"
+        intervals [80]:
+            xmin = 44.860000
+            xmax = 45.520000
+            text = "φοβοῦνται"
+        intervals [81]:
+            xmin = 45.520000
+            xmax = 45.690000
+            text = "οἱ"
+        intervals [82]:
+            xmin = 45.690000
+            xmax = 46.600000
+            text = "Ἀθηναῖοι"
+        intervals [83]:
+            xmin = 46.600000
+            xmax = 46.680000
+            text = ""
+        intervals [84]:
+            xmin = 46.680000
+            xmax = 46.960000
+            text = "τοὺς"
+        intervals [85]:
+            xmin = 46.960000
+            xmax = 48.030000
+            text = "Λακεδαιμονίους"
+        intervals [86]:
+            xmin = 48.030000
+            xmax = 48.390000
+            text = ""
+        intervals [87]:
+            xmin = 48.390000
+            xmax = 50.010000
+            text = "στρατιώτας"
+        intervals [88]:
+            xmin = 50.010000
+            xmax = 51.310000
+            text = ""
+        intervals [89]:
+            xmin = 51.310000
+            xmax = 51.580000
+            text = "ἐγὼ"
+        intervals [90]:
+            xmin = 51.580000
+            xmax = 51.760000
+            text = "οὖν"
+        intervals [91]:
+            xmin = 51.760000
+            xmax = 51.870000
+            text = "ἐν"
+        intervals [92]:
+            xmin = 51.870000
+            xmax = 52.140000
+            text = "ταῖς"
+        intervals [93]:
+            xmin = 52.140000
+            xmax = 52.640000
+            text = "Ἀθήναις"
+        intervals [94]:
+            xmin = 52.640000
+            xmax = 53.380000
+            text = "οἰκῶ"
+        intervals [95]:
+            xmin = 53.380000
+            xmax = 53.550000
+            text = ""
+        intervals [96]:
+            xmin = 53.550000
+            xmax = 53.730000
+            text = "ἵνα"
+        intervals [97]:
+            xmin = 53.730000
+            xmax = 53.870000
+            text = "τὰ"
+        intervals [98]:
+            xmin = 53.870000
+            xmax = 54.490000
+            text = "γενόμενα"
+        intervals [99]:
+            xmin = 54.490000
+            xmax = 55.130000
+            text = "ἀγγέλλω"
+        intervals [100]:
+            xmin = 55.130000
+            xmax = 55.510000
+            text = "τοῖς"
+        intervals [101]:
+            xmin = 55.510000
+            xmax = 56.860000
+            text = "Λακεδαιμονίοις"
+        intervals [102]:
+            xmin = 56.860000
+            xmax = 57.770000
+            text = ""
+        intervals [103]:
+            xmin = 57.770000
+            xmax = 57.960000
+            text = "πολὺ"
+        intervals [104]:
+            xmin = 57.960000
+            xmax = 59.040000
+            text = "φοβοῦμαι,"
+        intervals [105]:
+            xmin = 59.040000
+            xmax = 59.810000
+            text = ""
+        intervals [106]:
+            xmin = 59.810000
+            xmax = 60.680000
+            text = "κατάσκοπος"
+        intervals [107]:
+            xmin = 60.680000
+            xmax = 61.120000
+            text = "ὢν,"
+        intervals [108]:
+            xmin = 61.120000
+            xmax = 61.920000
+            text = ""
+        intervals [109]:
+            xmin = 61.920000
+            xmax = 62.360000
+            text = "ἀλλὰ"
+        intervals [110]:
+            xmin = 62.360000
+            xmax = 62.900000
+            text = ""
+        intervals [111]:
+            xmin = 62.900000
+            xmax = 62.990000
+            text = "τὰ"
+        intervals [112]:
+            xmin = 62.990000
+            xmax = 63.140000
+            text = "ἐν"
+        intervals [113]:
+            xmin = 63.140000
+            xmax = 63.430000
+            text = "ταῖς"
+        intervals [114]:
+            xmin = 63.430000
+            xmax = 64.100000
+            text = "Ἀθήναις"
+        intervals [115]:
+            xmin = 64.100000
+            xmax = 64.680000
+            text = "γενόμενα"
+        intervals [116]:
+            xmin = 64.680000
+            xmax = 64.990000
+            text = "τοῖς"
+        intervals [117]:
+            xmin = 64.990000
+            xmax = 66.000000
+            text = "Λακεδαιμονίοις"
+        intervals [118]:
+            xmin = 66.000000
+            xmax = 66.200000
+            text = "ἀεὶ"
+        intervals [119]:
+            xmin = 66.200000
+            xmax = 66.990000
+            text = "ἀγγέλλω"
