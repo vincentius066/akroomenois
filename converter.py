@@ -192,7 +192,7 @@ def format_timestamp(val):
         return "n/a"
     return f"{val:.2f}" if isinstance(val, (int, float)) else str(val)
     
-def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=False):
+def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=False, use_nothing=False):
     """Run cross-source text matching with recursive strict symmetry checks (Section -> Sentence -> Sub-phrase)."""
     greek_sections = parse_source_text_with_sentences(greek_text)
     english_sections = parse_source_text_with_sentences(english_text)
@@ -348,6 +348,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 
                 if use_tabs:
                     prefix = "&emsp;" if is_first_phrase else "  "
+                elif use_nothing:
+                    prefix = "  " if is_first_phrase else "  "
                 else:
                     prefix = f"  [{sec}] " if is_first_phrase else "  "
                 is_first_phrase = False
@@ -385,9 +387,12 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                     ts_val = format_timestamp(raw_ts)
                     
                     if use_tabs:
-                        prefix = "&emsp;" if is_first_english_phrase else "  "
+                        prefix = "&emsp;" if is_first_phrase else "  "
+                    elif use_nothing:
+                        prefix = "  " if is_first_phrase else "  "
                     else:
-                        prefix = f"  [{sec}] " if (s_idx == 0 and ss_idx == 0) else "  "
+                        prefix = f"  [{sec}] " if is_first_phrase else "  "
+                    is_first_phrase = False
                     is_first_english_phrase = False
                     
                     output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
