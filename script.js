@@ -1754,6 +1754,9 @@ document.addEventListener('generator-ready', function() {
     const chapterNum = targetChapter.getAttribute("data-chapter");
     if (chapterNum) {
       localStorage.setItem("savedChapter", chapterNum);
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: "auto" }); 
     }
   }
   
