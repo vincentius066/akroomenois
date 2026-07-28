@@ -1617,8 +1617,8 @@ document.addEventListener('generator-ready', function() {
     isChapterTransitioning = true;
     
     // 1. Pause current playback safely
-    wasPlaying = !audio.paused;
     audio.pause();
+    wasPlaying = false;
     
     // Reset the play button UI visually to the "Play" state
     if (playBtn) {
@@ -1665,11 +1665,6 @@ document.addEventListener('generator-ready', function() {
       }
       audio.load(); // Force reload the media element with the new track
     }
-    
-    // 8. Auto-play if the user was actively listening before switching
-    if (wasPlaying) {
-      audio.play().catch(err => console.log("Auto-play prevented: ", err));
-    }
   }
   
   function recalculateAudioBoundaries() {
@@ -1708,8 +1703,8 @@ document.addEventListener('generator-ready', function() {
     isChapterTransitioning = true;
   
     // Pause
-    wasPlaying = !audio.paused;
     audio.pause();
+    wasPlaying = false;
     if (playBtn) {
       playBtn.innerHTML = '<img class="btn-icon" src="icon/play-button.svg" alt="Play">';
     }
@@ -1754,11 +1749,6 @@ document.addEventListener('generator-ready', function() {
       textEn.style.display = "none";
     }
     updateTitle();
-  
-    // Auto-play if was playing
-    if (wasPlaying) {
-      audio.play().catch(err => console.log("Auto-play prevented: ", err));
-    }
   
     // Save chapter
     const chapterNum = targetChapter.getAttribute("data-chapter");
