@@ -58,6 +58,8 @@ def get_anchor_words(sections_dict, n=4, position="start"):
         for item in sections_dict[sec]:
             phrase_words = item["visual"].split()
             for w in phrase_words:
+                if 's' in w or 'S' in w:
+                    continue
                 clean_w = clean_for_matching(w)
                 if clean_w:
                     words.append(clean_w)
@@ -183,7 +185,13 @@ def split_punctuation(word):
     while j > i and word[j-1] in punct:
         j -= 1
     return word[:i], word[i:j], word[j:]
-
+    
+def format_timestamp(val):
+    """Safely format timestamps as two decimal places or string ('n/a')."""
+    if val is None or val == "n/a":
+        return "n/a"
+    return f"{val:.2f}" if isinstance(val, (int, float)) else str(val)
+    
 def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=False):
     """Run cross-source text matching with recursive strict symmetry checks (Section -> Sentence -> Sub-phrase)."""
     greek_sections = parse_source_text_with_sentences(greek_text)
@@ -201,9 +209,6 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
     output_2_lines = []
     output_3_lines = []
     
-    #all_sections = sorted(list(set(greek_sections.keys()).intersection(set(english_sections.keys()))))
-    #if not all_sections:
-        #all_sections = sorted(list(greek_sections.keys()))
     all_sections = sorted(greek_sections.keys())
         
     for idx, sec in enumerate(all_sections):
@@ -243,6 +248,19 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 phrase_start_time = None
                 
                 for word in words:
+                    # --- SILENT WORD DETECTION ---
+                    if 's' in word or 'S' in word:
+                        clean_display_word = re.sub(r'[sS]', '', word)
+                        if clean_display_word:
+                            matched_words_data.append({
+                                "text": clean_display_word,
+                                "start": "n/a",
+                                "end": "n/a",
+                                "is_punc": False
+                            })
+                        # Bypass TextGrid scanning completely
+                        continue
+                        
                     clean_w = clean_for_matching(word)
                     if not clean_w:
                         matched_words_data.append({"text": word, "start": None, "end": None, "is_punc": True})
@@ -277,8 +295,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                     })
                 
                 if phrase_start_time is None:
-                    phrase_start_time = 0.0
-                if section_start_timestamp is None:
+                    phrase_start_time = "n/a"
+                
+                # Only capture the section start timestamp if it's a valid numeric value
+                if section_start_timestamp is None and phrase_start_time != "n/a":
                     section_start_timestamp = phrase_start_time
                 
                 if match_sub_phrases:
@@ -292,7 +312,6 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                     data_sec_label = f"{sec}"
                 
                 # Construct HTML outputs using visual items
-                
                 o1_words_str = ""
                 for w_item in matched_words_data:
                     if w_item["is_punc"]:
@@ -300,12 +319,12 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         continue
                 
                     lead, core, trail = split_punctuation(w_item["text"])
-                    # Build the core word span
-                    word_span = f'<span class="word" data-word-start="{w_item["start"]:.2f}" data-word-end="{w_item["end"]:.2f}">{html.escape(core)}</span>'
-                    # Prepend leading punctuation
+                    start_str = format_timestamp(w_item["start"])
+                    end_str = format_timestamp(w_item["end"])
+
+                    word_span = f'<span class="word" data-word-start="{start_str}" data-word-end="{end_str}">{html.escape(core)}</span>'
                     if lead:
                         word_span = f'<span class="punctuation">{html.escape(lead)}</span>' + word_span
-                    # Append trailing punctuation
                     if trail:
                         word_span += f'<span class="punctuation">{html.escape(trail)}</span>'
                     o1_words_str += word_span + " "
@@ -317,7 +336,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         continue
                 
                     lead, core, trail = split_punctuation(w_item["text"])
-                    word_span = f'<span class="word" data-word-start="{w_item["start"]:.2f}" data-word-end="{w_item["end"]:.2f}">{html.escape(core)}</span>'
+                    start_str = format_timestamp(w_item["start"])
+                    end_str = format_timestamp(w_item["end"])
+
+                    word_span = f'<span class="word" data-word-start="{start_str}" data-word-end="{end_str}">{html.escape(core)}</span>'
                     if lead:
                         word_span = f'<span class="punctuation">{html.escape(lead)}</span>' + word_span
                     if trail:
@@ -330,8 +352,9 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                     prefix = f"  [{sec}] " if is_first_phrase else "  "
                 is_first_phrase = False
                 
-                output_1_lines.append(f'{prefix}<span data-start="{phrase_start_time:.2f}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span>\n')
-                output_2_lines.append(f'{prefix}<span data-start="{phrase_start_time:.2f}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span>\n')
+                phrase_ts_str = format_timestamp(phrase_start_time)
+                output_1_lines.append(f'{prefix}<span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span>\n')
+                output_2_lines.append(f'{prefix}<span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span>\n')
                 
         if section_start_timestamp is None:
             section_start_timestamp = tg_intervals[tg_idx-1]["start"] if tg_idx > 0 else 0.0
@@ -355,9 +378,11 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                     escaped_eng = html.escape(eng_phrase_text, quote=False)
                     
                     if match_sub_phrases:
-                        ts_val = f"{coordinate_timestamps.get(('sub', s_num, ss_num), section_start_timestamp):.2f}"
+                        raw_ts = coordinate_timestamps.get(('sub', s_num, ss_num), section_start_timestamp)
                     else:
-                        ts_val = f"{coordinate_timestamps.get(('sentence', s_num), section_start_timestamp):.2f}"
+                        raw_ts = coordinate_timestamps.get(('sentence', s_num), section_start_timestamp)
+                        
+                    ts_val = format_timestamp(raw_ts)
                     
                     if use_tabs:
                         prefix = "&emsp;" if is_first_english_phrase else "  "
@@ -370,7 +395,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
             if sec_sentences_eng:
                 full_english_block = " ".join([item["visual"] for item in sec_sentences_eng])
                 escaped_eng = html.escape(full_english_block, quote=False)
-                ts_val = f"{section_start_timestamp:.2f}"
+                ts_val = format_timestamp(section_start_timestamp)
                 output_3_lines.append(f'  [{sec}] <span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
             else:
                 pass
@@ -388,8 +413,6 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
     greek_output2 = convert_notes(greek_output2)
 
     return greek_output1, greek_output2, english_output
-    
-    #return "".join(output_1_lines), "".join(output_2_lines), "".join(output_3_lines)
 
 def prepare_readalong_studio_text(raw_text):
     """Extracts pure text content from raw web-scraped outputs, removing structural headers."""
