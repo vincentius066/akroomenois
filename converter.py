@@ -194,6 +194,20 @@ def format_timestamp(val):
     
 def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=False, use_nothing=False):
     """Run cross-source text matching with recursive strict symmetry checks (Section -> Sentence -> Sub-phrase)."""
+    
+    # 1. Very first thing: Convert user-friendly {notes} into hex and remove the {} in the Greek text
+    def preprocess_greek_notes(text):
+        pattern = re.compile(r'1111\{(.*?)\}2222\{(.*?)\}3333')
+        def repl(match):
+            # Convert characters to hex, effectively dropping the {} brackets
+            display_hex = ''.join(f'{ord(c):04X}' for c in match.group(1))
+            note_hex = ''.join(f'{ord(c):04X}' for c in match.group(2))
+            return f'1111{display_hex}2222{note_hex}3333'
+        return pattern.sub(repl, text)
+
+    # Apply ONLY to the Greek text before any alignment parsing happens
+    greek_text = preprocess_greek_notes(greek_text)
+    
     greek_sections = parse_source_text_with_sentences(greek_text)
     english_sections = parse_source_text_with_sentences(english_text)
     tg_intervals = parse_textgrid_intervals(textgrid_text)
