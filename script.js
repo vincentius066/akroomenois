@@ -1348,9 +1348,158 @@ document.addEventListener('generator-ready', function() {
   }
 
   if (freqBtn) {
-    freqBtn.addEventListener("click", () => {
-      console.log("Word Frequency metrics opened!");
-      // Your niche philological vocabulary analyzer logic goes here
+    freqBtn.addEventListener("click", async () => {
+      // 1. Show an initial loading state
+      popupContent.innerHTML = `<div style="padding:10px;">Loading frequency data...</div>`;
+      popup.style.display = "block";
+      document.body.style.overflow = 'hidden';
+      popupOverlay.style.display = "block";
+  
+      try {
+        // 2. Fetch the JSON data using your global configuration path
+        const response = await fetch(window.APP_CONFIG?.frequencyJsonPath || "frequency_data.json");
+        const freqData = await response.json();
+  
+        // 3. Define the brackets based on your exact specifications
+        const brackets = [
+          { id: "1-4", min: 1, max: 4, label: "1-4x" },
+          { id: "5-9", min: 5, max: 9, label: "5-9x" },
+          { id: "10-49", min: 10, max: 49, label: "10-49x" },
+          { id: "50-99", min: 50, max: 99, label: "50-99x" },
+          { id: "100-499", min: 100, max: 499, label: "100-499x" },
+          { id: "500-999", min: 500, max: 999, label: "500-999x" },
+          { id: "1000-4999", min: 1000, max: 4999, label: "1000-4999x" }
+        ];
+  
+        // 4. Initialize State
+        let currentTab = "all"; // 'all' or 'verbs'
+        let activeBrackets = new Set(brackets.map(b => b.id)); // All selected by default
+  
+        // 5. Build the UI Shell (matching your settings UI styling)
+        popupContent.innerHTML = `
+          <h3 style="margin-top:0;">Word Frequency</h3>
+          
+          <!-- Tabs -->
+          <div style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;">
+            <button id="freqTabAll" class="settings-btn" style="cursor: pointer; background-color: #ddd;">All</button>
+            <button id="freqTabVerbs" class="settings-btn" style="cursor: pointer;">Verbs</button>
+          </div>
+  
+          <!-- Selectable Bracket Toggles -->
+          <div id="bracketContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; justify-content: center;">
+            ${brackets.map(b => `
+              <button class="settings-btn bracket-btn" data-id="${b.id}" style="cursor: pointer; padding: 4px 8px; font-size: 0.85em; background-color: #ddd;">
+                ${b.label}
+              </button>
+            `).join("")}
+          </div>
+  
+          <!-- Scrollable Results Container -->
+          <div id="freqResults" style="max-height: 55vh; overflow-y: auto; padding-right: 10px; text-align: left;"></div>
+        `;
+  
+        // Grab interactive DOM elements
+        const tabAllBtn = document.getElementById("freqTabAll");
+        const tabVerbsBtn = document.getElementById("freqTabVerbs");
+        const bracketBtns = popupContent.querySelectorAll(".bracket-btn");
+        const resultsContainer = document.getElementById("freqResults");
+  
+        // 6. Bind Tab Events
+        tabAllBtn.addEventListener("click", () => {
+          currentTab = "all";
+          tabAllBtn.style.backgroundColor = "#ddd"; // Highlight active
+          tabVerbsBtn.style.backgroundColor = "";
+          renderResults();
+        });
+  
+        tabVerbsBtn.addEventListener("click", () => {
+          currentTab = "verbs";
+          tabVerbsBtn.style.backgroundColor = "#ddd";
+          tabAllBtn.style.backgroundColor = "";
+          renderResults();
+        });
+  
+        // 7. Bind Multi-Select Bracket Events
+        bracketBtns.forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            const id = e.target.dataset.id;
+            if (activeBrackets.has(id)) {
+              activeBrackets.delete(id); // Unselect
+              e.target.style.backgroundColor = ""; 
+            } else {
+              activeBrackets.add(id); // Select
+              e.target.style.backgroundColor = "#ddd"; 
+            }
+            renderResults();
+          });
+        });
+  
+        // 8. Main Rendering Logic
+        function renderResults() {
+          let html = "";
+  
+          // Filter vocabulary by current tab (All vs Verbs)
+          const filteredData = freqData.filter(item => {
+            if (currentTab === "verbs") {
+              // Allows for multiple ways you might have saved the POS in your JSON
+              return item.isVerb === true || item.pos === "verb" || item.pos === "V" || (item.partOfSpeech && item.partOfSpeech.toLowerCase().includes("verb"));
+            }
+            return true;
+          });
+  
+          // Iterate through brackets to preserve numerical order
+          brackets.forEach(bracket => {
+            if (!activeBrackets.has(bracket.id)) return; // Skip unselected brackets
+  
+            // Grab words matching this frequency range
+            const wordsInBracket = filteredData.filter(w => w.freq >= bracket.min && w.freq <= bracket.max);
+            
+            if (wordsInBracket.length > 0) {
+              // Inject section separators mapped to your settings UI style
+              html += `
+                <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0 10px 0;">
+                <h5 style="text-align: center; margin: 0 0 15px 0;">${bracket.label}</h5>
+              `;
+  
+              // Render the vocabulary lines
+              wordsInBracket.forEach(item => {
+                // Ensure array format for Greek
+                const greekArr = Array.isArray(item.greek) ? item.greek : [item.greek || item.lemma || item.word];
+                const greekText = greekArr.filter(Boolean).join(" / ");
+                
+                // Ensure array format for English, and isolate just the FIRST definition (split by comma)
+                let engArr = [];
+                const rawGlosses = Array.isArray(item.gloss) ? item.gloss : (Array.isArray(item.glosses) ? item.glosses : [item.gloss || item.definition]);
+                
+                engArr = rawGlosses.filter(Boolean).map(g => g.split(",")[0].trim()); // Grabs only the first definition before a comma
+                const engText = engArr.join(" / ");
+  
+                // Structure output
+                html += `
+                  <div style="margin-bottom: 14px; font-size: 1.1em; line-height: 1.3;">
+                    <div style="font-weight: bold;">${greekText} (${item.freq}x)</div>
+                    ${engText ? `<div style="font-size: 0.9em; color: #555;">${engText}</div>` : ""}
+                  </div>
+                `;
+              });
+            }
+          });
+  
+          // Fallback if combination yields no results
+          if (html === "") {
+            html = `<div style="text-align: center; color: #777; margin-top: 20px;">No words match the selected filters.</div>`;
+          }
+  
+          resultsContainer.innerHTML = html;
+        }
+  
+        // 9. Initial paint
+        renderResults();
+  
+      } catch (error) {
+        console.error("Error fetching frequency data:", error);
+        popupContent.innerHTML = `<div style="padding:10px; color: red;">Failed to load word frequencies.</div>`;
+      }
     });
   }
 
