@@ -17,8 +17,12 @@ def convert_notes(html_string):
     return pattern.sub(repl, html_string)
 
 def clean_for_matching(text):
-    cleaned = re.sub(r'[ABCDEFGHIJKLMNOPQRSTUVWXYZ\d\W_]+', '', text.lower())
-    return cleaned
+    if text and text[0] in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz":
+        cleaned = re.sub(r'[\d\W_]+', '', text.lower())
+        return cleaned
+    else:
+        cleaned = re.sub(r'[ABCDEFGHIJKLMNOPQRSTUVWXYZ\d\W_]+', '', text.lower())
+        return cleaned
 
 def parse_textgrid_intervals(textgrid_content):
     parts = re.split(r'item\s*\[\s*2\s*\]\s*:', textgrid_content)
