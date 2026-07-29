@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lingua Graeca Per Se Illustrata</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  
+  <script>
+    window.APP_CONFIG = {
+      dictionaryJsonPath: "books/LGPSI/dictionary_data/data_2.json",
+      frequencyJsonPath: "books/LGPSI/frequency_data_5.json",
+      sourceGreekPath: "books/LGPSI/text/diog.txt",
+      sourceEnglishPath: "books/LGPSI/text/topos.txt",
+      sectionDisplayType: "nothing",
+
+      customBookName: 'Chapter',
+      customChapterName: 'Reading'
+    };
+    window.BOOK_TITLE = {
+      greek: {
+        small:  'κεφ. {book} σκηνὴ {chapter}',
+        medium: 'κεφ. {book} σκηνὴ {chapter}',
+        large:  'κεφ. {book} σκηνὴ {chapter}'
+      }
+    };
+  </script>
+  <script src="generator.js" defer></script>
+  <script src="secondaryScripts/dictionary.js" defer></script>
+  <script src="secondaryScripts/advancedFontSettings.js" defer></script>
+  <script src="script.js" defer></script> 
+</head>
+<body data-book-id="LGPSI">
+<div id="loadingScreen">
+  <div id="loadingSpinner"></div>
+  <p id="loadingText">Loading…</p>
+</div>
+<audio id="audio" preload="auto"></audio>
+
+<!-- ============================== -->
+<!-- ============================== -->
+<!-- ==PREFACE== -->
+<!-- ============================== -->
+<!-- ============================== -->
+
+<div class="chapter-body active" data-chapter="0" data-section="0">
+<p class="text" lang="grc">
+  <span class="text_title">
+  <span data-start="n/a" data-section="0.1" class="phrase"><span class="punctuation"><strong>An Introduction to</strong>
+<br>Ἡ Ἑλληνικὴ γλῶσσα καθ᾿ αὑτὴν φωτιζομένη
+<br><br><i>What it is, what it isn't, and what's still to be done</i></span></span>
+  </span>
+  <br><br>
+  <span class="phrase">
+LGPSI is an open-ended collaborative project to develop sets of graded reading that guide learners from the beginning to a reading proficiency in ancient Greek (initially Koine, eventually expanding into Attic, Homer, and Byzantine).
+<br><br>
+LGPSI is also an in-progress work. That is, I am presently working on writing, editing, revising the text as I go. It's also almost entirely voluntary labour, so it's slow.
+<br><br>
+The core text: The core text is main material of continuous Greek text which follows, at its centre, the story of a family in Antioch in the 4th century A.D., and those they met along the way. This material is being primarily authored by myself. The chapters are designed to become increasingly more complex in style, vocabulary, and grammar.
+<br><br>
+<strong>Does it cost anything?</strong> LGPSI is an open-access resource and you can freely access it and put it to use basically however you see fit. No, you don’t need to send me money. Yes, you can if you would like.
+<br><br>
+There may come a stage where some instantiation of LGPSI costs money (e.g., a print version). But my commitment is that LGPSI should be both open in the sense of ‘free to collaborate and improve’, but also ‘free to use without cost’.
+<br><br>
+<strong>Where are the margin notes and illustrations like LLPSI?</strong> There aren't any, yet. I would be very happy to collaborate with anyone interested in doing simple line-drawings to illustrate words, scenes, etc., for chapters. Marginal notes will come, I believe, in time, especially as the main text becomes more stable and less subject to revision. My major focus at present is writing and developing the core text.
+<br><br>
+Can I use LGPSI to teach myself Greek? Honestly, not yet. Would I like LGPSI to get to the point where you could entirely use it, by itself, by yourself, to learn Greek (as you can do with LLPSI)? Yes, certainly. It's not at that point, and I don't expect it to reach that point especially quickly.
+<br><br>
+<strong>I have feedback/corrections</strong> Please send them to me. You can email me directly at thepatrologist@gmail.com.
+<br><br>
+Alternatively, if you look at the source files on github, you can submit issues or corrections directly there. I can sometimes be slow to respond, particularly if you are responding to parts of the work that I'm not currently revising.
+<br><br>
+<strong>I want to support this work financially</strong> Please do. Patreon or donate directly to me via paypal.
+<br><br>
+This work is licensed under a CC BY SA licence.
+<br><br>
+Seamus Macdonald.
+  </span>
+</p>
+
+<p class="text_en" lang="en">
+  <span data-start="n/a" class="phrase_en"></span>
+</p>
+</div>
+  
+<!-- ============================== -->
+<!-- ============================== -->
+<!-- ==BOOK 1, CHAPTER 1== -->
+<!-- ============================== -->
+<!-- ============================== -->
+  
+</body>
+</html>
