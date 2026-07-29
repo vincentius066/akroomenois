@@ -1356,11 +1356,11 @@ document.addEventListener('generator-ready', function() {
       popupOverlay.style.display = "block";
   
       try {
-        // 2. Fetch the JSON data using your global configuration path
+        // 2. Fetch the JSON data
         const response = await fetch(window.APP_CONFIG?.frequencyJsonPath || "frequency_data.json");
         const freqData = await response.json();
   
-        // 3. Define the brackets based on your exact specifications
+        // 3. Define the brackets
         const brackets = [
           { id: "1-4", min: 1, max: 4, label: "1-4x" },
           { id: "5-9", min: 5, max: 9, label: "5-9x" },
@@ -1372,10 +1372,10 @@ document.addEventListener('generator-ready', function() {
         ];
   
         // 4. Initialize State
-        let currentTab = "all"; // 'all' or 'verbs'
+        let currentTab = "all"; 
         let activeBrackets = new Set(brackets.map(b => b.id)); // All selected by default
   
-        // 5. Build the UI Shell (matching your settings UI styling)
+        // 5. Build the UI Shell
         popupContent.innerHTML = `
           <h3 style="margin-top:0;">Word Frequency</h3>
           
@@ -1404,19 +1404,19 @@ document.addEventListener('generator-ready', function() {
         const bracketBtns = popupContent.querySelectorAll(".bracket-btn");
         const resultsContainer = document.getElementById("freqResults");
   
-        // 6. Bind Tab Events
+        // 6. Bind Tab Events (passing freqData directly to prevent ReferenceErrors)
         tabAllBtn.addEventListener("click", () => {
           currentTab = "all";
-          tabAllBtn.style.backgroundColor = "#ddd"; // Highlight active
+          tabAllBtn.style.backgroundColor = "#ddd"; 
           tabVerbsBtn.style.backgroundColor = "";
-          renderResults();
+          renderResults(freqData);
         });
   
         tabVerbsBtn.addEventListener("click", () => {
           currentTab = "verbs";
           tabVerbsBtn.style.backgroundColor = "#ddd";
           tabAllBtn.style.backgroundColor = "";
-          renderResults();
+          renderResults(freqData);
         });
   
         // 7. Bind Multi-Select Bracket Events
@@ -1430,19 +1430,19 @@ document.addEventListener('generator-ready', function() {
               activeBrackets.add(id); // Select
               e.target.style.backgroundColor = "#ddd"; 
             }
-            renderResults();
+            renderResults(freqData);
           });
         });
         
         // 8. Main Rendering Logic
-        function renderResults() {
+        function renderResults(data) {
           let html = "";
   
           // Filter vocabulary by current tab (All vs Verbs)
-          const filteredData = freqData.filter(item => {
+          const filteredData = data.filter(item => {
             if (currentTab === "verbs") {
-              // Adjust these keys to match your JSON's part-of-speech or verb indicators
-              return item.isVerb === true || item.pos === "verb" || item.pos === "V" || (item.partOfSpeech && item.partOfSpeech.toLowerCase().includes("verb"));
+              // Matches your JSON key exactly
+              return item.isVerb === true;
             }
             return true;
           });
@@ -1451,33 +1451,27 @@ document.addEventListener('generator-ready', function() {
           brackets.forEach(bracket => {
             if (!activeBrackets.has(bracket.id)) return; // Skip unselected brackets
   
-            // Grab words matching this frequency range (adjust item.freq if your key differs, e.g., item.count)
-            const wordsInBracket = filteredData.filter(w => w.freq >= bracket.min && w.freq <= bracket.max);
+            // Matches totalFrequency instead of freq
+            const wordsInBracket = filteredData.filter(w => w.totalFrequency >= bracket.min && w.totalFrequency <= bracket.max);
             
             if (wordsInBracket.length > 0) {
-              // Inject section separators mapped to your settings UI style
+              // Inject section separators
               html += `
                 <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0 10px 0;">
                 <h5 style="text-align: center; margin: 0 0 15px 0;">${bracket.label}</h5>
               `;
   
-              // Render the vocabulary lines
+              // Render the vocabulary lines directly from your JSON structure
               wordsInBracket.forEach(item => {
-                // Map to your JSON's Greek text / lemma keys (e.g., item.greek, item.lemma, item.word)
-                const greekArr = Array.isArray(item.greek) ? item.greek : [item.greek || item.lemma || item.word];
-                const greekText = greekArr.filter(Boolean).join(" / ");
-                
-                // Map to your JSON's gloss / definition keys (e.g., item.gloss, item.glosses, item.definition)
-                let engArr = [];
-                const rawGlosses = Array.isArray(item.gloss) ? item.gloss : (Array.isArray(item.glosses) ? item.glosses : [item.gloss || item.definition]);
-                
-                engArr = rawGlosses.filter(Boolean).map(g => g.split(",")[0].trim()); 
-                const engText = engArr.join(" / ");
+                // Directly pull strings without injecting slashes or stripping commas
+                const greekText = item.pseudoLemma || "";
+                const engText = item.gloss || "";
+                const frequency = item.totalFrequency || 0;
   
                 // Structure output
                 html += `
                   <div style="margin-bottom: 14px; font-size: 1.1em; line-height: 1.3;">
-                    <div style="font-weight: bold;">${greekText} (${item.freq}x)</div>
+                    <div style="font-weight: bold;">${greekText} (${frequency}x)</div>
                     ${engText ? `<div style="font-size: 0.9em; color: #555;">${engText}</div>` : ""}
                   </div>
                 `;
@@ -1494,7 +1488,7 @@ document.addEventListener('generator-ready', function() {
         }
   
         // 9. Initial paint
-        renderResults();
+        renderResults(freqData);
   
       } catch (error) {
         console.error("Error fetching frequency data:", error);
