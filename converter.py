@@ -177,7 +177,7 @@ def parse_source_text_with_sentences(raw_text):
     return sections_dict
 
 def split_punctuation(word):
-    punct = set('.,·;:’\'()[]{}"“”—–')   # add any other punctuation you need
+    punct = set('.,·;:’\'()[]{}"“”—–?!')   # add any other punctuation you need
     i = 0
     while i < len(word) and word[i] in punct:
         i += 1
