@@ -2,7 +2,7 @@ import re
 import html
 
 def convert_notes(html_string):
-    pattern = re.compile(r'1111([0-9A-Fa-f]+?)2222([0-9A-Fa-f]+?)3333')
+    pattern = re.compile(r'GGGG([0-9A-Fa-f]+?)HHHH([0-9A-Fa-f]+?)IIII')
     def repl(match):
         display_hex = match.group(1)
         note_hex = match.group(2)
@@ -197,12 +197,12 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
     
     # 1. Very first thing: Convert user-friendly {notes} into hex and remove the {} in the Greek text
     def preprocess_greek_notes(text):
-        pattern = re.compile(r'1111\{(.*?)\}2222\{(.*?)\}3333')
+        pattern = re.compile(r'GGGG\{(.*?)\}HHHH\{(.*?)\}IIII')
         def repl(match):
             # Convert characters to hex, effectively dropping the {} brackets
             display_hex = ''.join(f'{ord(c):04X}' for c in match.group(1))
             note_hex = ''.join(f'{ord(c):04X}' for c in match.group(2))
-            return f'1111{display_hex}2222{note_hex}3333'
+            return f'GGGG{display_hex}HHHH{note_hex}IIII'
         return pattern.sub(repl, text)
 
     # Apply ONLY to the Greek text before any alignment parsing happens
