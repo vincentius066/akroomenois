@@ -1360,15 +1360,15 @@ document.addEventListener('generator-ready', function() {
         const response = await fetch(window.APP_CONFIG?.frequencyJsonPath || "frequency_data.json");
         const freqData = await response.json();
   
-        // 3. Define the brackets
+        // 3. Define the brackets (REVERSED: Highest frequencies at the top)
         const brackets = [
-          { id: "1-4", min: 1, max: 4, label: "1-4x" },
-          { id: "5-9", min: 5, max: 9, label: "5-9x" },
-          { id: "10-49", min: 10, max: 49, label: "10-49x" },
-          { id: "50-99", min: 50, max: 99, label: "50-99x" },
-          { id: "100-499", min: 100, max: 499, label: "100-499x" },
+          { id: "1000-4999", min: 1000, max: 4999, label: "1000-4999x" },
           { id: "500-999", min: 500, max: 999, label: "500-999x" },
-          { id: "1000-4999", min: 1000, max: 4999, label: "1000-4999x" }
+          { id: "100-499", min: 100, max: 499, label: "100-499x" },
+          { id: "50-99", min: 50, max: 99, label: "50-99x" },
+          { id: "10-49", min: 10, max: 49, label: "10-49x" },
+          { id: "5-9", min: 5, max: 9, label: "5-9x" },
+          { id: "1-4", min: 1, max: 4, label: "1-4x" }
         ];
   
         // 4. Initialize State
@@ -1404,7 +1404,7 @@ document.addEventListener('generator-ready', function() {
         const bracketBtns = popupContent.querySelectorAll(".bracket-btn");
         const resultsContainer = document.getElementById("freqResults");
   
-        // 6. Bind Tab Events (passing freqData directly to prevent ReferenceErrors)
+        // 6. Bind Tab Events
         tabAllBtn.addEventListener("click", () => {
           currentTab = "all";
           tabAllBtn.style.backgroundColor = "#ddd"; 
@@ -1434,6 +1434,27 @@ document.addEventListener('generator-ready', function() {
           });
         });
         
+        // Helper: Gloss Formatter (Mirrors DictionaryEngine's structure so toggleGloss works perfectly)
+        const formatGlossWithToggle = (glossText) => {
+          if (!glossText) return '—';
+          const semicolonIndex = glossText.indexOf(';');
+          if (semicolonIndex === -1) return glossText;
+  
+          const visiblePart = glossText.substring(0, semicolonIndex + 1);
+          const hiddenPart = glossText.substring(semicolonIndex + 1);
+  
+          // Wrapped in an outer span so DictionaryEngine.toggleGloss(this) finds `.extra-gloss` in this.parentNode
+          return `
+            <span>
+              <span>${visiblePart}</span><!--
+           --><span class="extra-gloss" style="display: none;">${hiddenPart}</span>
+              <button class="gloss-toggle-btn" onclick="if(window.DictionaryEngine) { DictionaryEngine.toggleGloss(this); }" style="cursor: pointer; z-index: 10; margin-left: 6px; font-size: 0.85em; padding: 1px 6px; border-radius: 4px; border: 1px solid #ccc; background-color: #f1f3f5;">
+                More
+              </button>
+            </span>
+          `;
+        };
+
         // 8. Main Rendering Logic
         function renderResults(data) {
           let html = "";
@@ -1441,19 +1462,21 @@ document.addEventListener('generator-ready', function() {
           // Filter vocabulary by current tab (All vs Verbs)
           const filteredData = data.filter(item => {
             if (currentTab === "verbs") {
-              // Matches your JSON key exactly
-              return item.isVerb === true;
+              // Loosened check to account for missing keys or string "true" in JSON imports
+              return item.isVerb == true || item.isVerb === "true";
             }
             return true;
           });
   
-          // Iterate through brackets to preserve numerical order
+          // Iterate through brackets (already reversed so higher frequencies print first)
           brackets.forEach(bracket => {
             if (!activeBrackets.has(bracket.id)) return; // Skip unselected brackets
   
-            // Matches totalFrequency instead of freq
             const wordsInBracket = filteredData.filter(w => w.totalFrequency >= bracket.min && w.totalFrequency <= bracket.max);
             
+            // Optional: Sort words descending within their bracket
+            wordsInBracket.sort((a, b) => b.totalFrequency - a.totalFrequency);
+
             if (wordsInBracket.length > 0) {
               // Inject section separators
               html += `
@@ -1461,18 +1484,33 @@ document.addEventListener('generator-ready', function() {
                 <h5 style="text-align: center; margin: 0 0 15px 0;">${bracket.label}</h5>
               `;
   
-              // Render the vocabulary lines directly from your JSON structure
+              // Render the vocabulary lines
               wordsInBracket.forEach(item => {
-                // Directly pull strings without injecting slashes or stripping commas
                 const greekText = item.pseudoLemma || "";
                 const engText = item.gloss || "";
                 const frequency = item.totalFrequency || 0;
+                
+                // Surface forms handling
+                let surfaceToggleBtn = "";
+                let surfaceFormsDiv = "";
+
+                if (item.surfaceFormsContributed && item.surfaceFormsContributed.length > 0) {
+                  const listItems = item.surfaceFormsContributed.map(sf => `${sf.surfaceForm} (${sf.formFrequency}x)`).join(", ");
+                  
+                  // Inline toggler for the surface forms
+                  surfaceToggleBtn = `<button onclick="const el = this.parentElement.nextElementSibling; if(el.style.display === 'none'){ el.style.display = 'block'; this.textContent = '[-] forms'; } else { el.style.display = 'none'; this.textContent = '[+] forms'; }" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 0.75em; padding: 0; margin-left: 8px;">[+] forms</button>`;
+                  
+                  surfaceFormsDiv = `<div style="display: none; font-size: 0.85em; color: #666; margin-top: 4px; padding-left: 10px; border-left: 2px solid #ddd; font-weight: normal;">${listItems}</div>`;
+                }
   
                 // Structure output
                 html += `
                   <div style="margin-bottom: 14px; font-size: 1.1em; line-height: 1.3;">
-                    <div style="font-weight: bold;">${greekText} (${frequency}x)</div>
-                    ${engText ? `<div style="font-size: 0.9em; color: #555;">${engText}</div>` : ""}
+                    <div style="font-weight: bold; display: flex; align-items: center; flex-wrap: wrap;">
+                      ${greekText} (${frequency}x) ${surfaceToggleBtn}
+                    </div>
+                    ${surfaceFormsDiv}
+                    ${engText ? `<div style="font-size: 0.9em; color: #555; margin-top: 3px;">${formatGlossWithToggle(engText)}</div>` : ""}
                   </div>
                 `;
               });
