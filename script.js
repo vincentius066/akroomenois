@@ -1433,7 +1433,7 @@ document.addEventListener('generator-ready', function() {
             renderResults();
           });
         });
-  
+        
         // 8. Main Rendering Logic
         function renderResults() {
           let html = "";
@@ -1441,7 +1441,7 @@ document.addEventListener('generator-ready', function() {
           // Filter vocabulary by current tab (All vs Verbs)
           const filteredData = freqData.filter(item => {
             if (currentTab === "verbs") {
-              // Allows for multiple ways you might have saved the POS in your JSON
+              // Adjust these keys to match your JSON's part-of-speech or verb indicators
               return item.isVerb === true || item.pos === "verb" || item.pos === "V" || (item.partOfSpeech && item.partOfSpeech.toLowerCase().includes("verb"));
             }
             return true;
@@ -1451,7 +1451,7 @@ document.addEventListener('generator-ready', function() {
           brackets.forEach(bracket => {
             if (!activeBrackets.has(bracket.id)) return; // Skip unselected brackets
   
-            // Grab words matching this frequency range
+            // Grab words matching this frequency range (adjust item.freq if your key differs, e.g., item.count)
             const wordsInBracket = filteredData.filter(w => w.freq >= bracket.min && w.freq <= bracket.max);
             
             if (wordsInBracket.length > 0) {
@@ -1463,15 +1463,15 @@ document.addEventListener('generator-ready', function() {
   
               // Render the vocabulary lines
               wordsInBracket.forEach(item => {
-                // Ensure array format for Greek
+                // Map to your JSON's Greek text / lemma keys (e.g., item.greek, item.lemma, item.word)
                 const greekArr = Array.isArray(item.greek) ? item.greek : [item.greek || item.lemma || item.word];
                 const greekText = greekArr.filter(Boolean).join(" / ");
                 
-                // Ensure array format for English, and isolate just the FIRST definition (split by comma)
+                // Map to your JSON's gloss / definition keys (e.g., item.gloss, item.glosses, item.definition)
                 let engArr = [];
                 const rawGlosses = Array.isArray(item.gloss) ? item.gloss : (Array.isArray(item.glosses) ? item.glosses : [item.gloss || item.definition]);
                 
-                engArr = rawGlosses.filter(Boolean).map(g => g.split(",")[0].trim()); // Grabs only the first definition before a comma
+                engArr = rawGlosses.filter(Boolean).map(g => g.split(",")[0].trim()); 
                 const engText = engArr.join(" / ");
   
                 // Structure output
