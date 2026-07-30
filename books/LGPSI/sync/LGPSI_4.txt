@@ -1764,10 +1764,10 @@ item []:
             text = "σύ,"
         intervals [419]:
             xmin = 246.360000
-            xmax = 247.460000
+            xmax = 246.500000
             text = ""
         intervals [420]:
-            xmin = 247.460000
+            xmin = 246.500000
             xmax = 247.710000
             text = "δοῦλε"
         intervals [421]:
