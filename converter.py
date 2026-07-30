@@ -53,7 +53,7 @@ def parse_textgrid_intervals(textgrid_content):
             })
     return intervals
 
-def get_anchor_words(sections_dict, n=4, position="start"):
+def get_anchor_words(sections_dict, n=5, position="start"):
     """Extract the first or last n clean words from the parsed Greek sections."""
     words = []
     
@@ -216,8 +216,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
     english_sections = parse_source_text_with_sentences(english_text)
     tg_intervals = parse_textgrid_intervals(textgrid_text)
 
-    start_anchor = get_anchor_words(greek_sections, n=4, position="start")
-    end_anchor = get_anchor_words(greek_sections, n=4, position="end")
+    start_anchor = get_anchor_words(greek_sections, n=5, position="start")
+    end_anchor = get_anchor_words(greek_sections, n=5, position="end")
     tg_intervals = anchor_textgrid(tg_intervals, start_anchor, end_anchor)
     
     tg_idx = 0
