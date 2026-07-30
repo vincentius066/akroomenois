@@ -1773,7 +1773,7 @@ item []:
         intervals [421]:
             xmin = 247.710000
             xmax = 248.060000
-            text = "Τρο"
+            text = "Τροχίλος"
         intervals [422]:
             xmin = 248.060000
             xmax = 249.310000
