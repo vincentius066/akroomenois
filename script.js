@@ -1349,6 +1349,10 @@ document.addEventListener('generator-ready', function() {
 
   if (freqBtn) {
     freqBtn.addEventListener("click", async () => {
+
+      wasPlaying = !audio.paused;
+      audio.pause();
+      
       // 1. Show an initial loading state
       popupContent.innerHTML = `<div style="padding:10px;">Loading frequency data...</div>`;
       popup.style.display = "block";
