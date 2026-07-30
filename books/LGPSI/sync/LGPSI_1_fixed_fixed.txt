@@ -4025,7 +4025,7 @@ item []:
         intervals [962]:
             xmin = 428.930000
             xmax = 429.220000
-            text = "ἐστι"
+            text = "ἐστὶ"
         intervals [963]:
             xmin = 429.220000
             xmax = 429.690000
