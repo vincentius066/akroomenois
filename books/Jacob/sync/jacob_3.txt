@@ -1617,7 +1617,7 @@ item []:
         intervals [361]:
             xmin = 230.120000
             xmax = 230.800000
-            text = "Οὕτως"
+            text = "οὕτως"
         intervals [362]:
             xmin = 230.800000
             xmax = 231.220000
