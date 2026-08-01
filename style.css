@@ -131,10 +131,16 @@ html {
   font-family: "Noto";
 }
 
+#nextBtn,
+#prevBtn,
+#playBtn {
+  visibility: visible;
+}
+
 .text_title {
   display: block !important;
-	text-align: center !important;
-	margin-bottom: 12px;
+  text-align: center !important;
+  margin-bottom: 12px;
 }
 
 .textual_image {
