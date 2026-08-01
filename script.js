@@ -644,9 +644,9 @@ document.addEventListener('generator-ready', function() {
       document.title = `Chapter ${ch}`;
       if (langBtn) langBtn.style.display = '';
       if (playerBar) playerBar.style.display = '';
-      if (prevBtn) prevBtn.style.display = '';
-      if (nextBtn) nextBtn.style.display = '';
-      if (playBtn) playBtn.style.display = '';
+      if (prevBtn) prevBtn.style.visibility = 'visible';
+      if (nextBtn) nextBtn.style.visibility = 'visible';
+      if (playBtn) playBtn.style.visibility = 'visible';
       if (progressBar) progressBar.style.visibility = 'visible';
       if (timeDisplay) timeDisplay.style.visibility = 'visible';
       return;
@@ -661,17 +661,17 @@ document.addEventListener('generator-ready', function() {
       if (hasEnglishContent()) {
         if (langBtn) langBtn.style.display = '';
         if (playerBar) playerBar.style.display = '';
-        if (prevBtn) prevBtn.style.display = 'none';
-        if (nextBtn) nextBtn.style.display = 'none';
-        if (playBtn) playBtn.style.display = 'none';
+        if (prevBtn) prevBtn.style.visibility = 'hidden';
+        if (nextBtn) nextBtn.style.visibility = 'hidden';
+        if (playBtn) playBtn.style.visibility = 'hidden';
         if (progressBar) progressBar.style.visibility = 'hidden';
         if (timeDisplay) timeDisplay.style.visibility = 'hidden';
       } else {
         if (langBtn) langBtn.style.display = 'none';
-        if (playerBar) playerBar.style.display = 'none';
-        if (prevBtn) prevBtn.style.display = 'none';
-        if (nextBtn) nextBtn.style.display = 'none';
-        if (playBtn) playBtn.style.display = 'none';
+        if (playerBar) playerBar.style.display = '';
+        if (prevBtn) prevBtn.style.visibility = 'hidden';
+        if (nextBtn) nextBtn.style.visibility = 'hidden';
+        if (playBtn) playBtn.style.visibility = 'hidden';
         if (progressBar) progressBar.style.visibility = 'hidden';
         if (timeDisplay) timeDisplay.style.visibility = 'hidden';
       }
@@ -679,9 +679,9 @@ document.addEventListener('generator-ready', function() {
     }
     if (langBtn) langBtn.style.display = '';
     if (playerBar) playerBar.style.display = '';
-    if (prevBtn) prevBtn.style.display = '';
-    if (nextBtn) nextBtn.style.display = '';
-    if (playBtn) playBtn.style.display = '';
+    if (prevBtn) prevBtn.style.visibility = 'visible';
+    if (nextBtn) nextBtn.style.visibility = 'visible';
+    if (playBtn) playBtn.style.visibility = 'visible';
     if (progressBar) progressBar.style.visibility = 'visible';
     if (timeDisplay) timeDisplay.style.visibility = 'visible';
   
