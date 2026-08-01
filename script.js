@@ -4,7 +4,7 @@
 const SITE_SETTINGS = {
   fontSize:    { min: "20",  max: "100", default: "70"  },
   playerSpeed: { min: "0.5", max: "2",   default: "1"   },
-  volume:      { min: "0",   max: "1", f  default: "1"   }
+  volume:      { min: "0",   max: "1",   default: "1"   }
 };
 
 const SEEK_TOLERANCE = 0.15;
@@ -232,7 +232,6 @@ document.addEventListener('generator-ready', function() {
   const htmlBtn = document.getElementById('copyHtml');
   const prevChapterBtns = document.querySelectorAll(".prev-chapter-btn");
   const nextChapterBtns = document.querySelectorAll(".next-chapter-btn");
-  const playerBar = document.getElementById("playerBar");
 
   let text = null;
   let textEn = null;
@@ -633,6 +632,8 @@ document.addEventListener('generator-ready', function() {
   function updateTitle() {
     const activeChapter = getActiveChapter();
     
+    const playerBar = document.getElementById("playerBar");
+    const timeDisplayAndProgressBar = document.getElementById("timeDisplayAndProgressBar");
     if (!activeChapter) return;
   
     const section = activeChapter.dataset.section;
@@ -641,7 +642,8 @@ document.addEventListener('generator-ready', function() {
       const titleEl = document.getElementById('title');
       if (titleEl) titleEl.textContent = `Chapter ${ch}`;
       document.title = `Chapter ${ch}`;
-      if (langBtn) langBtn.style.visibility = 'visible';
+      if (langBtn) langBtn.style.display = '';
+      if (playerBar) playerBar.style.display = '';
       if (prevBtn) prevBtn.style.visibility = 'visible';
       if (nextBtn) nextBtn.style.visibility = 'visible';
       if (playBtn) playBtn.style.visibility = 'visible';
@@ -657,14 +659,16 @@ document.addEventListener('generator-ready', function() {
       document.title = 'Preface';
 
       if (hasEnglishContent()) {
-        if (langBtn) langBtn.style.visibility = 'visible';
+        if (langBtn) langBtn.style.display = '';
+        if (playerBar) playerBar.style.display = '';
         if (prevBtn) prevBtn.style.visibility = 'hidden';
         if (nextBtn) nextBtn.style.visibility = 'hidden';
         if (playBtn) playBtn.style.visibility = 'hidden';
         if (progressBar) progressBar.style.visibility = 'hidden';
         if (timeDisplay) timeDisplay.style.visibility = 'hidden';
       } else {
-        if (langBtn) langBtn.style.visibility = 'hidden';
+        if (langBtn) langBtn.style.display = 'none';
+        if (playerBar) playerBar.style.display = '';
         if (prevBtn) prevBtn.style.visibility = 'hidden';
         if (nextBtn) nextBtn.style.visibility = 'hidden';
         if (playBtn) playBtn.style.visibility = 'hidden';
@@ -673,7 +677,8 @@ document.addEventListener('generator-ready', function() {
       }
       return;
     }
-    if (langBtn) langBtn.style.visibility = 'visible';
+    if (langBtn) langBtn.style.display = '';
+    if (playerBar) playerBar.style.display = '';
     if (prevBtn) prevBtn.style.visibility = 'visible';
     if (nextBtn) nextBtn.style.visibility = 'visible';
     if (playBtn) playBtn.style.visibility = 'visible';
