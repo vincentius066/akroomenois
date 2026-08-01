@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>The Greek War of Independence</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
+  
+  <script>
+    window.APP_CONFIG = {
+      dictionaryJsonPath: "books/the_greek_war_of_independence/dictionary_data/data_2.json",
+      frequencyJsonPath: "books/the_greek_war_of_independence/dictionary_data/frequency_data_5.json",
+      sourceGreekPath: "books/the_greek_war_of_independence/text/diog.txt",
+      sourceEnglishPath: "books/the_greek_war_of_independence/text/topos.txt",
+      sectionDisplayType: "tabs",
+
+      customBookName: 'Part',
+      customChapterName: 'Chapter'
+    };
+    window.BOOK_TITLE = {
+      greek: {
+        small:  'κεφ. {chapter}',
+        medium: 'κεφ. {chapter}',
+        large:  'κεφ. {chapter}'
+      },
+      english: {
+        small:  'Chapter {chapter}',
+        medium: 'Chapter {chapter}',
+        large:  'Chapter {chapter}'
+      }
+    };
+  </script>
+  <script src="generator.js" defer></script>
+  <script src="secondaryScripts/dictionary.js" defer></script>
+  <script src="secondaryScripts/advancedFontSettings.js" defer></script>
+  <script src="script.js" defer></script> 
+</head>
+<body data-book-id="The Greek War of Independence">
+<div id="loadingScreen">
+  <div id="loadingSpinner"></div>
+  <p id="loadingText">Loading…</p>
+</div>
+<audio id="audio" preload="auto"></audio>
+
+<!-- ============================== -->
+<!-- ============================== -->
+<!-- ==PREFACE== -->
+<!-- ============================== -->
+<!-- ============================== -->
+
+<div class="chapter-body active" data-chapter="0" data-section="0">
+<p class="text" lang="grc">
+  <span class="text_title">
+  <span data-start="n/a" data-section="0.1" class="phrase">
+<span class="punctuation">
+Summary
+</span></span>
+  </span>
+  <br>
+  <span class="phrase"><span class="punctuation">
+This book is an attempt to apply to Greek the methods which Professor Sonnenschein has expounded in his Ora Maritima and Pro Patria. The main principle is that the systematic study of grammar should proceed side by side with the reading of a narrative.
+<br>&emsp;
+The rate of progress, however, is more rapid than in the Latin books of this series, because it is assumed that pupils beginning Greek will have already been learning Latin for at least two years.
+<br>&emsp;
+The value of an introductory Reader depends on its success in enabling those who have used it to read an actual author. I have spared no pains in smoothing the path to the narrative portions of Thucydides, which for many obvious reasons are greatly to be preferred to any of the writings of Xenophon. Excepting proper names and official titleS (e.g. ἐπίσκοπος) the text does not contain a dozen words, which do not occur in Thucydides. But it is not merely from this negative point of view that the vocabulary may claim to be Thucydidean. Before writing the text, I drew up two lists, one containing all words which are found more than twenty times in that author, the other containing those which are found more than ten times. I have introduced about four-fifths of the words in my first list, and considerably over half of those in my second list. Nor has this resulted in a vocabulary of unwieldy proportions. The actual number of words (omitting proper names) is about 1250; very few of these are isolated (e.g. κόλπος), in nearly all cases there are at least three cognates (e.g. κρίνειν, κριτής, ἄκριτος). Considerable trouble has been taken in grouping such words together (e.g. in § 4, ἔμπορος, ἐμπόριον, ἐμπορία, πορίζειν), and it is intended that pupils should make such groups for themselves, as an aid to memory. To facilitate this process, a list of compounds occurring in the book is given in the vocabulary after the simple verb. Two specimen groups are printed on page 150.
+<br>&emsp;
+Not only in vocabulary but in sentence construction and turns of expression I have endeavoured to keep the narrative of Thucydides constantly in view. Quotations from Andocides and pseudo-Lysias, and from many other authors down to Diodorus Siculus may occasionally be detected in the text, but none of them are out of harmony with the general style: the only author from whom I have plagiarised constantly and unblushingly is Thucydides himself—ὅλον ἄρδην ἐπαγαγών, as Lucian would say.
+<br>&emsp;
+In choosing the subject of the narrative two considerations guided me. Firstly, Greece should be the scene and Greeks the actors in the drama; secondly, the narrative must be an account of real events. <i>The Greek War of Independence</i> fulfils both conditions, and has this advantage over more recent history that neither railways nor steamers disturb the scene. Only two post-classical words have been found necessary, <i>viz</i>., πυρῖτις <i>gunpowder</i>, μοναστήριον <i>monastery</i>, both of which are classical in form. Isocrates' view that it is possible περὶ τῶν νεωστὶ γεγενημένων ἀρχαιῶς εἰπεῖν, is certainly true of this period.
+<br>&emsp;
+Many important events, such as the various sieges of Athens, have been omitted from want of space. The incidents of six years cannot be compressed into fifteen hundred lines. But though I have confined my attention mainly to the Peloponnese, the islands, and Messalonghi, I hope that an intelligible and not wholly inaccurate view of the war is here presented. Some additional colour is given by various anecdotes inserted in the notes.
+<br>&emsp;
+The Greek-English vocabulary is very full, and aims at teaching the pupils to use a Lexicon. Much information is inserted in it, which might have found a place in the notes; the syntactical details will, I hope, prove useful to those who are eventually going to write Greek Prose, while they can readily be disregarded by those who only aim at being able to read a Greek Text.
+<br>&emsp;
+On pages 141-150 will be found the Accidence required for Part I.; after reaching this point it is desirable that boys should familiarise themselves with the arrangement of a grammar.
+<br>&emsp;
+Two parallel exercises are given under each set of rules; it is intended that only one of these should be done on paper, the other may be used to supply examples in explaining the rules, or may be taken <i>viva voce</i>.
+<br>&emsp;
+I am indebted to a large number of books and in particular—
+<br>
+<span class="tabbed-hanging-indent">
+(a) To the <i>Greek Accidence</i> of Professor Sonnenschein, to which references are given in the notes; and to <i>Murray’s Greek Grammar</i> by J. Thompson: from Mr. Thompson’s excellent book I have borrowed many syntactical notes and the treatment of prepositions in the vocabulary.
+<br>
+(b) To innumerable editions of <i>Thucydides</i>, to the <i>Index Thucydideus</i> of Von Essen, and the <i>Lexicon Thucydideum</i> of E. A. Bétant; without the help of these two the book could not have been written.
+<br>
+(c) To S. Tricoupi’s Ἱστορία τῆς Ἑλληνικῆς ἐπαναστάσεως, T. Gordon’s <i>History of the Greek Revolution</i>, G. Finlay’s <i>History of Greece</i> (vols. vi. and vii.), C. A. Fyffe’s <i>History of Modern Europe</i> (vol. ii.), Sir A. Alison’s <i>History of Europe from the Fall of Napoleon</i> (vol. iii.), together with a number of memoirs.   
+</span>
+<br>&emsp;
+There are several works of fiction dealing with this period:—
+<br>
+<span class="tabbed-hanging-indent">
+G. A. Henty’s <i>In Greek Waters</i>. (Somewhat unsympathetic.)
+<br>
+H. F. Benson’s <i>The Vintage</i> and its sequel <i>The Capsina</i>. (These two are excellent.)
+<br>
+M. Jokai’s <i>Lion of Janina</i> gives an account of Ali Pasha, and the state of affairs immediately preceding the rising in Greece.
+</span>
+<br>&emsp;
+Lastly, my best thanks are due to Mr. W. L. Bunting who read the MS. and offered many valuable suggestions, and to Professor Sonnenschein, of whose advice and assistance I have continually availed myself during the last two years. 
+<span style="text-align: right !important; display: block !important;"><br>C. D. C.</span>
+  </span></span>
+</p>
+
+<p class="text_en" lang="en">
+  <span class="phrase_en"></span>
+</p>
+</div>
+  
+<!-- ============================== -->
+<!-- ============================== -->
+<!-- ==BOOK 1, CHAPTER 1== -->
+<!-- ============================== -->
+<!-- ============================== -->
+  
+
+
+<!-- ============================== -->
+<!-- ============================== -->
+<!-- ==BOOK 1, CHAPTER 2== -->
+<!-- ============================== -->
+<!-- ============================== -->
+  
+</body>
+</html>
