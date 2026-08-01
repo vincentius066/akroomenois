@@ -633,14 +633,6 @@ document.addEventListener('generator-ready', function() {
     const activeChapter = getActiveChapter();
     
     const playerBar = document.getElementById("playerBar");
-
-    const langBtn = document.getElementById("langBtn");
-    
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const playBtn = document.getElementById("playBtn");
-    const progressBar = document.getElementById("progressBar");
-    const timeDisplay = document.getElementById("timeDisplay");
     
     if (!activeChapter) return;
   
@@ -672,16 +664,16 @@ document.addEventListener('generator-ready', function() {
         if (prevBtn) prevBtn.style.display = 'none';
         if (nextBtn) nextBtn.style.display = 'none';
         if (playBtn) playBtn.style.display = 'none';
-        if (progressBar) progressBar.style.display = 'none';
-        if (timeDisplay) timeDisplay.style.display = 'none';
+        if (progressBar) progressBar.style.display = 'none !important';
+        if (timeDisplay) timeDisplay.style.display = 'none !important';
       } else {
         if (langBtn) langBtn.style.display = 'none';
         if (playerBar) playerBar.style.display = 'none';
         if (prevBtn) prevBtn.style.display = 'none';
         if (nextBtn) nextBtn.style.display = 'none';
         if (playBtn) playBtn.style.display = 'none';
-        if (progressBar) progressBar.style.display = 'none';
-        if (timeDisplay) timeDisplay.style.display = 'none';
+        if (progressBar) progressBar.style.display = 'none !important';
+        if (timeDisplay) timeDisplay.style.display = 'none !important';
       }
       return;
     }
