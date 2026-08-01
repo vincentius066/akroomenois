@@ -232,6 +232,7 @@ document.addEventListener('generator-ready', function() {
   const htmlBtn = document.getElementById('copyHtml');
   const prevChapterBtns = document.querySelectorAll(".prev-chapter-btn");
   const nextChapterBtns = document.querySelectorAll(".next-chapter-btn");
+  const playerBar = document.getElementById("playerBar");
 
   let text = null;
   let textEn = null;
