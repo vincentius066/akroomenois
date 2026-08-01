@@ -152,6 +152,16 @@ html {
   height: auto;
 }
 
+.textual_image.rotated-90 {
+  transform: rotate(90deg);
+  transform-origin: center;
+  
+  /* Restrict height so when rotated horizontally, it won't overflow */
+  max-height: 80vw; /* or max-height: 100cqw if using container queries */
+  width: auto;
+  margin: 40px auto; /* Add extra vertical margin since rotated height affects horizontal space */
+}
+
 .container {
   max-width: 800px;
   margin: 0 auto;
