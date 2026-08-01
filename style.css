@@ -138,6 +138,15 @@ html {
   visibility: visible;
 }
 
+.tabbed-hanging-indent {
+  /* 1. Sets the indent for line 2 onwards (hanging indent depth) */
+  padding-left: 4em; 
+  
+  /* 2. Pulls line 1 back to the left. 
+        -2em means line 1 starts 2em inside the block (giving you a 1-tab indent) */
+  text-indent: -2em; 
+}
+
 .text_title {
   display: block !important;
   text-align: center !important;
