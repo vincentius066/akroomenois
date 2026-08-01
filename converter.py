@@ -409,8 +409,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                     elif use_nothing:
                         prefix = "  " if is_first_phrase else "  "
                     else:
-                        prefix = f"  [{sec}] " if is_first_phrase else "  "
-                    is_first_phrase = False
+                        prefix = f"  [{sec}] " if is_first_english_phrase else "  "
                     is_first_english_phrase = False
                     
                     output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
