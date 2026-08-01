@@ -631,7 +631,17 @@ document.addEventListener('generator-ready', function() {
   
   function updateTitle() {
     const activeChapter = getActiveChapter();
+    
     const playerBar = document.getElementById("playerBar");
+
+    const langBtn = document.getElementById("langBtn");
+    
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const playBtn = document.getElementById("playBtn");
+    const progressBar = document.getElementById("progressBar");
+    const timeDisplay = document.getElementById("timeDisplay");
+    
     if (!activeChapter) return;
   
     const section = activeChapter.dataset.section;
@@ -640,7 +650,13 @@ document.addEventListener('generator-ready', function() {
       const titleEl = document.getElementById('title');
       if (titleEl) titleEl.textContent = `Chapter ${ch}`;
       document.title = `Chapter ${ch}`;
+      if (langBtn) langBtn.style.display = '';
       if (playerBar) playerBar.style.display = '';
+      if (prevBtn) prevBtn.style.display = '';
+      if (nextBtn) nextBtn.style.display = '';
+      if (playBtn) playBtn.style.display = '';
+      if (progressBar) progressBar.style.display = '';
+      if (timeDisplay) timeDisplay.style.display = '';
       return;
     }
     if (section === "0" || section === 0) {
@@ -649,10 +665,32 @@ document.addEventListener('generator-ready', function() {
         titleEl.textContent = 'Preface';
       }
       document.title = 'Preface';
-      if (playerBar) playerBar.style.display = 'none';
+
+      if (hasEnglishContent()) {
+        if (langBtn) langBtn.style.display = '';
+        if (playerBar) playerBar.style.display = '';
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+        if (playBtn) playBtn.style.display = 'none';
+        if (progressBar) progressBar.style.display = 'none';
+        if (timeDisplay) timeDisplay.style.display = 'none';
+      } else {
+        if (langBtn) langBtn.style.display = 'none';
+        if (playerBar) playerBar.style.display = 'none';
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+        if (playBtn) playBtn.style.display = 'none';
+        if (progressBar) progressBar.style.display = 'none';
+        if (timeDisplay) timeDisplay.style.display = 'none';
       return;
     }
+    if (langBtn) langBtn.style.display = '';
     if (playerBar) playerBar.style.display = '';
+    if (prevBtn) prevBtn.style.display = '';
+    if (nextBtn) nextBtn.style.display = '';
+    if (playBtn) playBtn.style.display = '';
+    if (progressBar) progressBar.style.display = '';
+    if (timeDisplay) timeDisplay.style.display = '';
   
     const parts = section.split('.');
     const book = parseInt(parts[0], 10);
