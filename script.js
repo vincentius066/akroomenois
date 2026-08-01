@@ -682,6 +682,7 @@ document.addEventListener('generator-ready', function() {
         if (playBtn) playBtn.style.display = 'none';
         if (progressBar) progressBar.style.display = 'none';
         if (timeDisplay) timeDisplay.style.display = 'none';
+      }
       return;
     }
     if (langBtn) langBtn.style.display = '';
