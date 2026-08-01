@@ -139,12 +139,10 @@ html {
 }
 
 .tabbed-hanging-indent {
-  /* 1. Sets the indent for line 2 onwards (hanging indent depth) */
-  padding-left: 4em; 
-  
-  /* 2. Pulls line 1 back to the left. 
-        -2em means line 1 starts 2em inside the block (giving you a 1-tab indent) */
-  text-indent: -2em; 
+  display: block;      /* Forces block formatting so text-indent works */
+  padding-left: 4em;   /* Hanging indent depth */
+  text-indent: -2em;   /* Pulls the first line (like "(a)") back to the left */
+  margin-bottom: 4px;  /* Optional: Adds a slight gap between list items */
 }
 
 .text_title {
