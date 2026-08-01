@@ -133,7 +133,8 @@ html {
 
 #nextBtn,
 #prevBtn,
-#playBtn {
+#playBtn,
+#langBtn {
   visibility: visible;
 }
 
