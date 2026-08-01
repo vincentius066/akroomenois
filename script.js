@@ -642,7 +642,7 @@ document.addEventListener('generator-ready', function() {
       const titleEl = document.getElementById('title');
       if (titleEl) titleEl.textContent = `Chapter ${ch}`;
       document.title = `Chapter ${ch}`;
-      if (langBtn) langBtn.style.display = '';
+      if (langBtn) langBtn.style.visibility = 'visible';
       if (playerBar) playerBar.style.display = '';
       if (prevBtn) prevBtn.style.visibility = 'visible';
       if (nextBtn) nextBtn.style.visibility = 'visible';
@@ -659,7 +659,7 @@ document.addEventListener('generator-ready', function() {
       document.title = 'Preface';
 
       if (hasEnglishContent()) {
-        if (langBtn) langBtn.style.display = '';
+        if (langBtn) langBtn.style.visibility = 'visible';
         if (playerBar) playerBar.style.display = '';
         if (prevBtn) prevBtn.style.visibility = 'hidden';
         if (nextBtn) nextBtn.style.visibility = 'hidden';
@@ -667,7 +667,7 @@ document.addEventListener('generator-ready', function() {
         if (progressBar) progressBar.style.visibility = 'hidden';
         if (timeDisplay) timeDisplay.style.visibility = 'hidden';
       } else {
-        if (langBtn) langBtn.style.display = 'none';
+        if (langBtn) langBtn.style.visibility = 'hidden';
         if (playerBar) playerBar.style.display = '';
         if (prevBtn) prevBtn.style.visibility = 'hidden';
         if (nextBtn) nextBtn.style.visibility = 'hidden';
@@ -677,7 +677,7 @@ document.addEventListener('generator-ready', function() {
       }
       return;
     }
-    if (langBtn) langBtn.style.display = '';
+    if (langBtn) langBtn.style.visibility = 'visible';
     if (playerBar) playerBar.style.display = '';
     if (prevBtn) prevBtn.style.visibility = 'visible';
     if (nextBtn) nextBtn.style.visibility = 'visible';
