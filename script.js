@@ -178,10 +178,8 @@ document.addEventListener('generator-ready', function() {
       <button id="prevBtn"><img class="btn-icon" src="icon/play-backwards.svg" alt="Backward"></button>
       <button id="playBtn"><img class="btn-icon" src="icon/play-button.svg" alt="Play"></button>
       <button id="nextBtn"><img class="btn-icon" src="icon/play-forwards.svg" alt="Forward"></button>
-      <div id="timeDisplayAndProgressBar">
-        <input type="range" id="progressBar" value="0" min="0" step="0.1">
-        <span id="timeDisplay">00:00 / 00:00</span>
-      </div>
+      <input type="range" id="progressBar" value="0" min="0" step="0.1">
+      <span id="timeDisplay">00:00 / 00:00</span>
       <button id="langBtn">EN</button>
     </div>
   `;
@@ -649,9 +647,8 @@ document.addEventListener('generator-ready', function() {
       if (prevBtn) prevBtn.style.display = '';
       if (nextBtn) nextBtn.style.display = '';
       if (playBtn) playBtn.style.display = '';
-      if (progressBar) progressBar.style.display = '';
-      if (timeDisplay) timeDisplay.style.display = '';
-      if (timeDisplayAndProgressBar) timeDisplayAndProgressBar.style.display = '';
+      if (progressBar) progressBar.style.visibility = 'visible';
+      if (timeDisplay) timeDisplay.style.visibility = 'visible';
       return;
     }
     if (section === "0" || section === 0) {
@@ -667,18 +664,16 @@ document.addEventListener('generator-ready', function() {
         if (prevBtn) prevBtn.style.display = 'none';
         if (nextBtn) nextBtn.style.display = 'none';
         if (playBtn) playBtn.style.display = 'none';
-        if (progressBar) progressBar.style.display = 'none';
-        if (timeDisplay) timeDisplay.style.display = 'none';
-        if (timeDisplayAndProgressBar) timeDisplayAndProgressBar.style.display = 'none';
+        if (progressBar) progressBar.style.visibility = 'hidden';
+        if (timeDisplay) timeDisplay.style.visibility = 'hidden';
       } else {
         if (langBtn) langBtn.style.display = 'none';
         if (playerBar) playerBar.style.display = 'none';
         if (prevBtn) prevBtn.style.display = 'none';
         if (nextBtn) nextBtn.style.display = 'none';
         if (playBtn) playBtn.style.display = 'none';
-        if (progressBar) progressBar.style.display = 'none';
-        if (timeDisplay) timeDisplay.style.display = 'none';
-        if (timeDisplayAndProgressBar) timeDisplayAndProgressBar.style.display = 'none';
+        if (progressBar) progressBar.style.visibility = 'hidden';
+        if (timeDisplay) timeDisplay.style.visibility = 'hidden';
       }
       return;
     }
@@ -687,9 +682,8 @@ document.addEventListener('generator-ready', function() {
     if (prevBtn) prevBtn.style.display = '';
     if (nextBtn) nextBtn.style.display = '';
     if (playBtn) playBtn.style.display = '';
-    if (progressBar) progressBar.style.display = '';
-    if (timeDisplay) timeDisplay.style.display = '';
-    if (timeDisplayAndProgressBar) timeDisplayAndProgressBar.style.display = '';
+    if (progressBar) progressBar.style.visibility = 'visible';
+    if (timeDisplay) timeDisplay.style.visibility = 'visible';
   
     const parts = section.split('.');
     const book = parseInt(parts[0], 10);
