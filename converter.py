@@ -267,7 +267,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 
                 for word in words:
                     # --- SILENT WORD DETECTION ---
-                    if 's' in word or 'S' in word:
+                    if len(word) > 0 and word[-1] in ('s', 'S') and word[0] not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
                         clean_display_word = re.sub(r'[sS]', '', word)
                         if clean_display_word:
                             matched_words_data.append({
