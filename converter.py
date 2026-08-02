@@ -22,8 +22,11 @@ def convert_notes(html_string):
     return pattern.sub(repl, html_string)
 
 def clean_for_matching(text):
-    if text and text[0] in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
+    if text and text[0] in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz":
         cleaned = re.sub(r'[\d\W_]+', '', text.lower())
+        return cleaned
+    elif text and text[0] in "0123456789":
+        cleaned = re.sub(r'[\W_]+', '', text.lower())
         return cleaned
     else:
         cleaned = re.sub(r'[ABCDEFGHIJKLMNOPQRSTUVWXYZ\d\W_]+', '', text.lower())
