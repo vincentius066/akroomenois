@@ -375,7 +375,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 phrase_ts_str = format_timestamp(phrase_start_time)
                 
                 if sec == 0:
-                    separator = "" if is_first_phrase else "<br><br>"
+                    separator = "" if is_first_phrase else "<br>"
                     prefix = ""
                     output_1_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span></span>\n')
                     output_2_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span></span>\n')
@@ -421,7 +421,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                     ts_val = format_timestamp(raw_ts)
                     
                     if sec == 0:
-                        separator = "" if is_first_english_phrase else "<br><br>"
+                        separator = "" if is_first_english_phrase else "<br>"
                         prefix = ""
                         output_3_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span></span>\n')
                     else:
