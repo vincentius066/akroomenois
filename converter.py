@@ -248,6 +248,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
         coordinate_timestamps = {}
         
         # --- PROCESS GREEK ---
+        if sec == 0:
+            output_1_lines.append('<span class="text_title">')
+            output_2_lines.append('<span class="text_title">')
+
         is_first_phrase = True
         is_first_english_phrase = True
         for s_idx, grc_item in enumerate(sec_sentences_grc):
@@ -385,8 +389,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         separator = " "
                         
                     prefix = ""
-                    output_1_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span></span>')
-                    output_2_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span></span>')
+                    output_1_lines.append(f'{separator}{prefix}<span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span>')
+                    output_2_lines.append(f'{separator}{prefix}<span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span>')
                 else:
                     if use_tabs:
                         prefix = "&emsp;" if is_first_phrase else "  "
@@ -402,8 +406,15 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 
         if section_start_timestamp is None:
             section_start_timestamp = tg_intervals[tg_idx-1]["start"] if tg_idx > 0 else 0.0
+
+        if sec == 0:
+            output_1_lines.append('</span>')
+            output_2_lines.append('</span>')
             
         # --- PROCESS ENGLISH ---
+        if sec == 0:
+            output_3_lines.append('<span class="text_title">')
+
         if match_sentences:
             for s_idx, eng_item in enumerate(sec_sentences_eng):
                 s_num = s_idx + 1
@@ -439,7 +450,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                             separator = " "
                             
                         prefix = ""
-                        output_3_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span></span>\n')
+                        output_3_lines.append(f'{separator}{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
                     else:
                         if use_tabs:
                             prefix = "&emsp;" if is_first_english_phrase else "  "
@@ -457,11 +468,14 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 ts_val = format_timestamp(section_start_timestamp)
                 
                 if sec == 0:
-                    output_3_lines.append(f'<span class="text_title"><span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span></span>\n')
+                    output_3_lines.append(f'<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
                 else:
                     output_3_lines.append(f'  [{sec}] <span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
             else:
                 pass
+
+        if sec == 0:
+            output_3_lines.append('</span>\n')
             
         if idx < len(all_sections) - 1:
             output_1_lines.append("  <br><br>\n")
