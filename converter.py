@@ -385,8 +385,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         separator = " "
                         
                     prefix = ""
-                    output_1_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span></span>\n')
-                    output_2_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span></span>\n')
+                    output_1_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span></span>')
+                    output_2_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span></span>')
                 else:
                     if use_tabs:
                         prefix = "&emsp;" if is_first_phrase else "  "
