@@ -249,8 +249,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
         
         # --- PROCESS GREEK ---
         if sec == 0:
-            output_1_lines.append('<span class="text_title">')
-            output_2_lines.append('<span class="text_title">')
+            output_1_lines.append('<br><span class="text_title">')
+            output_2_lines.append('<br><span class="text_title">')
 
         is_first_phrase = True
         is_first_english_phrase = True
@@ -413,7 +413,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
             
         # --- PROCESS ENGLISH ---
         if sec == 0:
-            output_3_lines.append('<span class="text_title">')
+            output_3_lines.append('<br><span class="text_title">')
 
         if match_sentences:
             for s_idx, eng_item in enumerate(sec_sentences_eng):
