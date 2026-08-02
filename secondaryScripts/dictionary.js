@@ -176,6 +176,15 @@ window.DictionaryEngine = {
   async renderEntry(cleanLookupKey, wordElement, jsonPath) {
     const popupContent = document.getElementById("popupContent");
     if (!popupContent) return;
+
+    // --- NEW: Latin/Alphanumeric Character Check ---
+    // If the word contains any a-z, A-Z, or 0-9 character, block the lookup.
+    if (/[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789]/.test(cleanLookupKey)) {
+      popupContent.innerHTML = `<div>Non-Greek words are not supported.</div>`;
+      return;
+    }
+    // -----------------------------------------------
+    
     const littleNoteHTML = `
         <div>
           <br><br>
