@@ -444,7 +444,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                             separator = ""
                         elif ss_idx == 0:
                             # New sentence
-                            separator = "<br>"
+                            separator = "<br><br>"
                         else:
                             # Phrase split by comma
                             separator = " "
