@@ -478,9 +478,14 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
             output_3_lines.append('</span>\n')
             
         if idx < len(all_sections) - 1:
-            output_1_lines.append("  <br><br>\n")
-            output_2_lines.append("  <br><br>\n")
-            output_3_lines.append("  <br><br>\n")
+            if sec == 0:
+                output_1_lines.append("  <br>\n")
+                output_2_lines.append("  <br>\n")
+                output_3_lines.append("  <br>\n")
+            else:
+                output_1_lines.append("  <br><br>\n")
+                output_2_lines.append("  <br><br>\n")
+                output_3_lines.append("  <br><br>\n")
 
     greek_output1 = "".join(output_1_lines)
     greek_output2 = "".join(output_2_lines)
