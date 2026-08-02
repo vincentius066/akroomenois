@@ -816,10 +816,10 @@ item []:
             text = "of"
         intervals [97]:
             xmin = 57.300000
-            xmax = 57.540000
+            xmax = 57.440000
             text = "Greece"
         intervals [98]:
-            xmin = 57.540000
+            xmin = 57.440000
             xmax = 57.840000
             text = "ἔστι"
         intervals [99]:
