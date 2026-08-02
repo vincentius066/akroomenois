@@ -4729,7 +4729,7 @@ item []:
         intervals [1076]:
             xmin = 591.870000
             xmax = 592.590000
-            text = "sixtenth"
+            text = "16th"
         intervals [1077]:
             xmin = 592.590000
             xmax = 592.800000
@@ -13385,7 +13385,7 @@ item []:
         intervals [3240]:
             xmin = 1847.110000
             xmax = 1847.860000
-            text = "twentyfirst"
+            text = "21st"
         intervals [3241]:
             xmin = 1847.860000
             xmax = 1847.950000
@@ -13401,7 +13401,7 @@ item []:
         intervals [3244]:
             xmin = 1848.640000
             xmax = 1849.920000
-            text = "eighteentwentythree"
+            text = "1823"
         intervals [3245]:
             xmin = 1849.920000
             xmax = 1851.670000
@@ -15069,7 +15069,7 @@ item []:
         intervals [3661]:
             xmin = 2083.210000
             xmax = 2084.320000
-            text = "eighteentwentythree"
+            text = "1823"
         intervals [3662]:
             xmin = 2084.320000
             xmax = 2085.330000
@@ -16313,7 +16313,7 @@ item []:
         intervals [3972]:
             xmin = 2271.040000
             xmax = 2272.190000
-            text = "eighteentwentythree"
+            text = "1823"
         intervals [3973]:
             xmin = 2272.190000
             xmax = 2273.540000
