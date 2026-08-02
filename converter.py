@@ -372,25 +372,17 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         word_span += f'<span class="punctuation">{html.escape(trail)}</span>'
                     o2_words_str += word_span + " "
                 
-                phrase_ts_str = format_timestamp(phrase_start_time)
-                
-                if sec == 0:
-                    separator = "" if is_first_phrase else "<br><br>"
-                    prefix = ""
-                    output_1_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span></span>\n')
-                    output_2_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span></span>\n')
+                if use_tabs:
+                    prefix = "&emsp;" if is_first_phrase else "  "
+                elif use_nothing:
+                    prefix = "  " if is_first_phrase else "  "
                 else:
-                    if use_tabs:
-                        prefix = "&emsp;" if is_first_phrase else "  "
-                    elif use_nothing:
-                        prefix = "  " if is_first_phrase else "  "
-                    else:
-                        prefix = f"  [{sec}] " if is_first_phrase else "  "
-                        
-                    output_1_lines.append(f'{prefix}<span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span>\n')
-                    output_2_lines.append(f'{prefix}<span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span>\n')
-                
+                    prefix = f"  [{sec}] " if is_first_phrase else "  "
                 is_first_phrase = False
+                
+                phrase_ts_str = format_timestamp(phrase_start_time)
+                output_1_lines.append(f'{prefix}<span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o1_words_str.strip()}</span>\n')
+                output_2_lines.append(f'{prefix}<span data-start="{phrase_ts_str}" data-section="{data_sec_label}" class="phrase">{o2_words_str.strip()}</span>\n')
                 
         if section_start_timestamp is None:
             section_start_timestamp = tg_intervals[tg_idx-1]["start"] if tg_idx > 0 else 0.0
@@ -420,30 +412,21 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         
                     ts_val = format_timestamp(raw_ts)
                     
-                    if sec == 0:
-                        separator = "" if is_first_english_phrase else "<br><br>"
-                        prefix = ""
-                        output_3_lines.append(f'{separator}{prefix}<span class="text_title"><span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span></span>\n')
+                    if use_tabs:
+                        prefix = "&emsp;" if is_first_phrase else "  "
+                    elif use_nothing:
+                        prefix = "  " if is_first_phrase else "  "
                     else:
-                        if use_tabs:
-                            prefix = "&emsp;" if is_first_english_phrase else "  "
-                        elif use_nothing:
-                            prefix = "  " if is_first_english_phrase else "  "
-                        else:
-                            prefix = f"  [{sec}] " if is_first_english_phrase else "  "
-                        output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
-                        
+                        prefix = f"  [{sec}] " if is_first_english_phrase else "  "
                     is_first_english_phrase = False
+                    
+                    output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
         else:
             if sec_sentences_eng:
                 full_english_block = " ".join([item["visual"] for item in sec_sentences_eng])
                 escaped_eng = html.escape(full_english_block, quote=False)
                 ts_val = format_timestamp(section_start_timestamp)
-                
-                if sec == 0:
-                    output_3_lines.append(f'<span class="text_title"><span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span></span>\n')
-                else:
-                    output_3_lines.append(f'  [{sec}] <span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
+                output_3_lines.append(f'  [{sec}] <span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
             else:
                 pass
             
