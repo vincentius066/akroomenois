@@ -62,7 +62,7 @@ def get_anchor_words(sections_dict, n=5, position="start"):
         for item in sections_dict[sec]:
             phrase_words = item["visual"].split()
             for w in phrase_words:
-                if len(w) > 0 and w[-1] in ('s', 'S') and w[0] not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789": #make sure that this function doesnt affect english words 
+                if len(w) > 0 and 's' in w and w[0] not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789": #make sure that this function doesnt affect english words 
                     continue
                 clean_w = clean_for_matching(w)
                 if clean_w:
@@ -267,7 +267,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                 
                 for word in words:
                     # --- SILENT WORD DETECTION ---
-                    if len(word) > 0 and word[-1] in ('s', 'S') and word[0] not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
+                    if len(word) > 0 and 's' in word and word[0] not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
                         clean_display_word = re.sub(r'[sS]', '', word)
                         if clean_display_word:
                             matched_words_data.append({
