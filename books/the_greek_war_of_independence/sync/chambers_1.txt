@@ -721,7 +721,7 @@ item []:
         intervals [73]:
             xmin = 44.250000
             xmax = 44.680000
-            text = "one"
+            text = "1"
         intervals [74]:
             xmin = 44.680000
             xmax = 46.060000
@@ -5529,7 +5529,7 @@ item []:
         intervals [1275]:
             xmin = 691.150000
             xmax = 691.590000
-            text = "sixth"
+            text = "6th"
         intervals [1276]:
             xmin = 691.590000
             xmax = 691.740000
@@ -5541,7 +5541,7 @@ item []:
         intervals [1278]:
             xmin = 692.430000
             xmax = 693.750000
-            text = "eighteentwentyone"
+            text = "1821"
         intervals [1279]:
             xmin = 693.750000
             xmax = 695.610000
@@ -10577,7 +10577,7 @@ item []:
         intervals [2537]:
             xmin = 1424.280000
             xmax = 1424.970000
-            text = "ninetenth"
+            text = "19th"
         intervals [2538]:
             xmin = 1424.970000
             xmax = 1425.100000
@@ -10593,7 +10593,7 @@ item []:
         intervals [2541]:
             xmin = 1425.880000
             xmax = 1427.090000
-            text = "eighteentwentyone"
+            text = "1821"
         intervals [2542]:
             xmin = 1427.090000
             xmax = 1428.430000
@@ -12541,7 +12541,7 @@ item []:
         intervals [3028]:
             xmin = 1714.580000
             xmax = 1715.240000
-            text = "twentyninth"
+            text = "29th"
         intervals [3029]:
             xmin = 1715.240000
             xmax = 1715.350000
@@ -12557,7 +12557,7 @@ item []:
         intervals [3032]:
             xmin = 1716.070000
             xmax = 1716.930000
-            text = "eighteentwentyone"
+            text = "1821"
         intervals [3033]:
             xmin = 1716.930000
             xmax = 1717.970000
@@ -13573,7 +13573,7 @@ item []:
         intervals [3286]:
             xmin = 1837.200000
             xmax = 1838.320000
-            text = "eighteentwentyone"
+            text = "1821"
         intervals [3287]:
             xmin = 1838.320000
             xmax = 1839.790000
