@@ -62,7 +62,7 @@ def get_anchor_words(sections_dict, n=5, position="start"):
         for item in sections_dict[sec]:
             phrase_words = item["visual"].split()
             for w in phrase_words:
-                if 's' in w or 'S' in w:
+                if len(w) > 0 and w[-1] in ('s', 'S') and w[0] not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789": #make sure that this function doesnt affect english words 
                     continue
                 clean_w = clean_for_matching(w)
                 if clean_w:
