@@ -1,6 +1,11 @@
 import re
 import html
 
+def contains_greek(text):
+    if not text:
+        return False
+    return bool(re.search(r'[\u0370-\u03FF\u1F00-\u1FFF]', text))
+
 def convert_notes(html_string):
     pattern = re.compile(r'GGGG([0-9A-Fa-f]+?)HHHH([0-9A-Fa-f]+?)IIII')
     def repl(match):
@@ -17,7 +22,7 @@ def convert_notes(html_string):
     return pattern.sub(repl, html_string)
 
 def clean_for_matching(text):
-    if text and text[0] in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" and text[-1] not in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
+    if text and text[0] in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789":
         cleaned = re.sub(r'[\d\W_]+', '', text.lower())
         return cleaned
     else:
