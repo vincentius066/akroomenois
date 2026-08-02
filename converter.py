@@ -383,7 +383,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text, use_tabs=Fa
                         separator = ""
                     elif ss_idx == 0:
                         # This is a new sentence (split by dot)
-                        separator = "<br>"
+                        separator = "<br><br>"
                     else:
                         # This is a sub-phrase (split by comma)
                         separator = " "
