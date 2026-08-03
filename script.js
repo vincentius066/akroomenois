@@ -1316,10 +1316,11 @@ document.addEventListener('generator-ready', function() {
       let html = `<h3 style="margin-top:0;">Table of Contents</h3><ul style="list-style:none; padding:0; margin:0;">`;
       chapters.forEach((chapter, index) => {
         const section = chapter.dataset.section;
+        const isPreface = (section === "0" || section === 0);
         let label = "";
         
         // Check for Preface
-        if (section === "0" || section === 0) {
+        if (isPreface) {
           label = "Preface";
         } 
         // Check for standard sections
@@ -1340,42 +1341,47 @@ document.addEventListener('generator-ready', function() {
           label = `${chapName} ${chapter.dataset.chapter}`;
         }
         
-        // --- NEW: Calculate and Cache Meta Information ---
-        if (!chapter.dataset.wordCount) {
-          const chapterWords = chapter.querySelectorAll("span.word");
-          chapter.dataset.wordCount = chapterWords.length;
-          
-          const validWords = Array.from(chapterWords).filter(w => {
-            const s = parseFloat(w.dataset.wordStart);
-            const e = parseFloat(w.dataset.wordEnd);
-            return !isNaN(s) && !isNaN(e);
-          });
+        // --- Calculate and Cache Meta Information (Skipped for Chapter 0) ---
+        let metaHtml = "";
 
-          if (validWords.length > 0) {
-            const minTime = parseFloat(validWords[0].dataset.wordStart);
-            const maxTime = parseFloat(validWords[validWords.length - 1].dataset.wordEnd);
-            chapter.dataset.duration = (maxTime - minTime).toString();
-          } else {
-            chapter.dataset.duration = "0";
+        if (!isPreface) {
+          if (!chapter.dataset.wordCount) {
+            const chapterWords = chapter.querySelectorAll("span.word");
+            chapter.dataset.wordCount = chapterWords.length;
+            
+            const validWords = Array.from(chapterWords).filter(w => {
+              const s = parseFloat(w.dataset.wordStart);
+              const e = parseFloat(w.dataset.wordEnd);
+              return !isNaN(s) && !isNaN(e);
+            });
+
+            if (validWords.length > 0) {
+              const minTime = parseFloat(validWords[0].dataset.wordStart);
+              const maxTime = parseFloat(validWords[validWords.length - 1].dataset.wordEnd);
+              chapter.dataset.duration = (maxTime - minTime).toString();
+            } else {
+              chapter.dataset.duration = "0";
+            }
           }
-        }
 
-        const wordCount = chapter.dataset.wordCount;
-        const duration = parseFloat(chapter.dataset.duration);
-        let timeString = "";
-        
-        if (duration > 0) {
-          const minutes = Math.floor(duration / 60);
-          const seconds = Math.floor(duration % 60);
-          timeString = ` · ${minutes}m ${seconds}s`;
-        }
+          const wordCount = chapter.dataset.wordCount;
+          const duration = parseFloat(chapter.dataset.duration);
+          let timeString = "";
+          
+          if (duration > 0) {
+            const minutes = Math.floor(duration / 60);
+            const seconds = Math.floor(duration % 60);
+            timeString = ` · ${minutes}m ${seconds}s`;
+          }
 
-        const metaString = `${wordCount} words${timeString}`;
-        // -----------------------------------------------
+          const metaString = `${wordCount} words${timeString}`;
+          metaHtml = `<div style="font-size: 0.9em; color: #555; margin-top: 3px;">${metaString}</div>`;
+        }
+        // ---------------------------------------------------------------------
 
         html += `<li style="padding:6px 0; border-bottom:1px solid #eee; cursor:pointer;" data-index="${index}">
           <div>${label}</div>
-          <div style="font-size: 0.9em; color: #555; margin-top: 3px;">${metaString}</div>
+          ${metaHtml}
         </li>`;
       });
       html += `</ul>`;
