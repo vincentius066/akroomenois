@@ -229,12 +229,21 @@ footer {
   font-size: 0.9rem;
 }
 
-.book-card .info-btn {
+/* Container to keep them side-by-side and equal height */
+.card-actions {
+  display: flex;
+  justify-content: center;
+  align-items: stretch; /* Forces both buttons to match the height of the taller one */
+  gap: 8px;
+}
+
+/* Ensure the Info button centers its SVG as it stretches */
+.book-card .btn.info-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px; /* Adjusted padding for an icon-only button */
-  vertical-align: middle;
+  padding: 0 12px;       /* Only set horizontal padding; height is inherited */
+  aspect-ratio: 1;       /* Makes the Info button a perfect circle/square matching the height */
 }
 
 .book-card .info-btn svg {
