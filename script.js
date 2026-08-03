@@ -198,6 +198,21 @@ document.addEventListener('generator-ready', function() {
   document.body.insertAdjacentHTML('beforeend', interfaceHTML);
   document.querySelectorAll('.chapter-body').forEach(chapter => {
     chapter.insertAdjacentHTML('beforeend', nextChapterButtonHTML);
+    
+    // --- NEW: Read Button Injection & State Restoration ---
+    const section = chapter.dataset.section;
+    const isPreface = (section === "0" || section == 0);
+    
+    // Do not render the button on the preface (Chapter 0)
+    if (!isPreface) {
+      chapter.insertAdjacentHTML('beforeend', readButtonHTML);
+      
+      // Restore the "read" class from previous sessions
+      const chapterId = chapter.dataset.section || chapter.dataset.chapter;
+      if (localStorage.getItem(`read_chapter_${chapterId}`) === "true") {
+        chapter.classList.add("read");
+      }
+    }
   });
   
   // Grab all DOM elements
