@@ -186,7 +186,7 @@ document.addEventListener('generator-ready', function() {
 
   const buttonHTML = `
   <br><br>
-  <button id="bottomBarPrevChapBtn" class="next-chapter-btn">Next Chapter</button>
+  <button id="bottomBarPrevChapBtn" class="next-chapter-btn big-btn">Next Chapter</button>
   `;
 
   // Inject the interfaces into the body of the page
