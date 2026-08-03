@@ -2057,6 +2057,45 @@ document.addEventListener('generator-ready', function() {
   }
   
   // ==========================================
+  // READ CHAPTER LOGIC
+  // ==========================================
+  function updateReadButtonStatus(chapter) {
+    const readBtn = chapter.querySelector('.read-btn');
+    if (!readBtn) return;
+
+    const isRead = chapter.classList.contains('read');
+    const section = chapter.dataset.section;
+    
+    // Fetch custom names from config, defaulting to "Chapter" if missing
+    let chapName = window.APP_CONFIG?.customChapterName || "Chapter";
+    let chapNum = "";
+
+    // Parse the chapter number from your dataset structures
+    if (section && section !== "0") {
+      const parts = section.split('.');
+      chapNum = parts[1] || parts[0]; // Extracts the chapter from "book.chapter" format
+    } else {
+      chapNum = chapter.dataset.chapter;
+    }
+
+    if (isRead) {
+      readBtn.textContent = `${chapName} ${chapNum} completed!`;
+      readBtn.classList.add('active'); // Add active class for custom CSS
+    } else {
+      readBtn.textContent = "Mark as read";
+      readBtn.classList.remove('active'); // Remove active class
+    }
+  }
+
+  // Initialize the correct text/state for all buttons on page load
+  document.querySelectorAll('.chapter-body').forEach(chapter => {
+    const section = chapter.dataset.section;
+    if (!(section === "0" || section == 0)) {
+      updateReadButtonStatus(chapter);
+    }
+  });
+  
+  // ==========================================
   // GLOBAL EVENT DELEGATOR (REPLACES ALL BINDING LOGIC)
   // ==========================================
   document.addEventListener("click", (e) => {
@@ -2078,6 +2117,28 @@ document.addEventListener('generator-ready', function() {
         currentTarget: noteElement
       });
       return;
+    }
+    
+    // 3. --- NEW: Check if clicked element is the Read Button ---
+    const readBtnElement = e.target.closest(".read-btn");
+    if (readBtnElement) {
+      const chapter = readBtnElement.closest(".chapter-body");
+      if (chapter) {
+        // Toggle the 'read' class on the chapter
+        chapter.classList.toggle("read");
+        
+        // Save or remove the state in localStorage
+        const chapterId = chapter.dataset.section || chapter.dataset.chapter;
+        if (chapter.classList.contains("read")) {
+          localStorage.setItem(`read_chapter_${chapterId}`, "true");
+        } else {
+          localStorage.removeItem(`read_chapter_${chapterId}`);
+        }
+        
+        // Update the button's UI to reflect the new state
+        updateReadButtonStatus(chapter);
+      }
+      return; // Stop execution
     }
   });
 
