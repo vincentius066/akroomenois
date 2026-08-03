@@ -183,7 +183,6 @@ document.addEventListener('generator-ready', function() {
       <button id="langBtn">EN</button>
     </div>
   `;
-
   const readButtonHTML = `
   <br><br>
   <button class="read-btn">Mark as read</button>
