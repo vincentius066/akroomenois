@@ -161,10 +161,11 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
-  max-width: 900px;
+  max-width: 100%;
   margin: 0 auto;
 }
 .book-card {
+  box-sizing: border-box;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
