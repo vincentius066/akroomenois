@@ -1299,20 +1299,18 @@ document.addEventListener('generator-ready', function() {
       const chapters = getAllChapters();
       if (chapters.length === 0) return;
 
-      // NEW: Check how many unique books exist, completely ignoring the Preface ("0")
+      // Check how many unique books exist, completely ignoring the Preface ("0")
       const uniqueBooks = new Set();
       chapters.forEach(ch => {
         const sec = ch.dataset.section;
         if (sec) {
-          const bookNum = sec.split('.')[0]; // Grab the book number before the period
+          const bookNum = sec.split('.')[0]; 
           
-          // If the book number is "0" (Preface), it counts 0 towards the total
           if (bookNum !== "0") {
             uniqueBooks.add(bookNum);
           }
         }
       });
-      // If the Set only contains 1 item (or 0), it's a single book document
       const isSingleBook = uniqueBooks.size <= 1;
       
       let html = `<h3 style="margin-top:0;">Table of Contents</h3><ul style="list-style:none; padding:0; margin:0;">`;
@@ -1324,26 +1322,61 @@ document.addEventListener('generator-ready', function() {
         if (section === "0" || section === 0) {
           label = "Preface";
         } 
-        // Check for standard sections (e.g., "1.1")
+        // Check for standard sections
         else if (section) {
           const parts = section.split('.');
           const bookName = window.APP_CONFIG?.customBookName || "Book";
           const chapName = window.APP_CONFIG?.customChapterName || "Chapter";
           
-          // Conditionally format based on our uniqueBooks count
           if (isSingleBook) {
             label = `${chapName} ${parts[1]}`;
           } else {
             label = `${bookName} ${parts[0]}, ${chapName} ${parts[1]}`;
           }
         } 
-        // Fallback if dataset.section is missing entirely
+        // Fallback
         else {
           const chapName = window.APP_CONFIG?.customChapterName || "Chapter";
           label = `${chapName} ${chapter.dataset.chapter}`;
         }
         
-        html += `<li style="padding:6px 0; border-bottom:1px solid #eee; cursor:pointer;" data-index="${index}">${label}</li>`;
+        // --- NEW: Calculate and Cache Meta Information ---
+        if (!chapter.dataset.wordCount) {
+          const chapterWords = chapter.querySelectorAll("span.word");
+          chapter.dataset.wordCount = chapterWords.length;
+          
+          const validWords = Array.from(chapterWords).filter(w => {
+            const s = parseFloat(w.dataset.wordStart);
+            const e = parseFloat(w.dataset.wordEnd);
+            return !isNaN(s) && !isNaN(e);
+          });
+
+          if (validWords.length > 0) {
+            const minTime = parseFloat(validWords[0].dataset.wordStart);
+            const maxTime = parseFloat(validWords[validWords.length - 1].dataset.wordEnd);
+            chapter.dataset.duration = (maxTime - minTime).toString();
+          } else {
+            chapter.dataset.duration = "0";
+          }
+        }
+
+        const wordCount = chapter.dataset.wordCount;
+        const duration = parseFloat(chapter.dataset.duration);
+        let timeString = "";
+        
+        if (duration > 0) {
+          const minutes = Math.floor(duration / 60);
+          const seconds = Math.floor(duration % 60);
+          timeString = ` · ${minutes}m ${seconds}s`;
+        }
+
+        const metaString = `${wordCount} words${timeString}`;
+        // -----------------------------------------------
+
+        html += `<li style="padding:6px 0; border-bottom:1px solid #eee; cursor:pointer;" data-index="${index}">
+          <div>${label}</div>
+          <div style="font-size: 0.9em; color: #555; margin-top: 3px;">${metaString}</div>
+        </li>`;
       });
       html += `</ul>`;
   
@@ -1364,13 +1397,12 @@ document.addEventListener('generator-ready', function() {
             document.body.style.overflow = '';
             popupOverlay.style.display = "none";
 
-            // 2. Briefly resume audio if it was playing, so goToChapter captures the correct state
+            // Briefly resume audio if it was playing
             if (wasPlaying) { 
               audio.play(); 
               wasPlaying = false; 
             }
             
-            // Jump to the chapter
             goToChapter(targetChapter);
           }
         });
