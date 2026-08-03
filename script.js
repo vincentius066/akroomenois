@@ -2079,7 +2079,7 @@ document.addEventListener('generator-ready', function() {
     }
 
     if (isRead) {
-      readBtn.textContent = `${chapName} ${chapNum} completed!`;
+      readBtn.textContent = `${chapName} completed!`;
       readBtn.classList.add('active'); // Add active class for custom CSS
     } else {
       readBtn.textContent = "Mark as read";
