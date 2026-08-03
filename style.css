@@ -91,8 +91,9 @@
   display: block;
   margin: 0 auto;
   border: none;
+  border: 1px solid #4b5466;
 }
-.big-btn,
+.big-btn:hover,
 .read-btn:hover {
   background: #c0c4cb;
 }
@@ -100,7 +101,7 @@
 .read-btn.active {
   background: #aef68e;
   color: #3d8422;
-  border: 2px solid #3d8422;
+  border: 1px solid #3d8422;
 }
 
 .read-btn.active:hover {
