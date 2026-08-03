@@ -184,15 +184,20 @@ document.addEventListener('generator-ready', function() {
     </div>
   `;
 
-  const buttonHTML = `
+  const nextChapterButtonHTML = `
   <br><br>
   <button id="bottomBarPrevChapBtn" class="next-chapter-btn big-btn">Next chapter</button>
+  `;
+
+  const readButtonHTML = `
+  <br><br>
+  <button class="read-btn">Mark as read</button>
   `;
 
   // Inject the interfaces into the body of the page
   document.body.insertAdjacentHTML('beforeend', interfaceHTML);
   document.querySelectorAll('.chapter-body').forEach(chapter => {
-    chapter.insertAdjacentHTML('beforeend', buttonHTML);
+    chapter.insertAdjacentHTML('beforeend', nextChapterButtonHTML);
   });
   
   // Grab all DOM elements
