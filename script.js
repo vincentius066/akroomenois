@@ -1332,7 +1332,15 @@ document.addEventListener('generator-ready', function() {
       });
       const isSingleBook = uniqueBooks.size <= 1;
       
-      let html = `<h3 style="margin-top:0;">Table of Contents</h3><ul style="list-style:none; padding:0; margin:0;">`;
+      let html = `<h3 style="margin-top:0; margin-bottom: 5px;">Table of Contents</h3>
+                  <div style="font-size: 0.9em; color: #555; margin-bottom: 15px; font-weight: 500;">
+                    <!--GRAND_TOTALS-->
+                  </div>
+                  <ul style="list-style:none; padding:0; margin:0;">`;
+                  
+      let grandTotalWords = 0;
+      let grandTotalDuration = 0;
+      
       chapters.forEach((chapter, index) => {
         const section = chapter.dataset.section;
         const isPreface = (section === "0" || section === 0);
@@ -1385,6 +1393,10 @@ document.addEventListener('generator-ready', function() {
 
           const wordCount = chapter.dataset.wordCount;
           const duration = parseFloat(chapter.dataset.duration);
+
+          grandTotalWords += parseInt(wordCount || 0, 10);
+          grandTotalDuration += duration || 0;
+
           let timeString = "";
           
           if (duration > 0) {
@@ -1421,7 +1433,15 @@ document.addEventListener('generator-ready', function() {
         </li>`;
       });
       html += `</ul>`;
-  
+
+      const totalMinutes = Math.floor(grandTotalDuration / 60);
+      const totalSeconds = Math.floor(grandTotalDuration % 60);
+      
+      console.log(`Total Book Words: ${grandTotalWords} | Total Run Time: ${totalMinutes}m ${totalSeconds}s`);
+      
+      const totalsString = `Total Words: ${grandTotalWords} &nbsp;·&nbsp; Total Time: ${totalMinutes}m ${totalSeconds}s`;
+      html = html.replace('<!--GRAND_TOTALS-->', totalsString);
+      
       popupContent.innerHTML = html;
       popup.style.display = "block";
       document.body.style.overflow = 'hidden';
@@ -1503,6 +1523,7 @@ document.addEventListener('generator-ready', function() {
         // 2. Fetch the JSON data
         const response = await fetch(window.APP_CONFIG?.frequencyJsonPath || "frequency_data.json");
         const freqData = await response.json();
+        console.log(`Total vocabulary entries loaded: ${freqData.length}`);
   
         // 3. Define the brackets (REVERSED: Highest frequencies at the top)
         const brackets = [
