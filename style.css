@@ -79,8 +79,6 @@
 .big-btn,
 .read-btn {
   display: inline-block;
-  background: #eef2f8;
-  color: #4b5466;
   padding: 8px 24px;
   border-radius: 30px;
   text-decoration: none;
@@ -90,7 +88,8 @@
 
   display: block;
   margin: 0 auto;
-  border: none;
+  background: #eef2f8;
+  color: #4b5466;
   border: 1px solid #dde1e7;
 }
 .big-btn:hover,
@@ -242,8 +241,16 @@ footer {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 12px;       /* Only set horizontal padding; height is inherited */
-  aspect-ratio: 1;       /* Makes the Info button a perfect circle/square matching the height */
+  padding: 0;           /* Prevents extra padding from stretching it into an oval */
+  aspect-ratio: 1;      /* Forces width to equal height */
+  border-radius: 50%;   /* Turns the square aspect ratio into a perfect circle */
+
+  background: #eef2f8;
+  color: #4b5466;
+  border: 1px solid #dde1e7;
+}
+.book-card .btn.info-btn:hover {
+  background: #c0c4cb;
 }
 
 .book-card .info-btn svg {
