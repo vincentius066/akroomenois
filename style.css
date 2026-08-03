@@ -72,6 +72,29 @@
   font-display: swap;
 }
 
+/* =========================================================
+   RULES TAKEN FROM INDEX.HTML
+   ========================================================= */
+
+.big-btn {
+      display: inline-block;
+      background: #e06e04;
+      color: white;
+      padding: 8px 24px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s;
+	  font-family: "Noto";
+}
+.big-btn:hover {
+      background: #b75d0a;
+}
+
+/* =========================================================
+   NORMAL RULES
+   ========================================================= */
+
 html {
   /* Reserves the scrollbar space globally, preventing layout jumping */
   scrollbar-gutter: stable;
@@ -517,7 +540,7 @@ select {
   filter: invert(32%) sepia(16%) saturate(692%) hue-rotate(182deg) brightness(91%) contrast(85%);
 }
 
-#bottomBarPrevChapBtn {
+/*#bottomBarPrevChapBtn {
   background: #e06e04;
   border: none;
   color: #ffffff;
@@ -529,7 +552,7 @@ select {
   display: block;
   margin: 0 auto;
   cursor: pointer;
-}
+}*/
 
 /* =========================================================
    TABLET LAYOUT RULES (TRIGGERS ON SCREEN SIZE OR MANUAL OVERRIDE)
