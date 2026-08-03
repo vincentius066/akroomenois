@@ -124,7 +124,7 @@
   border: none;
   padding: 10px 28px;
   font-size: 1.1rem;
-  font-family: "Noto";
+  font-family: "Noto" !important;
   color: #6b6b6b;
   cursor: pointer;
   border-bottom: 3px solid transparent;
