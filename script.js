@@ -1450,7 +1450,8 @@ document.addEventListener('generator-ready', function() {
               if (isNowRead) {
                 localStorage.setItem(`read_chapter_${chapterId}`, "true");
                 tocBtn.classList.add("active");
-                tocBtn.style.backgroundColor = "#4caf50";
+                tocBtn.style.backgroundColor = "#8fdfaa";
+                tocBtn.style.borderColor = "#8fdfaa";
               } else {
                 localStorage.removeItem(`read_chapter_${chapterId}`);
                 tocBtn.classList.remove("active");
