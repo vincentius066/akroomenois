@@ -184,14 +184,14 @@ document.addEventListener('generator-ready', function() {
     </div>
   `;
 
-  const nextChapterButtonHTML = `
-  <br><br>
-  <button id="bottomBarPrevChapBtn" class="next-chapter-btn big-btn">Next chapter</button>
-  `;
-
   const readButtonHTML = `
   <br><br>
   <button class="read-btn">Mark as read</button>
+  `;
+
+  const nextChapterButtonHTML = `
+  <br><br>
+  <button id="bottomBarPrevChapBtn" class="next-chapter-btn big-btn">Next chapter</button>
   `;
 
   // Inject the interfaces into the body of the page
