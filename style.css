@@ -76,10 +76,11 @@
    RULES TAKEN FROM INDEX.HTML
    ========================================================= */
 
-.big-btn {
+.big-btn,
+.read-btn {
   display: inline-block;
-  background: #e06e04;
-  color: white;
+  background: #eef2f8;
+  color: #4c5568;
   padding: 8px 24px;
   border-radius: 30px;
   text-decoration: none;
@@ -92,7 +93,7 @@
   border: none;
 }
 .big-btn:hover {
-  background: #b75d0a;
+  background: #c0c4cb;
 }
 
 /* =========================================================
@@ -454,7 +455,7 @@ select {
 }
 
 #topBarPrevChapBtn,
-#topBarNextChapBtn {
+#topBarNextChap {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
