@@ -232,28 +232,33 @@ footer {
 .card-actions {
   display: flex;
   justify-content: center;
-  align-items: stretch; /* Forces both buttons to match the height of the taller one */
+  align-items: stretch; /* Both buttons match height automatically */
   gap: 8px;
 }
 
-/* Ensure the Info button centers its SVG as it stretches */
+/* Info button rule */
 .book-card .btn.info-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0;           /* Prevents extra padding from stretching it into an oval */
-  aspect-ratio: 1;      /* Forces width to equal height */
-  border-radius: 50%;   /* Turns the square aspect ratio into a perfect circle */
+  padding: 0;
+  height: 100%;         /* <--- FORCES button to adopt full container height */
+  aspect-ratio: 1;      /* Calculates width from height (creates perfect circle) */
+  border-radius: 50%;
 
   background: #eef2f8;
   color: #4b5466;
   border: 1px solid #dde1e7;
 }
+
 .book-card .btn.info-btn:hover {
   background: #c0c4cb;
 }
 
+/* Keeps the SVG icon centered and sized independently from the button */
 .book-card .info-btn svg {
+  width: 16px;
+  height: 16px;
   display: block;
 }
 /* =========================================================
