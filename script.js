@@ -23,9 +23,9 @@ document.addEventListener('generator-ready', function() {
     <div id="topBar">
       <button id="homeBtn"><img class="btn-icon" src="icon/arrow-left.svg" alt="Play"></button>
       <span class="title">
-      <div id="topBarPrevChapBtn" class="prev-chapter-btn">◀ &nbsp; &nbsp;</div>
+      <div id="topBarPrevChapBtn" class="prev-chapter-btn">◀&#xFE0E; &nbsp; &nbsp;</div>
       <div id="title"></div>
-      <div id="topBarNextChapBtn" class="next-chapter-btn">&nbsp; &nbsp; ▶</div>
+      <div id="topBarNextChapBtn" class="next-chapter-btn">&nbsp; &nbsp; ▶&#xFE0E;</div>
       </span>
       <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
         <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
