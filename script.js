@@ -1456,6 +1456,7 @@ document.addEventListener('generator-ready', function() {
                 localStorage.removeItem(`read_chapter_${chapterId}`);
                 tocBtn.classList.remove("active");
                 tocBtn.style.backgroundColor = "transparent";
+                tocBtn.style.borderColor = "#eee";
               }
               
               // Keep the main chapter read button at the bottom of the page in sync
