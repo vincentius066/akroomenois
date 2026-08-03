@@ -242,8 +242,8 @@ footer {
   align-items: center;
   justify-content: center;
   padding: 0;
-  width: 38px;          /* Matches the ~38px height of the Open button */
-  height: 38px;         /* Locks it into a square */
+  width: 35.5px;          /* Matches the 35.5px height of the Open button */
+  height: 35.5px;         /* Locks it into a square */
   border-radius: 50%;   /* Turns the square into a circle */
 
   background: #eef2f8;
