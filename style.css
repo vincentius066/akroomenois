@@ -99,13 +99,13 @@
 }
 
 .read-btn.active {
-  background: #aef68e;
-  color: #3d8422;
-  border: 1px solid #3d8422;
+  background: #ebfdf3;
+  color: #2b8d58;
+  border: 1px solid #cbdfd3;
 }
 
 .read-btn.active:hover {
-  background: #91cc77;
+  background: #cbd9d1;
 }
 
 /* =========================================================
