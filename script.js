@@ -1398,9 +1398,26 @@ document.addEventListener('generator-ready', function() {
         }
         // ---------------------------------------------------------------------
 
-        html += `<li style="padding:6px 0; border-bottom:1px solid #eee; cursor:pointer;" data-index="${index}">
-          <div>${label}</div>
-          ${metaHtml}
+        // --- NEW: Generate Circle Read Button HTML ---
+        let readCircleBtnHtml = "";
+        if (!isPreface) {
+          const chapterId = chapter.dataset.section || chapter.dataset.chapter;
+          const isRead = localStorage.getItem(`read_chapter_${chapterId}`) === "true" || chapter.classList.contains("read");
+          
+          // Apply 'active' class and inline styling based on read state
+          const readActiveClass = isRead ? "active" : "";
+          const readActiveColor = isRead ? "#4caf50" : "transparent"; // Green when marked as read
+          
+          readCircleBtnHtml = `<button class="toc-read-btn ${readActiveClass}" data-chapter-id="${chapterId}" data-index="${index}" title="Toggle read status" style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #aaa; background-color: ${readActiveColor}; cursor: pointer; flex-shrink: 0; margin-left: 10px; padding: 0; transition: background-color 0.2s ease;"></button>`;
+        }
+
+        // Updated <li> wrapper to use Flexbox to align text left and button right
+        html += `<li style="padding:8px 0; border-bottom:1px solid #eee; cursor:pointer; display: flex; justify-content: space-between; align-items: center;" data-index="${index}">
+          <div style="flex-grow: 1; padding-right: 10px;">
+            <div>${label}</div>
+            ${metaHtml}
+          </div>
+          ${readCircleBtnHtml}
         </li>`;
       });
       html += `</ul>`;
@@ -1413,7 +1430,40 @@ document.addEventListener('generator-ready', function() {
       // Add click listeners to each list item
       const items = popupContent.querySelectorAll('li');
       items.forEach((item) => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+          
+          // --- NEW: Handle clicks explicitly on the circular read button ---
+          const tocBtn = e.target.closest('.toc-read-btn');
+          if (tocBtn) {
+            e.stopPropagation(); // Prevent the chapter navigation from firing
+            
+            const index = parseInt(tocBtn.dataset.index, 10);
+            const targetChapter = chapters[index];
+            const chapterId = tocBtn.dataset.chapterId;
+            
+            if (targetChapter) {
+              // Toggle the actual 'read' class on the target chapter in the DOM
+              targetChapter.classList.toggle("read");
+              const isNowRead = targetChapter.classList.contains("read");
+              
+              // Update Local Storage and button visuals
+              if (isNowRead) {
+                localStorage.setItem(`read_chapter_${chapterId}`, "true");
+                tocBtn.classList.add("active");
+                tocBtn.style.backgroundColor = "#4caf50";
+              } else {
+                localStorage.removeItem(`read_chapter_${chapterId}`);
+                tocBtn.classList.remove("active");
+                tocBtn.style.backgroundColor = "transparent";
+              }
+              
+              // Keep the main chapter read button at the bottom of the page in sync
+              updateReadButtonStatus(targetChapter);
+            }
+            return; // Stop execution here, do not navigate or close popup
+          }
+
+          // --- ORIGINAL NAVIGATION LOGIC ---
           const index = parseInt(item.dataset.index, 10);
           const targetChapter = chapters[index];
           if (targetChapter) {
