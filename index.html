@@ -43,67 +43,7 @@
   <!-- TAB CONTENT: Library -->
   <div id="tab-library" class="tab-content active">
     <div class="book-grid">
-      <!-- Anabasis -->
-      <div class="book-card">
-        <h2>Anabasis</h2>
-        <img class="cover-art" src="books/anabasis/image/cover.jpg">
-        <p class="author">Xenophon<br>(read by bedwere)</p>
-        <a href="anabasis.html" class="btn">Open</a>
-      </div>
-      <div class="book-card">
-        <h2>Cyropaedia (Work in Progress)</h2>
-        <img class="cover-art" src="books/cyropaedia/image/cover.jpg">
-        <p class="author">Xenophon<br>(read by bedwere)</p>
-        <a href="cyropaedia.html" class="btn">Open</a>
-      </div>
-      <div class="book-card">
-        <h2>A First Greek Reader</h2>
-        <img class="cover-art" src="books/a_first_greek_reader/image/cover.jpg">
-        <p class="author">Beresford and Douglas<br>(read by Ioannis Stratakis)</p>
-        <a href="a_first_greek_reader.html" class="btn">Open</a>
-      </div>
-      <div class="book-card">
-        <h2>O Katascopos</h2>
-        <img class="cover-art" src="books/katascopos/image/cover.jpg">
-        <p class="author">Jacob Gerber<br>(read by Luke Amadeus Ranieri)</p>
-        <a href="katascopos.html" class="btn">Open</a>
-      </div>
-      <div class="book-card">
-        <h2>Lingua Graeca Per Se Illustrata (1-4)</h2>
-        <img class="cover-art" src="books/LGPSI/image/cover.jpg">
-        <p class="author">Seumas Macdonald<br>(read by Luke Amadeus Ranieri)</p>
-        <a href="LGPSI.html" class="btn">Open</a>
-      </div>
-      <div class="book-card">
-        <h2>Epistle of James</h2>
-        <img class="cover-art" src="books/Jacob/image/cover.jpg">
-        <p class="author">St. James<br>(read by peaceuntoyou)</p>
-        <a href="jacob.html" class="btn">Open</a>
-      </div>
-      <div class="book-card">
-        <h2>The Greek War of Independence</h2>
-        <img class="cover-art" src="books/the_greek_war_of_independence/image/cover.jpg">
-        <p class="author">Charles D. Chambers<br>(read by Ariphron)</p>
-        
-        <div class="card-actions">
-          <a href="the_greek_war_of_independence.html" class="btn">Open</a>
-          <a href="#" class="btn info-btn" aria-label="Information">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-          </a>
-        </div>
-      </div>
-      <!-- Add more books here -->
-      <!--
-      <div class="book-card">
-        <h2>Iliad</h2>
-        <p class="author">Homer</p>
-        <a href="iliad.html" class="btn">Open</a>
-      </div>
-      -->
+    
     </div>
   </div>
 
@@ -131,6 +71,38 @@
         if (target) target.classList.add('active');
       });
     });
+  </script>
+  <script>
+    const books = [
+      { title: "Anabasis", cover: "books/anabasis/image/cover.jpg", author: "Xenophon", reader: "bedwere", link: "anabasis.html" },
+      { title: "Cyropaedia (Work in Progress)", cover: "books/cyropaedia/image/cover.jpg", author: "Xenophon", reader: "bedwere", link: "cyropaedia.html" },
+      { title: "A First Greek Reader", cover: "books/a_first_greek_reader/image/cover.jpg", author: "Beresford and Douglas", reader: "Ioannis Stratakis", link: "a_first_greek_reader.html" },
+      { title: "O Katascopos", cover: "books/katascopos/image/cover.jpg", author: "Jacob Gerber", reader: "Luke Amadeus Ranieri", link: "katascopos.html" },
+      { title: "Lingua Graeca Per Se Illustrata (1-4)", cover: "books/LGPSI/image/cover.jpg", author: "Seumas Macdonald", reader: "Luke Amadeus Ranieri", link: "LGPSI.html" },
+      { title: "Epistle of James", cover: "books/Jacob/image/cover.jpg", author: "St. James", reader: "peaceuntoyou", link: "jacob.html" },
+      { title: "The Greek War of Independence (test)", cover: "books/the_greek_war_of_independence/image/cover.jpg", author: "Charles D. Chambers", reader: "Ariphron", link: "the_greek_war_of_independence.html" }
+    ];
+  
+    const grid = document.getElementById('library-grid');
+  
+    grid.innerHTML = books.map(book => `
+      <div class="book-card">
+        <h2>${book.title}</h2>
+        <img class="cover-art" src="${book.cover}">
+        <p class="author">${book.author}<br>(read by ${book.reader})</p>
+        
+        <div class="card-actions">
+          <a href="${book.link}" class="btn">Open</a>
+          <a href="#" class="btn info-btn" aria-label="Information">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </a>
+        </div>
+      </div>
+    `).join('');
   </script>
 </body>
 </html>
