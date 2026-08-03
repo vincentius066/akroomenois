@@ -228,6 +228,18 @@ footer {
   color: #9a9a9a;
   font-size: 0.9rem;
 }
+
+.book-card .info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px; /* Adjusted padding for an icon-only button */
+  vertical-align: middle;
+}
+
+.book-card .info-btn svg {
+  display: block;
+}
 /* =========================================================
    NORMAL RULES
    ========================================================= */
