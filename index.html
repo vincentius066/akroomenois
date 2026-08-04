@@ -154,11 +154,32 @@
     // ==========================================
     // CARD HOVER SLIDE LOGIC
     // ==========================================
+    
+    // 1. Function to check if text needs a shadow based on its length
+    function updateScrollShadows() {
+      document.querySelectorAll('.scroll-text').forEach(text => {
+        const container = text.parentElement;
+        if (text.scrollWidth > container.clientWidth) {
+          container.classList.add('needs-scroll');
+        } else {
+          container.classList.remove('needs-scroll');
+        }
+      });
+    }
+
+    // Run the check immediately, and again after custom fonts load (just to be mathematically perfect)
+    updateScrollShadows();
+    if (document.fonts) {
+      document.fonts.ready.then(updateScrollShadows);
+    }
+
+    // 2. The Hover Animation
     const cards = document.querySelectorAll('.book-card');
     
     cards.forEach(card => {
+      let scrollTimeouts = []; // Stores our timers so we can cancel them if the user moves their mouse away
+      
       card.addEventListener('mouseenter', () => {
-        // Stop entirely if the user is on a touch device
         if (!window.matchMedia('(hover: hover)').matches) return;
         
         const scrollTexts = card.querySelectorAll('.scroll-text');
@@ -166,16 +187,20 @@
         scrollTexts.forEach(text => {
           const container = text.parentElement;
           
-          // Only animate if the text is physically wider than the card
           if (text.scrollWidth > container.clientWidth) {
             const scrollDistance = text.scrollWidth - container.clientWidth;
+            const duration = scrollDistance / 30; // 30px per second
             
-            // Calculate speed (30px per second) so long text doesn't whip by too fast
-            const duration = scrollDistance / 30; 
-            
-            // 0.2s delay ensures the card lifts up FIRST, then text slides
+            // Slide the text
             text.style.transition = `transform ${duration}s linear 0.2s`;
             text.style.transform = `translateX(-${scrollDistance}px)`;
+            
+            // Wait for the duration + the 0.2s delay, then fade out the shadow
+            const timeout = setTimeout(() => {
+              container.classList.add('is-scrolled');
+            }, (duration + 0.2) * 1000);
+            
+            scrollTimeouts.push(timeout);
           }
         });
       });
@@ -183,10 +208,19 @@
       card.addEventListener('mouseleave', () => {
         if (!window.matchMedia('(hover: hover)').matches) return;
         
+        // Cancel the shadow fade-out timers immediately
+        scrollTimeouts.forEach(clearTimeout);
+        scrollTimeouts = [];
+        
         const scrollTexts = card.querySelectorAll('.scroll-text');
         
         scrollTexts.forEach(text => {
-          // Snap back smoothly when the mouse leaves the card
+          const container = text.parentElement;
+          
+          // Bring the shadow back immediately as the text snaps back
+          container.classList.remove('is-scrolled');
+          
+          // Snap text back home
           text.style.transition = 'transform 0.3s ease-out';
           text.style.transform = 'translateX(0)';
         });
