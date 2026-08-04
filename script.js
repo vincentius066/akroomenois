@@ -1463,7 +1463,7 @@ document.addEventListener('generator-ready', function() {
       
       console.log(`Total Book Words: ${grandTotalWords} | Total Run Time: ${totalMinutes}m ${totalSeconds}s`);
       
-      const totalsString = `Total: ${grandTotalWords} words &nbsp;·&nbsp; ${totalMinutes}m ${totalSeconds}s`;
+      const totalsString = `Total: ${grandTotalWords} words&nbsp;·&nbsp;${totalMinutes}m ${totalSeconds}s`;
       html = html.replace('<!--GRAND_TOTALS-->', totalsString);
       
       popupContent.innerHTML = html;
