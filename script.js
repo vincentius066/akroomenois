@@ -569,37 +569,45 @@ document.addEventListener('generator-ready', function() {
   function handleNoteClick(e) {
     e.stopPropagation(); 
     if (isPopupActive()) return;
-
+  
     const note = e.currentTarget;
     wasPlaying = !audio.paused; 
     audio.pause();
-
+  
     let noteContent = note.dataset.note || "No note data available.";
-    const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
     
-    noteContent = noteContent.replace(urlRegex, (matchedUrl) => {
+    // Matches anything between &quot; OR matches a standard URL
+    const urlRegex = /(&quot;.*?&quot;)|(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+    
+    noteContent = noteContent.replace(urlRegex, (match, quotedText, matchedUrl) => {
+      // If the match was wrapped in &quot;, skip it and return it unmodified
+      if (quotedText) {
+        return match;
+      }
+  
+      // Otherwise, process the standard URL as usual
       const punctuationMatch = matchedUrl.match(/[.,;:!)]+$/);
       let trailingPunctuation = "";
       let cleanUrl = matchedUrl;
-
+  
       if (punctuationMatch) {
         trailingPunctuation = punctuationMatch[0];
         cleanUrl = matchedUrl.slice(0, -trailingPunctuation.length);
       }
-
+  
       const hyperLink = cleanUrl.startsWith("http") ? cleanUrl : `https://${cleanUrl}`;
       const breakableUrlText = cleanUrl.replace(/\//g, "/&shy;");
-
+  
       return `<a href="${hyperLink}" target="_blank" style="color: #007bff; text-decoration: underline; word-break: break-word;">${breakableUrlText}</a>${trailingPunctuation}`;
     });
-
+  
     popupContent.innerHTML = `
       <div style="font-family: inherit; text-align: justify; font-size: 0.9em; padding: 10px; line-height: 1.5;">
         <h3 style="margin-top: 0; color: #a52a2a;">Note</h3>
         <p>${noteContent}</p>
       </div>
     `;
-
+  
     popup.style.display = "block";
     document.body.style.overflow = 'hidden';
     popupOverlay.style.display = "block";
