@@ -284,6 +284,7 @@ footer {
   flex-direction: column;
   padding: 20px;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .stats-list {
