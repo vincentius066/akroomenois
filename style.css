@@ -158,12 +158,7 @@
   margin-bottom: 6px;
   font-weight: 500;
 }
-.book-card .author {
-  font-style: italic;
-  color: #6b6b6b;
-  font-size: 1rem;
-  margin-bottom: 12px;
-}
+
 .book-card .btn {
   display: inline-block;
   background: #d4a373;
@@ -298,6 +293,50 @@ footer {
 /* Push the back button to the bottom just like the front layout */
 .card-back .card-actions {
   margin-top: auto; 
+}
+
+/* =========================================================
+   EXPANDING TITLE OVERLAY
+   ========================================================= */
+
+.title-expand-container,
+.author-expand-container {
+  position: relative;
+  /* Hardcodes the height to match exactly one line of your 1.5rem h2 */
+  height: 36px; 
+  margin-bottom: 6px; 
+  width: 100%;
+}
+
+.title-expand-text {
+  position: absolute;
+  top: -4px;
+  left: -10px; /* Slight negative offset to make room for padding */
+  right: -10px;
+  padding: 4px 10px;
+  
+  /* Locks the text to a single line and adds the "..." */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  /* Matches your original h2 styling */
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0;
+  
+  /* Sets up the overlay appearance */
+  background: white; /* Matches the book-card background */
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.book-card .author-expand-text {
+  font-style: italic;
+  color: #6b6b6b;
+  font-size: 1rem;
+  margin-bottom: 12px;
 }
 /* =========================================================
    NORMAL RULES
@@ -785,7 +824,7 @@ select {
 	  background: #b88a5e;
 	}
 
-	.book-card:hover {
+  .book-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 10px 24px rgba(0,0,0,0.12);
   }
@@ -799,6 +838,17 @@ select {
 	  background: #f0ebe6;
 	  border-radius: 8px 8px 0 0;
 	}
+
+  .title-expand-container:hover .title-expand-text,
+  .author-expand-container:hover .author-expand-text{
+    white-space: normal;
+    overflow: visible;
+    z-index: 10;
+    
+    /* Adds a shadow and border so it pops out from the card */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e8e2da; 
+  }
 }
 
 /* =========================================================
