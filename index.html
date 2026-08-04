@@ -196,7 +196,7 @@
             text.style.transform = `translateX(-${scrollDistance}px)`;
             
             // Wait for the duration + the 0.2s delay, then fade out the shadow
-            const fadeLeadTime = 0.8; 
+            const fadeLeadTime = 1.1; 
             const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
             
             const timeout = setTimeout(() => {
