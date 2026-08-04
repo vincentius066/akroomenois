@@ -266,7 +266,7 @@ footer {
   height: 100%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden; /* Safari support */
-  border-radius: 8px; /* Match to your current design */
+  border-radius: inherit;
   background: #fff; /* Match your card background color */
 }
 
