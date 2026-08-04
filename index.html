@@ -126,9 +126,6 @@
               <li><strong>Run time:</strong> ${book.runTime || '0 min'}</li>
               <li><strong>Progress:</strong> ${book.progress || '0%'}</li>
             </ul>
-            <div class="card-actions">
-              <a href="#" class="btn return-btn">Back</a>
-            </div>
           </div>
           
         </div>
@@ -138,16 +135,16 @@
     // Event delegation to handle flips for all cards dynamically
     grid.addEventListener('click', (e) => {
       const infoBtn = e.target.closest('.info-btn');
-      const returnBtn = e.target.closest('.return-btn');
+      const cardBack = e.target.closest('.card-back');
       
+      // If they click the info button on the front, flip it
       if (infoBtn) {
         e.preventDefault();
         infoBtn.closest('.book-card').classList.add('is-flipped');
-      }
-      
-      if (returnBtn) {
-        e.preventDefault();
-        returnBtn.closest('.book-card').classList.remove('is-flipped');
+      } 
+      // If they click anywhere on the back of the card, flip it back
+      else if (cardBack) {
+        cardBack.closest('.book-card').classList.remove('is-flipped');
       }
     });
     
