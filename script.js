@@ -1444,7 +1444,7 @@ document.addEventListener('generator-ready', function() {
           const readActiveColor = isRead ? "#8fdfaa" : "transparent"; 
           const readActiveBorder = isRead ? "#8fdfaa" : "#aaa";
           
-          readCircleBtnHtml = `<button class="toc-read-btn ${readActiveClass}" data-chapter-id="${chapterId}" data-index="${index}" title="Toggle read status" style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #aaa; background-color: ${readActiveColor}; cursor: pointer; flex-shrink: 0; margin-left: 10px; padding: 0; transition: background-color 0.2s ease;"></button>`;
+          readCircleBtnHtml = `<button class="toc-read-btn ${readActiveClass}" data-chapter-id="${chapterId}" data-index="${index}" title="Toggle read status" style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid ${readActiveBorder}; background-color: ${readActiveColor}; cursor: pointer; flex-shrink: 0; margin-left: 10px; padding: 0; transition: background-color 0.2s ease, border-color 0.2s ease;"></button>`;
         }
 
         // Updated <li> wrapper to use Flexbox to align text left and button right
