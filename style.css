@@ -282,7 +282,7 @@ footer {
   transform: rotateY(180deg);
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 30px 20px 25px;
   box-sizing: border-box;
   cursor: pointer;
 }
