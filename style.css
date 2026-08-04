@@ -235,7 +235,7 @@ footer {
 
 .book-card-wrapper {
   perspective: 1000px;
-  width: 100%;
+  width: 220px;
   height: 100%; 
 }
 
@@ -786,9 +786,13 @@ select {
 	}
 
 	.book-card:hover {
-	  transform: translateY(-6px);
-	  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
-	}
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+  }
+
+  .book-card.is-flipped:hover {
+    transform: rotateY(180deg) translateY(-6px);
+  }
 
 	.tab-btn:hover {
 	  color: #2c2c2c;
