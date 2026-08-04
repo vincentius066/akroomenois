@@ -324,9 +324,9 @@ footer {
   right: 0;
   width: 40px; 
   height: 100%;
-  /* Creates a fade to pure white (matches the card background) */
   background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-  transition: opacity 0.3s ease;
+  /* Change this from 0.3s to 0.4s so it matches the fade window perfectly */
+  transition: opacity 0.4s ease; 
   pointer-events: none; 
 }
 
