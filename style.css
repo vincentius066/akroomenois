@@ -692,7 +692,7 @@ select {
    HOVERS
    ========================================================= */
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
 	
   .big-btn:hover,
 	.read-btn:hover {
