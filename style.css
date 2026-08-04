@@ -92,19 +92,11 @@
   color: #4b5466;
   border: 1px solid #dde1e7;
 }
-.big-btn:hover,
-.read-btn:hover {
-  background: #c0c4cb;
-}
 
 .read-btn.active {
   background: #ebfdf3;
   color: #2b8d58;
   border: 1px solid #cbdfd3;
-}
-
-.read-btn.active:hover {
-  background: #cbd9d1;
 }
 
 
@@ -131,11 +123,7 @@
   margin-bottom: -2px;
   font-weight: 500;
 }
-.tab-btn:hover {
-  color: #2c2c2c;
-  background: #f0ebe6;
-  border-radius: 8px 8px 0 0;
-}
+
 .tab-btn.active {
   color: #2c2c2c;
   border-bottom-color: #d4a373;
@@ -175,10 +163,7 @@
   transition: transform 0.2s, box-shadow 0.2s;
   border: 1px solid #e8e2da;
 }
-.book-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
-}
+
 .book-card h2 {
   font-size: 1.5rem;
   margin-bottom: 6px;
@@ -200,9 +185,7 @@
   font-weight: 500;
   transition: background 0.2s;
 }
-.book-card .btn:hover {
-  background: #b88a5e;
-}
+
 .cover-art {
   height: 150px;
   width: 150px;
@@ -250,10 +233,6 @@ footer {
   background: #eef2f8;
   color: #4b5466;
   border: 1px solid #dde1e7;
-}
-
-.book-card .btn.info-btn:hover {
-  background: #c0c4cb;
 }
 
 /* Keeps the SVG icon centered and sized */
@@ -545,10 +524,6 @@ select {
   border-radius: 6px;
 }
 
-#playerBar button:hover {
-  background: #eef2f8;
-}
-
 #freqBtn,
 #contentsBtn,
 #settingsBtn {
@@ -639,10 +614,6 @@ select {
   cursor: pointer;
   border-radius: 6px;
 }
-
-#topBar button:hover {
-  background: transparent;
-}
 	
 .note-marker {
   color: #a52a2a;      /* A nice deep classical red/burgundy color */
@@ -652,15 +623,7 @@ select {
   user-select: none;   /* Prevents accidentally selecting the text when clicking */
 }
 
-.note-marker:hover {
-  color: #ff4500;      /* Lights up bright red-orange on mouse hover */
-}
-
 .phrase.active .note-marker {
-  color: #111926;
-}
-
-.phrase.active .note-marker:hover {
   color: #111926;
 }
 
@@ -724,6 +687,57 @@ select {
   margin: 0 auto;
   cursor: pointer;
 }*/
+
+/* =========================================================
+   HOVERS
+   ========================================================= */
+
+@media (hover: hover) {
+	
+  .big-btn:hover,
+	.read-btn:hover {
+	  background: #c0c4cb;
+	}
+	
+	.read-btn.active:hover {
+	  background: #cbd9d1;
+	}
+
+	.phrase.active .note-marker:hover {
+	  color: #111926;
+	}
+
+	.note-marker:hover {
+	  color: #ff4500;      /* Lights up bright red-orange on mouse hover */
+	}
+
+	#topBar button:hover {
+	  background: transparent;
+	}
+
+	#playerBar button:hover {
+	  background: #eef2f8;
+	}
+
+	.book-card .btn.info-btn:hover {
+	  background: #c0c4cb;
+	}
+
+	.book-card .btn:hover {
+	  background: #b88a5e;
+	}
+
+	.book-card:hover {
+	  transform: translateY(-6px);
+	  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+	}
+
+	.tab-btn:hover {
+	  color: #2c2c2c;
+	  background: #f0ebe6;
+	  border-radius: 8px 8px 0 0;
+	}
+}
 
 /* =========================================================
    TABLET LAYOUT RULES (TRIGGERS ON SCREEN SIZE OR MANUAL OVERRIDE)
