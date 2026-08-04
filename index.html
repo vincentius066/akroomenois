@@ -91,16 +91,9 @@
           
           <!-- FRONT OF CARD -->
           <div class="card-front">
-            <div class="title-expand-container">
-              <h2 class="title-expand-text">${book.title}</h2>
-            </div>
+            <h2>${book.title}</h2>
             <img class="cover-art" src="${book.cover}">
-            <div class="author-expand-container">
-              <p class="author-expand-text">${book.author}</p>
-            </div>
-            <div class="author-expand-container">
-              <p class="author-expand-text">(read by ${book.reader})</p>
-            </div>
+            <p class="author">${book.author}<br>(read by ${book.reader})</p>
             
             <div class="card-actions">
               <a href="${book.link}" class="btn">Open</a>
