@@ -86,23 +86,60 @@
     const grid = document.getElementById('library-grid');
   
     grid.innerHTML = books.map(book => `
-      <div class="book-card">
-        <h2>${book.title}</h2>
-        <img class="cover-art" src="${book.cover}">
-        <p class="author">${book.author}<br>(read by ${book.reader})</p>
-        
-        <div class="card-actions">
-          <a href="${book.link}" class="btn">Open</a>
-          <a href="#" class="btn info-btn" aria-label="Information">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-          </a>
+      <div class="book-card-wrapper">
+        <div class="book-card">
+          
+          <!-- FRONT OF CARD -->
+          <div class="card-front">
+            <h2>${book.title}</h2>
+            <img class="cover-art" src="${book.cover}">
+            <p class="author">${book.author}<br>(read by ${book.reader})</p>
+            
+            <div class="card-actions">
+              <a href="${book.link}" class="btn">Open</a>
+              <a href="#" class="btn info-btn" aria-label="Information">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </a>
+            </div>
+          </div>
+  
+          <!-- BACK OF CARD -->
+          <div class="card-back">
+            <h2>Stats</h2>
+            <ul class="stats-list">
+              <li><strong>Vocabulary:</strong> ${book.vocab || 0}</li>
+              <li><strong>Total words:</strong> ${book.totalWords || 0}</li>
+              <li><strong>Run time:</strong> ${book.runTime || '0 min'}</li>
+              <li><strong>Progress:</strong> ${book.progress || '0%'}</li>
+            </ul>
+            <div class="card-actions">
+              <a href="#" class="btn return-btn">Back</a>
+            </div>
+          </div>
+          
         </div>
       </div>
     `).join('');
+  
+    // Event delegation to handle flips for all cards dynamically
+    grid.addEventListener('click', (e) => {
+      const infoBtn = e.target.closest('.info-btn');
+      const returnBtn = e.target.closest('.return-btn');
+      
+      if (infoBtn) {
+        e.preventDefault();
+        infoBtn.closest('.book-card').classList.add('is-flipped');
+      }
+      
+      if (returnBtn) {
+        e.preventDefault();
+        returnBtn.closest('.book-card').classList.remove('is-flipped');
+      }
+    });
   </script>
 </body>
 </html>
