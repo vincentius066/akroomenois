@@ -576,17 +576,18 @@ document.addEventListener('generator-ready', function() {
   
     let noteContent = note.dataset.note || "No note data available.";
     
-    // Matches anything between &quot; OR matches a standard URL
-    const urlRegex = /(&quot;.*?&quot;)|(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+    // Group 1: Any HTML tag (to protect existing links/attributes)
+    // Group 2: Standalone URLs in plain text (excluding '<' so it stops before tags)
+    const urlRegex = /(<[^>]+>)|(https?:\/\/[^\s<]+|www\.[^\s<]+)/gi;
     
-    noteContent = noteContent.replace(urlRegex, (match, quotedText, matchedUrl) => {
-      // If the match was wrapped in &quot;, skip it and return it unmodified
-      if (quotedText) {
-        return match;
+    noteContent = noteContent.replace(urlRegex, (match, htmlTag, matchedUrl) => {
+      // If it matched an HTML tag (like <a href="..."> or </a>), leave it completely alone!
+      if (htmlTag) {
+        return htmlTag;
       }
   
-      // Otherwise, process the standard URL as usual
-      const punctuationMatch = matchedUrl.match(/[.,;:!)]+$/);
+      // Process standalone plain-text URLs
+      const punctuationMatch = matchedUrl.match(/[.,;:!"']+$/);
       let trailingPunctuation = "";
       let cleanUrl = matchedUrl;
   
