@@ -299,6 +299,46 @@ footer {
 .card-back .card-actions {
   margin-top: auto; 
 }
+
+/* =========================================================
+   HORIZONTAL SCROLL CONTAINERS
+   ========================================================= */
+
+.scroll-wrapper {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  
+  /* Creates the professional fade-out effect on the right side */
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  
+  text-align: center; 
+}
+
+.scroll-text {
+  display: inline-block;
+}
+
+/* Reset and apply the original fonts/margins to our new structure */
+.scroll-wrapper h2 { 
+  margin-bottom: 0; 
+  font-size: 1.5rem; 
+  font-weight: 500; 
+}
+
+.scroll-wrapper .author, 
+.scroll-wrapper .reader { 
+  margin-bottom: 0; 
+  font-style: italic; 
+  color: #6b6b6b; 
+  font-size: 1rem; 
+}
+
+/* Recreate the spacing from the original layout */
+.title-wrapper { margin-bottom: 6px; }
+.reader-wrapper { margin-bottom: 12px; }
+
 /* =========================================================
    NORMAL RULES
    ========================================================= */
