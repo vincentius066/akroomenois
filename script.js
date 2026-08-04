@@ -1418,7 +1418,8 @@ document.addEventListener('generator-ready', function() {
           
           // Apply 'active' class and inline styling based on read state
           const readActiveClass = isRead ? "active" : "";
-          const readActiveColor = isRead ? "#4caf50" : "transparent"; // Green when marked as read
+          const readActiveColor = isRead ? "#8fdfaa" : "transparent"; 
+          const readActiveBorder = isRead ? "#8fdfaa" : "#aaa";
           
           readCircleBtnHtml = `<button class="toc-read-btn ${readActiveClass}" data-chapter-id="${chapterId}" data-index="${index}" title="Toggle read status" style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #aaa; background-color: ${readActiveColor}; cursor: pointer; flex-shrink: 0; margin-left: 10px; padding: 0; transition: background-color 0.2s ease;"></button>`;
         }
