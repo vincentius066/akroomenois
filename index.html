@@ -152,32 +152,45 @@
     });
     
     // ==========================================
-    // CARD HOVER SLIDE LOGIC
+    // CARD HOVER SLIDE LOGIC & AUTO-SQUEEZE
     // ==========================================
     
-    // 1. Function to check if text needs a shadow based on its length
     function updateScrollShadows() {
       document.querySelectorAll('.scroll-text').forEach(text => {
         const container = text.parentElement;
+        
+        // Reset styles to accurately measure native un-squeezed width
+        text.style.letterSpacing = 'normal';
+        text.style.wordSpacing = 'normal';
+        container.classList.remove('needs-scroll');
+
+        // If text naturally overflows, attempt a subtle squeeze
         if (text.scrollWidth > container.clientWidth) {
+          text.style.letterSpacing = '-0.3px';
+          text.style.wordSpacing = '-0.8px';
+
+          // If the slight squeeze made it fit, leave it squeezed and skip the slide animation!
+          if (text.scrollWidth <= container.clientWidth) {
+            return;
+          }
+
+          // Otherwise, it's significantly too long: revert spacing and mark for scrolling
+          text.style.letterSpacing = 'normal';
+          text.style.wordSpacing = 'normal';
           container.classList.add('needs-scroll');
-        } else {
-          container.classList.remove('needs-scroll');
         }
       });
     }
 
-    // Run the check immediately, and again after custom fonts load (just to be mathematically perfect)
     updateScrollShadows();
     if (document.fonts) {
       document.fonts.ready.then(updateScrollShadows);
     }
 
-    // 2. The Hover Animation
     const cards = document.querySelectorAll('.book-card');
     
     cards.forEach(card => {
-      let scrollTimeouts = []; // Stores our timers so we can cancel them if the user moves their mouse away
+      let scrollTimeouts = [];
       
       card.addEventListener('mouseenter', () => {
         if (!window.matchMedia('(hover: hover)').matches) return;
@@ -187,15 +200,14 @@
         scrollTexts.forEach(text => {
           const container = text.parentElement;
           
-          if (text.scrollWidth > container.clientWidth) {
+          // Only slide if updateScrollShadows marked it as needing a scroll
+          if (container.classList.contains('needs-scroll')) {
             const scrollDistance = text.scrollWidth - container.clientWidth;
             const duration = scrollDistance / 30; // 30px per second
             
-            // Slide the text
             text.style.transition = `transform ${duration}s linear 0.2s`;
             text.style.transform = `translateX(-${scrollDistance}px)`;
             
-            // Wait for the duration + the 0.2s delay, then fade out the shadow
             const fadeLeadTime = 1.1; 
             const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
             
@@ -211,7 +223,6 @@
       card.addEventListener('mouseleave', () => {
         if (!window.matchMedia('(hover: hover)').matches) return;
         
-        // Cancel the shadow fade-out timers immediately
         scrollTimeouts.forEach(clearTimeout);
         scrollTimeouts = [];
         
@@ -219,11 +230,8 @@
         
         scrollTexts.forEach(text => {
           const container = text.parentElement;
-          
-          // Bring the shadow back immediately as the text snaps back
           container.classList.remove('is-scrolled');
           
-          // Snap text back home
           text.style.transition = 'transform 0.3s ease-out';
           text.style.transform = 'translateX(0)';
         });
