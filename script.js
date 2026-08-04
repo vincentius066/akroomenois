@@ -273,6 +273,29 @@ document.addEventListener('generator-ready', function() {
   // IMPORTANT STUFF
   // ==========================================
   // ==========================================
+
+  // Sticky hover remover
+  document.addEventListener('touchend', (e) => {
+    // 1. Automatically find the clickable element that was tapped
+    // This catches all standard links, buttons, and inputs globally
+    const el = e.target.closest('button, a, input, [tabindex]') || e.target;
+    
+    // 2. Wait your requested 500 milliseconds
+    setTimeout(() => {
+      
+      // 3. Temporarily disable pointer events. 
+      // This makes the browser think the "mouse" just left the element.
+      const originalPointerEvents = el.style.pointerEvents;
+      el.style.pointerEvents = 'none';
+      
+      // 4. Force the browser to immediately recalculate its layout (dropping the hover)
+      void el.offsetHeight; 
+      
+      // 5. Instantly restore it so it can be tapped again normally
+      el.style.pointerEvents = originalPointerEvents;
+      
+    }, 500); // 500ms delay
+  }, { passive: true });
   
   // Helper check for active popups
   function isPopupActive() {
