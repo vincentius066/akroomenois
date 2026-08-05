@@ -372,6 +372,11 @@ html {
   flex-direction: column;
   transition: opacity 0.5s ease;
   font-family: "Noto", sans-serif;
+
+  background-image: url('images/backround_2.svg');
+  background-size: cover;      
+  background-position: center; 
+  background-repeat: no-repeat;
 }
 
 /* Hidden state */
