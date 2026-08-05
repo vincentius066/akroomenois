@@ -361,6 +361,12 @@ html {
 }
 
 /* Loading screen container */
+#loadingLogo {
+  width: 150px; /* Adjust this to make your logo bigger or smaller */
+  height: auto;
+  margin-bottom: 16px; /* Space between logo and text */
+}
+
 #loadingScreen {
   position: fixed;
   inset: 0;
@@ -406,9 +412,9 @@ html {
 /* Loading text (if you use an element with this ID) */
 #loadingText {
   color: #d4a373;
-  margin-top: 24px;
   font-size: 1.1rem;
-  font-family: "Noto";
+  font-family: "Noto", sans-serif;
+  margin: 0 0 24px 0;
 }
 
 #nextBtn,
