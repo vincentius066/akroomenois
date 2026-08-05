@@ -27,13 +27,67 @@
       margin-bottom: 30px;
       font-size: 1.2rem;
     }
+
+    /* Logout button */
+    #logoutBtn {
+      display: none;
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      z-index: 999;
+      font-family: 'Inter', sans-serif;
+      color: #666;
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      background: white;
+      transition: background 0.2s;
+    }
+    #logoutBtn:hover {
+      background: #f0f0f0;
+    }
+
+    /* User welcome banner */
+    #userBanner {
+      display: none;
+      text-align: center;
+      padding: 8px 16px;
+      margin-bottom: 20px;
+      background: #ebfdf3;
+      border: 1px solid #cbdfd3;
+      border-radius: 30px;
+      color: #2b8d58;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #userBanner .patron-badge {
+      background: #FF424D;
+      color: white;
+      padding: 2px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      margin-left: 8px;
+      font-weight: bold;
+    }
   </style>
   <link rel="icon" type="image/png" sizes="192x192" href="images/kithara_3_orange_favicon_rounded.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/kithara_3_orange_apple_icon_rounded.png">
 </head>
 <body>
+
+  <!-- LOGOUT BUTTON -->
+  <a href="#" id="logoutBtn">🚪 Logout</a>
+
   <h1>Ἀκροωμένοις</h1>
   <p class="sub">Select a text to begin</p>
+
+  <!-- USER BANNER -->
+  <div id="userBanner"></div>
 
   <!-- TABS -->
   <div class="tabs">
@@ -46,9 +100,7 @@
 
   <!-- TAB CONTENT: Library -->
   <div id="tab-library" class="tab-content active">
-    <div class="book-grid" id="library-grid">
-    
-    </div>
+    <div class="book-grid" id="library-grid"></div>
   </div>
 
   <!-- TAB CONTENT: About -->
@@ -77,138 +129,183 @@
   </div>
 
   <script>
-    // -------- TAB SWITCHING WITH URL PATHS --------
-    function syncTabWithHash() {
-      // Read the current URL hash (e.g., #about), defaulting to 'library' if none exists
-      const tabName = window.location.hash.replace('#', '') || 'library';
-      
-      const targetBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
-      const targetContent = document.getElementById('tab-' + tabName);
+    // =========================================================
+    // BOOK DATA
+    // =========================================================
+    const books = [
+      { title: "Anabasis", cover: "books/anabasis/image/cover.jpg", author: "Xenophon", reader: "bedwere", link: "anabasis.html", isPaid: false, totalWords: "57470", runTime: "12h 4m 36s" },
+      { title: "Cyropaedia (Work in Progress)", cover: "books/cyropaedia/image/cover.jpg", author: "Xenophon", reader: "bedwere", link: "cyropaedia.html", isPaid: false },
+      { title: "A First Greek Reader", cover: "books/a_first_greek_reader/image/cover.jpg", author: "Beresford and Douglas", reader: "Ioannis Stratakis", link: "a_first_greek_reader.html", isPaid: true, totalWords: "8916", runTime: "1h 41m 24s" },
+      { title: "O Katascopos", cover: "books/katascopos/image/cover.jpg", author: "Jacob Gerber", reader: "Luke Ranieri", link: "katascopos.html", isPaid: false, totalWords: "3748", runTime: "38m 46s" },
+      { title: "LGPSI (1-4)", cover: "books/LGPSI/image/cover.jpg", author: "Seumas Macdonald", reader: "Luke Ranieri", link: "LGPSI.html", isPaid: false, totalWords: "3104", runTime: "34m 31s" },
+      { title: "Epistle of James", cover: "books/Jacob/image/cover.jpg", author: "St. James", reader: "peaceuntoyou", link: "jacob.html", isPaid: false, totalWords: "1774", runTime: "23m 55s" },
+      { title: "The Greek War of Independence", cover: "books/the_greek_war_of_independence/image/cover.jpg", author: "Charles D. Chambers", reader: "Ariphron", link: "the_greek_war_of_independence.html", isPaid: false, totalWords: "12578", runTime: "2h 21m 1s" }
+    ];
 
-      if (targetContent && targetBtn) {
-        // Remove active class from all tabs and contents
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    // =========================================================
+    // PATREON LOGIN STATE
+    // =========================================================
+    let currentUser = { loggedIn: false, isPatron: false, tiers: [], name: '' };
 
-        // Activate matching tab
-        targetBtn.classList.add('active');
-        targetContent.classList.add('active');
+    // =========================================================
+    // RENDER BOOKS
+    // =========================================================
+    function renderBooks() {
+      const grid = document.getElementById('library-grid');
+      if (!grid) return;
+
+      grid.innerHTML = books.map(book => {
+        const isPaid = book.isPaid || false;
+        const hasAccess = currentUser.isPatron || !isPaid;
+        const isLoggedIn = currentUser.loggedIn;
+
+        let actionsHTML = '';
+
+        if (hasAccess) {
+          // Free book OR user is a patron
+          actionsHTML = `
+            <a href="${book.link}" class="btn">Open</a>
+            <a href="#" class="btn info-btn" aria-label="Information">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </a>
+          `;
+        } else if (isPaid && !isLoggedIn) {
+          // Paid book, user not logged in
+          actionsHTML = `
+            <a href="/" class="btn" style="background:#ccc; cursor:pointer; text-decoration:none; color:#666;" 
+               onclick="alert('Please login with Patreon to access this book.'); return false;">
+              🔒 Login to Unlock
+            </a>
+            <a href="#" class="btn info-btn" aria-label="Information">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </a>
+          `;
+        } else if (isPaid && isLoggedIn && !currentUser.isPatron) {
+          // Paid book, user logged in but NOT a patron
+          actionsHTML = `
+            <a href="https://www.patreon.com/akroomenois" target="_blank" class="btn" style="background:#FF424D; color:white; text-decoration:none;">
+              🔒 Become a Patron
+            </a>
+            <a href="#" class="btn info-btn" aria-label="Information">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </a>
+          `;
+        }
+
+        // Build stats list with paid/free indicator
+        let statsList = `
+          <li><strong>Words:</strong> ${book.totalWords || 0}</li>
+          <li><strong>Unique words:</strong> ${book.vocab || 0}</li>
+          <li><strong>Run time:</strong> ${book.runTime || '0 min'}</li>
+          <li><strong>Progress:</strong> ${book.progress || '0%'}</li>
+        `;
+        if (isPaid) {
+          statsList += `<li style="color:#FF424D; font-weight:bold;">🔒 Patron Only</li>`;
+        } else {
+          statsList += `<li style="color:#2b8d58;">✓ Free</li>`;
+        }
+
+        return `
+          <div class="book-card-wrapper" data-paid="${isPaid}" data-link="${book.link}">
+            <div class="book-card ${isPaid && !hasAccess ? 'locked' : ''}">
+              
+              <!-- FRONT OF CARD -->
+              <div class="card-front">
+                
+                <div class="scroll-wrapper title-wrapper">
+                  <h2 class="scroll-text">${book.title}</h2>
+                </div>
+                
+                <img class="cover-art" src="${book.cover}">
+                
+                <div class="scroll-wrapper">
+                  <p class="author scroll-text">${book.author}</p>
+                </div>
+                <div class="scroll-wrapper reader-wrapper">
+                  <p class="reader scroll-text">(read by ${book.reader})</p>
+                </div>
+                
+                <div class="card-actions">
+                  ${actionsHTML}
+                </div>
+              </div>
+
+              <!-- BACK OF CARD -->
+              <div class="card-back">
+                <h2>Stats</h2>
+                <ul class="stats-list">
+                  ${statsList}
+                </ul>
+              </div>
+              
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Re-apply all the dynamic behaviors
+      attachCardFlipListeners();
+      updateScrollShadows();
+      attachHoverScrollListeners();
+    }
+
+    // =========================================================
+    // CARD FLIP LOGIC
+    // =========================================================
+    function attachCardFlipListeners() {
+      const grid = document.getElementById('library-grid');
+      if (!grid) return;
+
+      // Remove any existing listener to avoid duplicates
+      grid.removeEventListener('click', handleCardFlip);
+      grid.addEventListener('click', handleCardFlip);
+    }
+
+    function handleCardFlip(e) {
+      const infoBtn = e.target.closest('.info-btn');
+      const cardBack = e.target.closest('.card-back');
+
+      if (infoBtn) {
+        e.preventDefault();
+        const card = infoBtn.closest('.book-card');
+        if (card) card.classList.add('is-flipped');
+      } else if (cardBack) {
+        const card = cardBack.closest('.book-card');
+        if (card) card.classList.remove('is-flipped');
       }
     }
 
-    // 1. Update the URL hash when a user clicks a tab button
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        window.location.hash = btn.dataset.tab;
-      });
-    });
-
-    // 2. Switch tabs automatically when the URL hash changes (or browser back/forward buttons are used)
-    window.addEventListener('hashchange', syncTabWithHash);
-
-    // 3. Set the correct tab on initial page load
-    syncTabWithHash();
-  </script>
-  <script>
-    const books = [
-      { title: "Anabasis", cover: "books/anabasis/image/cover.jpg", author: "Xenophon", reader: "bedwere", link: "anabasis.html", totalWords: "57470", runTime: "12h 4m 36s" },
-      { title: "Cyropaedia (Work in Progress)", cover: "books/cyropaedia/image/cover.jpg", author: "Xenophon", reader: "bedwere", link: "cyropaedia.html" },
-      { title: "A First Greek Reader", cover: "books/a_first_greek_reader/image/cover.jpg", author: "Beresford and Douglas", reader: "Ioannis Stratakis", link: "a_first_greek_reader.html", totalWords: "8916", runTime: "1h 41m 24s" },
-      { title: "O Katascopos", cover: "books/katascopos/image/cover.jpg", author: "Jacob Gerber", reader: "Luke Ranieri", link: "katascopos.html", totalWords: "3748", runTime: "38m 46s" },
-      { title: "LGPSI (1-4)", cover: "books/LGPSI/image/cover.jpg", author: "Seumas Macdonald", reader: "Luke Ranieri", link: "LGPSI.html", totalWords: "3104", runTime: "34m 31s" },
-      { title: "Epistle of James", cover: "books/Jacob/image/cover.jpg", author: "St. James", reader: "peaceuntoyou", link: "jacob.html", totalWords: "1774", runTime: "23m 55s" },
-      { title: "The Greek War of Independence", cover: "books/the_greek_war_of_independence/image/cover.jpg", author: "Charles D. Chambers", reader: "Ariphron", link: "the_greek_war_of_independence.html", totalWords: "12578", runTime: "2h 21m 1s" }
-    ];
-  
-    const grid = document.getElementById('library-grid');
-  
-    grid.innerHTML = books.map(book => `
-      <div class="book-card-wrapper">
-        <div class="book-card">
-          
-          <!-- FRONT OF CARD -->
-          <div class="card-front">
-            
-            <div class="scroll-wrapper title-wrapper">
-              <h2 class="scroll-text">${book.title}</h2>
-            </div>
-            
-            <img class="cover-art" src="${book.cover}">
-            
-            <div class="scroll-wrapper">
-              <p class="author scroll-text">${book.author}</p>
-            </div>
-            <div class="scroll-wrapper reader-wrapper">
-              <p class="reader scroll-text">(read by ${book.reader})</p>
-            </div>
-            
-            <div class="card-actions">
-              <a href="${book.link}" class="btn">Open</a>
-              <a href="#" class="btn info-btn" aria-label="Information">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="16" x2="12" y2="12"></line>
-                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                </svg>
-              </a>
-            </div>
-          </div>
-  
-          <!-- BACK OF CARD -->
-          <div class="card-back">
-            <h2>Stats</h2>
-            <ul class="stats-list">
-              <li><strong>Words:</strong> ${book.totalWords || 0}</li>
-              <li><strong>Unique words:</strong> ${book.vocab || 0}</li>
-              <li><strong>Run time:</strong> ${book.runTime || '0 min'}</li>
-              <li><strong>Progress:</strong> ${book.progress || '0%'}</li>
-            </ul>
-          </div>
-          
-        </div>
-      </div>
-    `).join('');
-  
-    // Event delegation to handle flips for all cards dynamically
-    grid.addEventListener('click', (e) => {
-      const infoBtn = e.target.closest('.info-btn');
-      const cardBack = e.target.closest('.card-back');
-      
-      // If they click the info button on the front, flip it
-      if (infoBtn) {
-        e.preventDefault();
-        infoBtn.closest('.book-card').classList.add('is-flipped');
-      } 
-      // If they click anywhere on the back of the card, flip it back
-      else if (cardBack) {
-        cardBack.closest('.book-card').classList.remove('is-flipped');
-      }
-    });
-    
-    // ==========================================
-    // CARD HOVER SLIDE LOGIC & AUTO-SQUEEZE
-    // ==========================================
-    
+    // =========================================================
+    // HOVER SCROLL LOGIC
+    // =========================================================
     function updateScrollShadows() {
       document.querySelectorAll('.scroll-text').forEach(text => {
         const container = text.parentElement;
-        
-        // Reset styles to accurately measure native un-squeezed width
+
         text.style.letterSpacing = 'normal';
         text.style.wordSpacing = 'normal';
         container.classList.remove('needs-scroll');
 
-        // If text naturally overflows, attempt a subtle squeeze
         if (text.scrollWidth > container.clientWidth) {
           text.style.letterSpacing = '-0.3px';
           text.style.wordSpacing = '-0.8px';
 
-          // If the slight squeeze made it fit, leave it squeezed and skip the slide animation!
           if (text.scrollWidth <= container.clientWidth) {
             return;
           }
 
-          // Otherwise, it's significantly too long: revert spacing and mark for scrolling
           text.style.letterSpacing = 'normal';
           text.style.wordSpacing = 'normal';
           container.classList.add('needs-scroll');
@@ -216,60 +313,182 @@
       });
     }
 
-    updateScrollShadows();
-    if (document.fonts) {
-      document.fonts.ready.then(updateScrollShadows);
+    function attachHoverScrollListeners() {
+      const cards = document.querySelectorAll('.book-card');
+
+      cards.forEach(card => {
+        let scrollTimeouts = [];
+
+        card.addEventListener('mouseenter', () => {
+          if (!window.matchMedia('(hover: hover)').matches) return;
+
+          const scrollTexts = card.querySelectorAll('.scroll-text');
+
+          scrollTexts.forEach(text => {
+            const container = text.parentElement;
+
+            if (container.classList.contains('needs-scroll')) {
+              const scrollDistance = text.scrollWidth - container.clientWidth;
+              const duration = scrollDistance / 30;
+
+              text.style.transition = `transform ${duration}s linear 0.2s`;
+              text.style.transform = `translateX(-${scrollDistance}px)`;
+
+              const fadeLeadTime = 1.1;
+              const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
+
+              const timeout = setTimeout(() => {
+                container.classList.add('is-scrolled');
+              }, timeUntilFade);
+
+              scrollTimeouts.push(timeout);
+            }
+          });
+        });
+
+        card.addEventListener('mouseleave', () => {
+          if (!window.matchMedia('(hover: hover)').matches) return;
+
+          scrollTimeouts.forEach(clearTimeout);
+          scrollTimeouts = [];
+
+          const scrollTexts = card.querySelectorAll('.scroll-text');
+
+          scrollTexts.forEach(text => {
+            const container = text.parentElement;
+            container.classList.remove('is-scrolled');
+
+            text.style.transition = 'transform 0.3s ease-out';
+            text.style.transform = 'translateX(0)';
+          });
+        });
+      });
     }
 
-    const cards = document.querySelectorAll('.book-card');
-    
-    cards.forEach(card => {
-      let scrollTimeouts = [];
-      
-      card.addEventListener('mouseenter', () => {
-        if (!window.matchMedia('(hover: hover)').matches) return;
-        
-        const scrollTexts = card.querySelectorAll('.scroll-text');
-        
-        scrollTexts.forEach(text => {
-          const container = text.parentElement;
-          
-          // Only slide if updateScrollShadows marked it as needing a scroll
-          if (container.classList.contains('needs-scroll')) {
-            const scrollDistance = text.scrollWidth - container.clientWidth;
-            const duration = scrollDistance / 30; // 30px per second
-            
-            text.style.transition = `transform ${duration}s linear 0.2s`;
-            text.style.transform = `translateX(-${scrollDistance}px)`;
-            
-            const fadeLeadTime = 1.1; 
-            const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
-            
-            const timeout = setTimeout(() => {
-              container.classList.add('is-scrolled');
-            }, timeUntilFade);
-            
-            scrollTimeouts.push(timeout);
+    // =========================================================
+    // CHECK LOGIN STATUS
+    // =========================================================
+    async function checkLoginStatus() {
+      try {
+        const response = await fetch('/api/me');
+        const data = await response.json();
+
+        currentUser = {
+          loggedIn: data.loggedIn || false,
+          isPatron: data.isPatron || false,
+          tiers: data.tiers || [],
+          name: data.name || ''
+        };
+
+        // Update UI
+        updateUserBanner();
+        renderBooks();
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.style.display = currentUser.loggedIn ? 'inline-block' : 'none';
+        }
+
+        // Check if login was just successful (from URL param)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('login') === 'success') {
+          // Clean the URL without refreshing the page
+          const cleanUrl = window.location.pathname + window.location.hash;
+          window.history.replaceState({}, document.title, cleanUrl);
+        }
+
+      } catch (error) {
+        console.error('Error checking login status:', error);
+        // On error, render books as guest (all free, paid locked)
+        currentUser = { loggedIn: false, isPatron: false, tiers: [], name: '' };
+        renderBooks();
+      }
+    }
+
+    // =========================================================
+    // UPDATE USER BANNER
+    // =========================================================
+    function updateUserBanner() {
+      const banner = document.getElementById('userBanner');
+      if (!banner) return;
+
+      if (currentUser.loggedIn && currentUser.isPatron) {
+        const tierNames = currentUser.tiers.map(t => t.title).join(', ');
+        banner.innerHTML = `
+          👋 Welcome, ${currentUser.name}! 
+          <span class="patron-badge">🎧 PATRON</span>
+          ${tierNames ? `<span style="font-weight:normal;color:#555;font-size:0.85rem;"> · ${tierNames}</span>` : ''}
+        `;
+        banner.style.display = 'block';
+      } else if (currentUser.loggedIn && !currentUser.isPatron) {
+        banner.innerHTML = `
+          👋 Welcome, ${currentUser.name}! 
+          <span style="color:#FF424D;">You are not an active patron.</span>
+          <a href="https://www.patreon.com/akroomenois" target="_blank" style="color:#FF424D;font-weight:bold;">Become a patron →</a>
+        `;
+        banner.style.display = 'block';
+      } else {
+        banner.style.display = 'none';
+      }
+    }
+
+    // =========================================================
+    // LOGOUT
+    // =========================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          try {
+            await fetch('/auth/logout');
+            window.location.href = '/home.html';
+          } catch (error) {
+            console.error('Logout error:', error);
+            window.location.href = '/home.html';
           }
         });
+      }
+    });
+
+    // =========================================================
+    // TAB SWITCHING WITH URL PATHS
+    // =========================================================
+    function syncTabWithHash() {
+      const tabName = window.location.hash.replace('#', '') || 'library';
+      const targetBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+      const targetContent = document.getElementById('tab-' + tabName);
+
+      if (targetContent && targetBtn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        targetBtn.classList.add('active');
+        targetContent.classList.add('active');
+      }
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.location.hash = btn.dataset.tab;
       });
-  
-      card.addEventListener('mouseleave', () => {
-        if (!window.matchMedia('(hover: hover)').matches) return;
-        
-        scrollTimeouts.forEach(clearTimeout);
-        scrollTimeouts = [];
-        
-        const scrollTexts = card.querySelectorAll('.scroll-text');
-        
-        scrollTexts.forEach(text => {
-          const container = text.parentElement;
-          container.classList.remove('is-scrolled');
-          
-          text.style.transition = 'transform 0.3s ease-out';
-          text.style.transform = 'translateX(0)';
+    });
+
+    window.addEventListener('hashchange', syncTabWithHash);
+
+    // =========================================================
+    // INITIALIZE
+    // =========================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      syncTabWithHash();
+      checkLoginStatus();
+
+      // Re-run scroll shadow check after fonts load
+      if (document.fonts) {
+        document.fonts.ready.then(() => {
+          updateScrollShadows();
         });
-      });
+      }
     });
   </script>
 </body>
