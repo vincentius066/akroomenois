@@ -27,9 +27,9 @@ async function getPatreonTokens(code, env) {
 
 // A helper function to get the user's identity and membership status
 async function getPatreonIdentity(accessToken) {
-    // FIXED: Correct API parameters for Patreon v2
+    // SIMPLIFIED: No fields[tier] parameter
     const response = await fetch(
-        'https://www.patreon.com/api/oauth2/v2/identity?include=memberships&fields[user]=email,full_name,first_name,last_name&fields[member]=patron_status,currently_entitled_amount_cents&fields[tier]=title,id',
+        'https://www.patreon.com/api/oauth2/v2/identity?include=memberships&fields[user]=email,full_name&fields[member]=patron_status,currently_entitled_amount_cents',
         {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
