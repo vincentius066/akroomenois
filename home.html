@@ -154,15 +154,18 @@
       const grid = document.getElementById('library-grid');
       if (!grid) return;
 
+      console.log('📚 Rendering books. User state:', currentUser);
+
       grid.innerHTML = books.map(book => {
         const isPaid = book.isPaid || false;
         const hasAccess = currentUser.isPatron || !isPaid;
         const isLoggedIn = currentUser.loggedIn;
 
+        console.log(`📖 ${book.title}: isPaid=${isPaid}, hasAccess=${hasAccess}, isLoggedIn=${isLoggedIn}`);
+
         let actionsHTML = '';
 
         if (hasAccess) {
-          // Free book OR user is a patron
           actionsHTML = `
             <a href="${book.link}" class="btn">Open</a>
             <a href="#" class="btn info-btn" aria-label="Information">
@@ -174,7 +177,6 @@
             </a>
           `;
         } else if (isPaid && !isLoggedIn) {
-          // Paid book, user not logged in
           actionsHTML = `
             <a href="/" class="btn" style="background:#ccc; cursor:pointer; text-decoration:none; color:#666;" 
                onclick="alert('Please login with Patreon to access this book.'); return false;">
@@ -189,7 +191,6 @@
             </a>
           `;
         } else if (isPaid && isLoggedIn && !currentUser.isPatron) {
-          // Paid book, user logged in but NOT a patron
           actionsHTML = `
             <a href="https://www.patreon.com/akroomenois" target="_blank" class="btn" style="background:#FF424D; color:white; text-decoration:none;">
               🔒 Become a Patron
@@ -204,7 +205,6 @@
           `;
         }
 
-        // Build stats list with paid/free indicator
         let statsList = `
           <li><strong>Words:</strong> ${book.totalWords || 0}</li>
           <li><strong>Unique words:</strong> ${book.vocab || 0}</li>
@@ -220,42 +220,32 @@
         return `
           <div class="book-card-wrapper" data-paid="${isPaid}" data-link="${book.link}">
             <div class="book-card ${isPaid && !hasAccess ? 'locked' : ''}">
-              
-              <!-- FRONT OF CARD -->
               <div class="card-front">
-                
                 <div class="scroll-wrapper title-wrapper">
                   <h2 class="scroll-text">${book.title}</h2>
                 </div>
-                
                 <img class="cover-art" src="${book.cover}">
-                
                 <div class="scroll-wrapper">
                   <p class="author scroll-text">${book.author}</p>
                 </div>
                 <div class="scroll-wrapper reader-wrapper">
                   <p class="reader scroll-text">(read by ${book.reader})</p>
                 </div>
-                
                 <div class="card-actions">
                   ${actionsHTML}
                 </div>
               </div>
-
-              <!-- BACK OF CARD -->
               <div class="card-back">
                 <h2>Stats</h2>
                 <ul class="stats-list">
                   ${statsList}
                 </ul>
               </div>
-              
             </div>
           </div>
         `;
       }).join('');
 
-      // Re-apply all the dynamic behaviors
       attachCardFlipListeners();
       updateScrollShadows();
       attachHoverScrollListeners();
@@ -267,8 +257,6 @@
     function attachCardFlipListeners() {
       const grid = document.getElementById('library-grid');
       if (!grid) return;
-
-      // Remove any existing listener to avoid duplicates
       grid.removeEventListener('click', handleCardFlip);
       grid.addEventListener('click', handleCardFlip);
     }
@@ -276,7 +264,6 @@
     function handleCardFlip(e) {
       const infoBtn = e.target.closest('.info-btn');
       const cardBack = e.target.closest('.card-back');
-
       if (infoBtn) {
         e.preventDefault();
         const card = infoBtn.closest('.book-card');
@@ -293,19 +280,13 @@
     function updateScrollShadows() {
       document.querySelectorAll('.scroll-text').forEach(text => {
         const container = text.parentElement;
-
         text.style.letterSpacing = 'normal';
         text.style.wordSpacing = 'normal';
         container.classList.remove('needs-scroll');
-
         if (text.scrollWidth > container.clientWidth) {
           text.style.letterSpacing = '-0.3px';
           text.style.wordSpacing = '-0.8px';
-
-          if (text.scrollWidth <= container.clientWidth) {
-            return;
-          }
-
+          if (text.scrollWidth <= container.clientWidth) return;
           text.style.letterSpacing = 'normal';
           text.style.wordSpacing = 'normal';
           container.classList.add('needs-scroll');
@@ -315,49 +296,33 @@
 
     function attachHoverScrollListeners() {
       const cards = document.querySelectorAll('.book-card');
-
       cards.forEach(card => {
         let scrollTimeouts = [];
-
         card.addEventListener('mouseenter', () => {
           if (!window.matchMedia('(hover: hover)').matches) return;
-
           const scrollTexts = card.querySelectorAll('.scroll-text');
-
           scrollTexts.forEach(text => {
             const container = text.parentElement;
-
             if (container.classList.contains('needs-scroll')) {
               const scrollDistance = text.scrollWidth - container.clientWidth;
               const duration = scrollDistance / 30;
-
               text.style.transition = `transform ${duration}s linear 0.2s`;
               text.style.transform = `translateX(-${scrollDistance}px)`;
-
               const fadeLeadTime = 1.1;
               const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
-
-              const timeout = setTimeout(() => {
-                container.classList.add('is-scrolled');
-              }, timeUntilFade);
-
+              const timeout = setTimeout(() => container.classList.add('is-scrolled'), timeUntilFade);
               scrollTimeouts.push(timeout);
             }
           });
         });
-
         card.addEventListener('mouseleave', () => {
           if (!window.matchMedia('(hover: hover)').matches) return;
-
           scrollTimeouts.forEach(clearTimeout);
           scrollTimeouts = [];
-
           const scrollTexts = card.querySelectorAll('.scroll-text');
-
           scrollTexts.forEach(text => {
             const container = text.parentElement;
             container.classList.remove('is-scrolled');
-
             text.style.transition = 'transform 0.3s ease-out';
             text.style.transform = 'translateX(0)';
           });
@@ -370,8 +335,10 @@
     // =========================================================
     async function checkLoginStatus() {
       try {
+        console.log('🔍 Checking login status...');
         const response = await fetch('/api/me');
         const data = await response.json();
+        console.log('✅ /api/me response:', data);
 
         currentUser = {
           loggedIn: data.loggedIn || false,
@@ -380,7 +347,8 @@
           name: data.name || ''
         };
 
-        // Update UI
+        console.log('📊 Current user state:', currentUser);
+
         updateUserBanner();
         renderBooks();
 
@@ -389,17 +357,15 @@
           logoutBtn.style.display = currentUser.loggedIn ? 'inline-block' : 'none';
         }
 
-        // Check if login was just successful (from URL param)
+        // Clean URL if login was successful
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('login') === 'success') {
-          // Clean the URL without refreshing the page
           const cleanUrl = window.location.pathname + window.location.hash;
           window.history.replaceState({}, document.title, cleanUrl);
         }
 
       } catch (error) {
-        console.error('Error checking login status:', error);
-        // On error, render books as guest (all free, paid locked)
+        console.error('❌ Error checking login status:', error);
         currentUser = { loggedIn: false, isPatron: false, tiers: [], name: '' };
         renderBooks();
       }
@@ -433,6 +399,21 @@
     }
 
     // =========================================================
+    // TAB SWITCHING WITH URL PATHS
+    // =========================================================
+    function syncTabWithHash() {
+      const tabName = window.location.hash.replace('#', '') || 'library';
+      const targetBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+      const targetContent = document.getElementById('tab-' + tabName);
+      if (targetContent && targetBtn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        targetBtn.classList.add('active');
+        targetContent.classList.add('active');
+      }
+    }
+
+    // =========================================================
     // LOGOUT
     // =========================================================
     document.addEventListener('DOMContentLoaded', () => {
@@ -452,22 +433,8 @@
     });
 
     // =========================================================
-    // TAB SWITCHING WITH URL PATHS
+    // TAB CLICK HANDLERS
     // =========================================================
-    function syncTabWithHash() {
-      const tabName = window.location.hash.replace('#', '') || 'library';
-      const targetBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
-      const targetContent = document.getElementById('tab-' + tabName);
-
-      if (targetContent && targetBtn) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-        targetBtn.classList.add('active');
-        targetContent.classList.add('active');
-      }
-    }
-
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         window.location.hash = btn.dataset.tab;
@@ -480,8 +447,13 @@
     // INITIALIZE
     // =========================================================
     document.addEventListener('DOMContentLoaded', () => {
+      console.log('🚀 Page loaded, initializing...');
       syncTabWithHash();
-      checkLoginStatus();
+      
+      // Wait a moment for everything to settle, then check login
+      setTimeout(() => {
+        checkLoginStatus();
+      }, 100);
 
       // Re-run scroll shadow check after fonts load
       if (document.fonts) {
