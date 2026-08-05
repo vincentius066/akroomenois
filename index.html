@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akroomenois · Ancient Greek Audiobooks</title>
+  
+  <!-- Your existing stylesheet – only one link, nothing else -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Same favicons as your current site -->
+  <link rel="icon" type="image/png" sizes="192x192" href="images/kithara_3_orange_favicon_rounded.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/kithara_3_orange_apple_icon_rounded.png">
+</head>
+<body style="padding: 20px; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: #f8f5f0;">
+
+  <!-- Main container – uses your existing .container class from style.css -->
+  <div class="container" style="max-width: 480px; width: 100%; background: #ffffff; padding: 50px 40px 45px; border-radius: 24px; text-align: center; border: 1px solid #ece6de; box-shadow: 0 12px 40px rgba(0,0,0,0.08);">
+    
+    <!-- Title uses your existing EB_Garamond font -->
+    <h1 style="font-family: 'EB_Garamond', serif; font-size: 3.2rem; font-weight: 400; color: #2c2c2c; letter-spacing: 2px; margin-bottom: 6px;">Ἀκροωμένοις</h1>
+    
+    <p style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: #6b6b6b; margin-bottom: 8px;">Ancient Greek Audiobooks</p>
+    
+    <div style="width: 60px; height: 2px; background: #d4a373; margin: 16px auto 28px; border-radius: 2px;"></div>
+    
+    <p style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #4b5466; line-height: 1.6; margin-bottom: 32px;">
+      Some books are free for everyone.<br>
+      Others are reserved for our patrons.
+    </p>
+
+    <!-- BUTTONS -->
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      
+      <!-- 1. Continue as Guest → uses your existing .big-btn class -->
+      <a href="home.html" class="big-btn" style="display: block; width: 100%; padding: 16px 20px; font-size: 1.05rem; text-align: center; background: #ecf0f1; color: #2c3e50; border: 2px solid #d5dbdf; box-sizing: border-box;">
+        Continue as Guest
+      </a>
+
+      <!-- 2. Proceed with Patreon → uses .big-btn but overridden with Patreon red via inline styles -->
+      <!-- ⚠️ Replace YOUR_CLIENT_ID_HERE with your actual Client ID -->
+      <a href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id=YOUR_CLIENT_ID_HERE&redirect_uri=https://akroomenois.com/auth/callback&scope=identity%20identity.memberships" 
+         class="big-btn" 
+         style="display: block; width: 100%; padding: 16px 20px; font-size: 1.05rem; text-align: center; box-sizing: border-box; background: #FF424D; color: #ffffff; border: 2px solid #FF424D; box-shadow: 0 4px 14px rgba(255,66,77,0.30);">
+        Proceed with Patreon
+      </a>
+
+    </div>
+
+    <p style="margin-top: 28px; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #9a9a9a;">
+      Already a patron? Log in to unlock all books.
+    </p>
+
+  </div>
+
+</body>
+</html>
