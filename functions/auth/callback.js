@@ -46,13 +46,13 @@ async function getPatreonIdentity(accessToken) {
 
 // The main function that Cloudflare Pages will call
 export async function onRequest(context) {
-    const { request, env, redirect } = context;
+    const { request, env } = context;
     const url = new URL(request.url);
     const code = url.searchParams.get('code');
 
     // 1. Check if the authorization code is present
     if (!code) {
-        return redirect('https://akroomenois.com/home.html?login=error&message=missing_code');
+        return Response.redirect('https://akroomenois.com/home.html?login=error&message=missing_code', 302);
     }
 
     try {
@@ -88,26 +88,22 @@ export async function onRequest(context) {
 
         // 5. Create the session and redirect back to your site
         // This creates a secure, HTTP-only cookie with the user's info.
-        // The cookie is encrypted and can only be read by your Cloudflare Functions.
-        return redirect('https://akroomenois.com/home.html?login=success', {
-            cookies: [{
-                name: 'patreon_session',
-                path: '/',
-                httpOnly: true,
-                secure: true,
-                sameSite: 'lax',
-                maxAge: 60 * 60 * 24, // 24 hours
-                value: JSON.stringify({
-                    email: identityData.data.attributes.email,
-                    name: identityData.data.attributes.full_name,
-                    isActivePatron,
-                    tiers,
-                }),
-            }]
+        const redirectUrl = 'https://akroomenois.com/home.html?login=success';
+        const cookieValue = JSON.stringify({
+            email: identityData.data.attributes.email,
+            name: identityData.data.attributes.full_name,
+            isActivePatron,
+            tiers,
+        });
+
+        return Response.redirect(redirectUrl, 302, {
+            headers: {
+                'Set-Cookie': `patreon_session=${encodeURIComponent(cookieValue)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`
+            }
         });
 
     } catch (error) {
         console.error('OAuth Error:', error);
-        return redirect('https://akroomenois.com/home.html?login=error&message=' + encodeURIComponent(error.message));
+        return Response.redirect('https://akroomenois.com/home.html?login=error&message=' + encodeURIComponent(error.message), 302);
     }
 }
