@@ -408,8 +408,8 @@ html {
 
 /* Spinner element – you can give it an ID or class */
 #loadingSpinner {
-  width: 48px;
-  height: 48px;
+  width: 24px;
+  height: 24px;
   border: 4px solid rgba(255, 215, 150, 0.15);
   border-top-color: #e06e04;
   border-radius: 50%;
