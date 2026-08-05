@@ -27,8 +27,9 @@ async function getPatreonTokens(code, env) {
 
 // A helper function to get the user's identity and membership status
 async function getPatreonIdentity(accessToken) {
+    // FIXED: Correct API parameters for Patreon v2
     const response = await fetch(
-        'https://www.patreon.com/api/oauth2/v2/identity?include=memberships.tier&fields[user]=email,full_name&fields[member]=patron_status,currently_entitled_amount_cents&fields[tier]=title,id',
+        'https://www.patreon.com/api/oauth2/v2/identity?include=memberships&fields[user]=email,full_name,first_name,last_name&fields[member]=patron_status,currently_entitled_amount_cents&fields[tier]=title,id',
         {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
@@ -66,12 +67,15 @@ export async function onRequest(context) {
         // 4. Check for active membership
         let isActivePatron = false;
         let tiers = [];
+        
+        // The included array contains memberships and tiers
         const memberships = identityData.included?.filter(item => item.type === 'member') || [];
         const tierObjects = identityData.included?.filter(item => item.type === 'tier') || [];
 
         for (const membership of memberships) {
             if (membership.attributes.patron_status === 'active_patron') {
                 isActivePatron = true;
+                // Find which tiers this membership entitles
                 const tierRelations = membership.relationships?.currently_entitled_tiers?.data || [];
                 for (const tierRel of tierRelations) {
                     const tier = tierObjects.find(t => t.id === tierRel.id);
@@ -87,8 +91,6 @@ export async function onRequest(context) {
         }
 
         // 5. Create the session and redirect back to your site
-        // This creates a secure, HTTP-only cookie with the user's info.
-        const redirectUrl = 'https://akroomenois.com/home.html?login=success';
         const cookieValue = JSON.stringify({
             email: identityData.data.attributes.email,
             name: identityData.data.attributes.full_name,
@@ -96,7 +98,7 @@ export async function onRequest(context) {
             tiers,
         });
 
-        return Response.redirect(redirectUrl, 302, {
+        return Response.redirect('https://akroomenois.com/home.html?login=success', 302, {
             headers: {
                 'Set-Cookie': `patreon_session=${encodeURIComponent(cookieValue)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`
             }
