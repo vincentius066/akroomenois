@@ -1775,7 +1775,7 @@ document.addEventListener('generator-ready', function() {
   // ==========================================
   if (homeBtn) {
     homeBtn.addEventListener("click", () => {
-      window.location.href = "index.html";
+      window.location.href = "home.html";
     });
   }
 
