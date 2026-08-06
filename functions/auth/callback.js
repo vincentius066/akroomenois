@@ -1,4 +1,4 @@
-// functions/auth/callback.js - HTML REDIRECT VERSION
+// functions/auth/callback.js - WITH DEBUGGING
 
 async function getPatreonTokens(code, env) {
     const params = new URLSearchParams();
@@ -57,13 +57,24 @@ export async function onRequest(context) {
 
         const identityData = await getPatreonIdentity(accessToken);
 
+        // =========================================================
+        // DEBUG: Log the entire response to see what's happening
+        // =========================================================
+        console.log('📝 Full Patreon response:', JSON.stringify(identityData, null, 2));
+
         let isActivePatron = false;
         let tiers = [];
         
         const memberships = identityData.included?.filter(item => item.type === 'member') || [];
         const tierObjects = identityData.included?.filter(item => item.type === 'tier') || [];
 
+        console.log('📝 Memberships found:', memberships.length);
+        console.log('📝 Tiers found:', tierObjects.length);
+
         for (const membership of memberships) {
+            console.log('📝 Membership:', JSON.stringify(membership, null, 2));
+            console.log('📝 patron_status:', membership.attributes?.patron_status);
+            
             if (membership.attributes.patron_status === 'active_patron') {
                 isActivePatron = true;
                 const tierRelations = membership.relationships?.currently_entitled_tiers?.data || [];
@@ -80,17 +91,28 @@ export async function onRequest(context) {
             }
         }
 
+        // =========================================================
+        // TEMPORARY: Force isActivePatron to true for your email
+        // =========================================================
+        const userEmail = identityData.data.attributes.email;
+        console.log('📝 User email:', userEmail);
+        
+        // If the email matches YOUR email, force patron status for testing
+        // Replace 'your-email@example.com' with your actual email
+        // if (userEmail === 'your-email@example.com') {
+        //     isActivePatron = true;
+        //     console.log('🔓 Forced isActivePatron to true for testing');
+        // }
+
         const cookieValue = JSON.stringify({
-            email: identityData.data.attributes.email,
+            email: userEmail,
             name: identityData.data.attributes.full_name,
             isActivePatron,
             tiers,
         });
 
-        console.log('📝 Cookie value length:', cookieValue.length);
-        console.log('📝 Cookie value:', cookieValue);
+        console.log('📝 Final cookie value:', cookieValue);
 
-        // HTML page that sets the cookie via JavaScript and redirects
         const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -109,12 +131,9 @@ export async function onRequest(context) {
         <p>Logging you in...</p>
     </div>
     <script>
-        // Set the cookie directly with JavaScript
         document.cookie = "patreon_session=${encodeURIComponent(cookieValue)}; path=/; secure; samesite=lax; max-age=86400";
         console.log('🍪 Cookie set via JavaScript');
-        // Log the cookie to verify
         console.log('🍪 Cookie value:', document.cookie);
-        // Redirect after a brief delay
         setTimeout(function() {
             window.location.href = "https://akroomenois.com/home.html?login=success";
         }, 500);
