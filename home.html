@@ -211,11 +211,11 @@
           <li><strong>Run time:</strong> ${book.runTime || '0 min'}</li>
           <li><strong>Progress:</strong> ${book.progress || '0%'}</li>
         `;
-        if (isPaid) {
-          statsList += `<li style="color:#FF424D; font-weight:bold;">🔒 Patron Only</li>`;
-        } else {
-          statsList += `<li style="color:#2b8d58;">✓ Free</li>`;
-        }
+        //if (isPaid) {
+          //statsList += `<li style="color:#FF424D; font-weight:bold;">🔒 Patron Only</li>`;
+        //} else {
+          //statsList += `<li style="color:#2b8d58;">✓ Free</li>`;
+        //}
 
         return `
           <div class="book-card-wrapper" data-paid="${isPaid}" data-link="${book.link}">
