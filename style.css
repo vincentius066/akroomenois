@@ -7,6 +7,14 @@
 }
 
   @font-face {
+  font-family: "Tinos";
+  src: url("font/Tinos-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+  @font-face {
   font-family: "Inter";
   src: url("font/Inter-VariableFont_opsz,wght.ttf") format("truetype");
   font-weight: normal;
