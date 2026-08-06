@@ -12,13 +12,13 @@
   <link rel="icon" type="image/png" sizes="192x192" href="images/kithara_3_orange_favicon_rounded.png">
   <link rel="apple-touch-icon" sizes="180x180" href="images/kithara_3_orange_apple_icon_rounded.png">
 </head>
-<body style="padding: 20px; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: #f8f5f0; max-width: 90%;">
+<body style="padding: 20px; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: #f8f5f0; box-sizing: border-box;">
 
   <!-- Main container – uses your existing .container class from style.css -->
-  <div class="container" style="max-width: 480px; max-width: 90%; width: 100%; background: #ffffff; padding: 50px 40px 45px; border-radius: 24px; text-align: center; border: 1px solid #ece6de; box-shadow: 0 12px 40px rgba(0,0,0,0.08);">
+  <div class="container" style="width: 100%; max-width: 480px; box-sizing: border-box; background: #ffffff; padding: 40px 20px; border-radius: 24px; text-align: center; border: 1px solid #ece6de; box-shadow: 0 12px 40px rgba(0,0,0,0.08);">
     
     <!-- Title uses your existing EB_Garamond font -->
-    <h1 style="font-family: 'Times New Roman', serif; font-size: 3.2rem; font-weight: 400; color: #2c2c2c; letter-spacing: 2px; margin-bottom: 6px;">ΑΚΡΟΩΜΕΝΟΙΣ</h1>
+    <h1 style="font-family: 'Times New Roman', serif; font-size: 2.5rem; font-weight: 400; color: #2c2c2c; letter-spacing: 2px; margin-bottom: 6px;">ΑΚΡΟΩΜΕΝΟΙΣ</h1>
     
     <p style="font-family: 'Times New Roman', sans-serif; font-size: 1.1rem; color: #6b6b6b; margin-bottom: 8px;">· ΑΝΑΛΕΓΟΥ · ΑΚΟΥΕ · ΜΑΝΘΑΝΕ ·</p>
     
@@ -30,10 +30,10 @@
     </p>
 
     <!-- BUTTONS -->
-    <div style="display: flex; flex-direction: column; gap: 14px; max-width: 70%;">
+    <div style="display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 280px; margin: 0 auto;">
       
       <!-- 1. Continue as Guest → uses your existing .big-btn class -->
-      <a href="/auth/logout" class="big-btn" style="display: block; width: 100%; padding: 16px 20px; font-size: 1.05rem; text-align: center; background: #ecf0f1; color: #2c3e50; border: 2px solid #d5dbdf; box-sizing: border-box;">
+      <a href="/auth/logout" class="big-btn" style="display: block; width: 100%; padding: 16px 20px; font-size: 1.05rem; text-align: center; background: #ecf0f1; color: #2c3e50; border: 2px solid #d5dbdf; box-sizing: border-box; text-decoration: none; border-radius: 8px;">
         Continue as Guest
       </a>
 
@@ -41,7 +41,7 @@
       <!-- ⚠️ Replace YOUR_CLIENT_ID_HERE with your actual Client ID -->
       <a href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id=TTiouu3TFB59C6YY-djV2suYv8pvEjFc61WyqxJqK666ApDzHsnVmS2tPLcejn7e&redirect_uri=https://akroomenois.com/auth/callback&scope=identity%20identity.memberships" 
          class="big-btn" 
-         style="display: block; width: 100%; padding: 16px 20px; font-size: 1.05rem; text-align: center; box-sizing: border-box; background: #FF424D; color: #ffffff; border: 2px solid #FF424D; box-shadow: 0 4px 14px rgba(255,66,77,0.30);">
+         style="display: block; width: 100%; padding: 16px 20px; font-size: 1.05rem; text-align: center; box-sizing: border-box; background: #FF424D; color: #ffffff; border: 2px solid #FF424D; box-shadow: 0 4px 14px rgba(255,66,77,0.30); text-decoration: none; border-radius: 8px;">
         Proceed with Patreon
       </a>
 
