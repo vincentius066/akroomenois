@@ -853,10 +853,12 @@ select {
 
 	.book-card .btn.info-btn:hover {
 	  background: #c0c4cb;
+	  border: 1px solid #b0b3ba;
 	}
 
 	.book-card .btn:hover {
 	  background: #b88a5e;
+	  border: 1px solid #a67d56;
 	}
 
 	.book-card:hover {
