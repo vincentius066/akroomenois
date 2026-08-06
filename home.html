@@ -35,8 +35,8 @@
 <body>
 
   <!-- AUTH BUTTONS -->
-  <a href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id=TTiouu3TFB59C6YY-djV2suYv8pvEjFc61WyqxJqK666ApDzHsnVmS2tPLcejn7e&redirect_uri=https://akroomenois.com/auth/callback&scope=identity%20identity.memberships" id="loginBtn">🔑 Log In</a>
-  <a href="/auth/logout" id="logoutBtn">🚪 Logout</a>
+  <a href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id=TTiouu3TFB59C6YY-djV2suYv8pvEjFc61WyqxJqK666ApDzHsnVmS2tPLcejn7e&redirect_uri=https://akroomenois.com/auth/callback&scope=identity%20identity.memberships" id="loginBtn">Log In</a>
+  <a href="/auth/logout" id="logoutBtn">Log Out</a>
 
   <span style="display: block; text-align: justify;">
   <h1>ΑΚΡΟΩΜΕΝΟΙΣ</h1>
@@ -367,7 +367,7 @@
         const tierNames = currentUser.tiers.map(t => t.title).join(', ');
         banner.innerHTML = `
           χαῖρε, ${currentUser.name}! 
-          <span class="patron-badge">🎧 PATRON</span>
+          <span class="patron-badge">PATRON</span>
           ${tierNames ? `<span style="font-weight:normal;color:#555;font-size:0.85rem;"> · ${tierNames}</span>` : ''}
         `;
         banner.style.display = 'block';
