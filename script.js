@@ -269,6 +269,28 @@ document.addEventListener('generator-ready', function() {
   let isReadingModeGreek = true;
 
   // ==========================================
+  // LOAD AUDIO FOR A CHAPTER
+  // ==========================================
+  
+  function loadAudioForChapter(chapterElement) {
+      if (!chapterElement) return;
+      
+      const chapterAudioSrc = chapterElement.getAttribute('data-audio-src');
+      if (!chapterAudioSrc) return;
+      
+      const audio = document.getElementById('audio');
+      if (!audio) return;
+      
+      // Check if the audio source has changed to avoid unnecessary reloads
+      const currentSrc = audio.querySelector('source')?.src || audio.src;
+      if (currentSrc !== chapterAudioSrc) {
+          audio.src = chapterAudioSrc;
+          audio.load();
+          console.log('🎵 Loaded audio:', chapterAudioSrc);
+      }
+  }
+  
+  // ==========================================
   // ==========================================
   // IMPORTANT STUFF
   // ==========================================
@@ -2056,17 +2078,7 @@ document.addEventListener('generator-ready', function() {
     progressBar.value = 0;
 
     // Dynamically update the audio source if your chapters use different audio files
-    const chapterAudioSrc = targetChapter.dataset.audioSrc; 
-    if (chapterAudioSrc) {
-      const mainAudioSource = audio.querySelector("source");
-      if (mainAudioSource) {
-        mainAudioSource.src = chapterAudioSrc;
-      } else {
-        audio.src = chapterAudioSrc;
-      }
-      audio.load(); // Force reload the media element with the new track
-    }
-  }
+    loadAudioForChapter(targetChapter);
   
   function recalculateAudioBoundaries() {
     const validWords = Array.from(words).filter(w => {
@@ -2126,16 +2138,7 @@ document.addEventListener('generator-ready', function() {
     progressBar.value = 0;
   
     // Update audio source
-    const chapterAudioSrc = targetChapter.dataset.audioSrc;
-    if (chapterAudioSrc) {
-      const mainAudioSource = audio.querySelector("source");
-      if (mainAudioSource) {
-        mainAudioSource.src = chapterAudioSrc;
-      } else {
-        audio.src = chapterAudioSrc;
-      }
-      audio.load();
-    }
+    loadAudioForChapter(targetChapter);
   
     // Apply saved language preference
     updateLanguageToggleVisibility(); //Makes sure it changes the language mode before fetching it
@@ -2281,6 +2284,22 @@ document.addEventListener('generator-ready', function() {
     // Note: Change "smooth" to "auto" if you want an instant, non-animated jump.
   }
 
+  // ==========================================
+  // OBSERVE CHAPTER CHANGES FOR AUDIO LOADING
+  // ==========================================
+  
+  const chapterObserver = new MutationObserver(function() {
+      const activeChapter = document.querySelector('.chapter-body.active');
+      if (activeChapter) {
+          loadAudioForChapter(activeChapter);
+      }
+  });
+  
+  // Observe all chapter bodies for class changes
+  document.querySelectorAll('.chapter-body').forEach(chapter => {
+      chapterObserver.observe(chapter, { attributes: true, attributeFilter: ['class'] });
+  });
+    
   // ==========================================
   // INITIAL ACTIVE CHAPTER BOOTSTRAPPER & SETUP CONFIG BOUNDARIES & LIMIT AUDIO SCOPE TO WORDS TIMESTAMP BOUNDARIES
   // ==========================================
