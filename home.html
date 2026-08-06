@@ -366,14 +366,14 @@
       if (currentUser.loggedIn && currentUser.isPatron) {
         const tierNames = currentUser.tiers.map(t => t.title).join(', ');
         banner.innerHTML = `
-          👋 Welcome, ${currentUser.name}! 
+          χαῖρε, ${currentUser.name}! 
           <span class="patron-badge">🎧 PATRON</span>
           ${tierNames ? `<span style="font-weight:normal;color:#555;font-size:0.85rem;"> · ${tierNames}</span>` : ''}
         `;
         banner.style.display = 'block';
       } else if (currentUser.loggedIn && !currentUser.isPatron) {
         banner.innerHTML = `
-          👋 Welcome, ${currentUser.name}! 
+          χαῖρε, ${currentUser.name}! 
           <span style="color:#FF424D;">You are not an active patron.</span>
           <a href="https://www.patreon.com/akroomenois" target="_blank" style="color:#FF424D;font-weight:bold;">Become a patron →</a>
         `;
