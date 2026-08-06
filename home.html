@@ -151,61 +151,103 @@
     // RENDER BOOKS
     // =========================================================
     function renderBooks() {
-        const grid = document.getElementById('library-grid');
-        if (!grid) return;
-    
-        grid.innerHTML = books.map(book => {
-            const isPaid = book.isPaid || false;
-            const hasAccess = currentUser.isPatron || !isPaid;
-            const isLoggedIn = currentUser.loggedIn;
-    
-            // Determine if the lock should show
-            const showLock = isPaid && !hasAccess;
-    
-            // Lock overlay HTML (shown only for locked books)
-            const lockOverlay = showLock ? `
-                <div class="lock-overlay">
-                    <img src="images/locked.svg" alt="Locked" class="lock-icon">
+      const grid = document.getElementById('library-grid');
+      if (!grid) return;
+
+      console.log('📚 Rendering books. User state:', currentUser);
+
+      grid.innerHTML = books.map(book => {
+        const isPaid = book.isPaid || false;
+        const hasAccess = currentUser.isPatron || !isPaid;
+        const isLoggedIn = currentUser.loggedIn;
+
+        console.log(`📖 ${book.title}: isPaid=${isPaid}, hasAccess=${hasAccess}, isLoggedIn=${isLoggedIn}`);
+
+        let actionsHTML = '';
+
+        if (hasAccess) {
+          actionsHTML = `
+            <a href="${book.link}" class="btn">Open</a>
+            <a href="#" class="btn info-btn" aria-label="Information">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </a>
+          `;
+        } else if (isPaid && !isLoggedIn) {
+          actionsHTML = `
+            <a href="/" class="btn-unlock" onclick="alert('Please login with Patreon to access this book.'); return false;">
+              Unlock
+            </a>
+            <a href="#" class="btn info-btn" aria-label="Information">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </a>
+          `;
+        } else if (isPaid && isLoggedIn && !currentUser.isPatron) {
+          actionsHTML = `
+            <a href="https://www.patreon.com/akroomenois" target="_blank" class="btn-unlock">
+              Unlock
+            </a>
+            <a href="#" class="btn info-btn" aria-label="Information">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </a>
+          `;
+        }
+
+        let statsList = `
+          <li><strong>Words:</strong> ${book.totalWords || 0}</li>
+          <li><strong>Unique words:</strong> ${book.vocab || 0}</li>
+          <li><strong>Run time:</strong> ${book.runTime || '0 min'}</li>
+          <li><strong>Progress:</strong> ${book.progress || '0%'}</li>
+        `;
+        //if (isPaid) {
+          //statsList += `<li style="color:#FF424D; font-weight:bold;">🔒 Patron Only</li>`;
+        //} else {
+          //statsList += `<li style="color:#2b8d58;">✓ Free</li>`;
+        //}
+
+        return `
+          <div class="book-card-wrapper" data-paid="${isPaid}" data-link="${book.link}">
+            <div class="book-card ${isPaid && !hasAccess ? 'locked' : ''}">
+              <div class="card-front">
+                <div class="scroll-wrapper title-wrapper">
+                  <h2 class="scroll-text">${book.title}</h2>
                 </div>
-            ` : '';
-    
-            // ... rest of your code for actionsHTML and statsList ...
-    
-            return `
-                <div class="book-card-wrapper" data-paid="${isPaid}" data-link="${book.link}">
-                    <div class="book-card ${isPaid && !hasAccess ? 'locked' : ''}">
-                        <div class="card-front">
-                            <div class="scroll-wrapper title-wrapper">
-                                <h2 class="scroll-text">${book.title}</h2>
-                            </div>
-                            <div class="cover-wrapper">
-                                <img class="cover-art" src="${book.cover}">
-                                ${lockOverlay}
-                            </div>
-                            <div class="scroll-wrapper">
-                                <p class="author scroll-text">${book.author}</p>
-                            </div>
-                            <div class="scroll-wrapper reader-wrapper">
-                                <p class="reader scroll-text">(read by ${book.reader})</p>
-                            </div>
-                            <div class="card-actions">
-                                ${actionsHTML}
-                            </div>
-                        </div>
-                        <div class="card-back">
-                            <h2>Stats</h2>
-                            <ul class="stats-list">
-                                ${statsList}
-                            </ul>
-                        </div>
-                    </div>
+                <img class="cover-art" src="${book.cover}">
+                <div class="scroll-wrapper">
+                  <p class="author scroll-text">${book.author}</p>
                 </div>
-            `;
-        }).join('');
-    
-        attachCardFlipListeners();
-        updateScrollShadows();
-        attachHoverScrollListeners();
+                <div class="scroll-wrapper reader-wrapper">
+                  <p class="reader scroll-text">(read by ${book.reader})</p>
+                </div>
+                <div class="card-actions">
+                  ${actionsHTML}
+                </div>
+              </div>
+              <div class="card-back">
+                <h2>Stats</h2>
+                <ul class="stats-list">
+                  ${statsList}
+                </ul>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      attachCardFlipListeners();
+      updateScrollShadows();
+      attachHoverScrollListeners();
     }
 
     // =========================================================
