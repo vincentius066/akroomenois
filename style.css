@@ -178,7 +178,7 @@
   border: 1px solid #c0956a;
 }
 
-.book-card .btn-unlock {
+.btn-unlock {
   display: inline-block;
   background: #ccc;
   color: #666;
@@ -877,7 +877,7 @@ select {
 	  border: 1px solid #a67d56;
 	}
 
-	.book-card .btn-unlock:hover {
+	.btn-unlock:hover {
 	  background: #aeaeae;
 	  border: 1px solid #999999;
 	}
