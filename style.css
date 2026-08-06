@@ -84,6 +84,55 @@
    RULES TAKEN FROM INDEX.HTML
    ========================================================= */
 
+/* Logout button */
+#logoutBtn,
+#loginBtn {
+  display: none;
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  z-index: 999;
+  font-family: 'Inter', sans-serif;
+  color: #666;
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: white;
+  transition: background 0.2s;
+}
+#logoutBtn:hover,
+#loginBtn:hover {
+  background: #f0f0f0;
+}
+
+/* User welcome banner */
+#userBanner {
+  display: none;
+  text-align: center;
+  padding: 8px 16px;
+  margin-bottom: 20px;
+  background: #ebfdf3;
+  border: 1px solid #cbdfd3;
+  border-radius: 30px;
+  color: #2b8d58;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+#userBanner .patron-badge {
+  background: #FF424D;
+  color: white;
+  padding: 2px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  margin-left: 8px;
+  font-weight: bold;
+}
+
 .big-btn,
 .read-btn {
   display: inline-block;
