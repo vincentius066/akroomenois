@@ -441,6 +441,25 @@
     }
 
     // =========================================================
+    // LOGOUT
+    // =========================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          try {
+            await fetch('/auth/logout');
+            window.location.href = '/home.html';
+          } catch (error) {
+            console.error('Logout error:', error);
+            window.location.href = '/home.html';
+          }
+        });
+      }
+    });
+
+    // =========================================================
     // TAB CLICK HANDLERS
     // =========================================================
     document.querySelectorAll('.tab-btn').forEach(btn => {
