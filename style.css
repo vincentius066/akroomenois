@@ -899,40 +899,6 @@ select {
 }
 
 /* =========================================================
-   TOUCH DEVICE TITLE SCROLL (iOS/Android fix)
-   ========================================================= */
-
-/* On touch devices, use .touch-active class to trigger scroll */
-@media (hover: none) {
-    .book-card.touch-active .scroll-text {
-        transition: transform 4s linear 0.2s !important;
-        transform: translateX(var(--scroll-distance, -50px)) !important;
-    }
-    
-    .book-card.touch-active .scroll-wrapper.needs-scroll::after {
-        opacity: 0;
-        transition: opacity 1.1s linear;
-    }
-    
-    /* Reset when not active */
-    .book-card:not(.touch-active) .scroll-text {
-        transform: translateX(0) !important;
-        transition: transform 0.3s ease-out !important;
-    }
-    
-    .book-card:not(.touch-active) .scroll-wrapper.needs-scroll::after {
-        opacity: 1;
-        transition: opacity 0.3s ease-out;
-    }
-    
-    /* Prevent card lift interference on touch */
-    .book-card.touch-active {
-        transform: translateY(-6px) !important;
-        box-shadow: 0 10px 24px rgba(0,0,0,0.12) !important;
-    }
-}
-
-/* =========================================================
    TABLET LAYOUT RULES (TRIGGERS ON SCREEN SIZE OR MANUAL OVERRIDE)
    ========================================================= */
 @media (min-width: 768px) and (max-width: 1023px) {
