@@ -106,7 +106,7 @@
   <!-- TAB CONTENT: About -->
   <div id="tab-about" class="tab-content">
     <div class="about-text">
-      <p><strong>Ἀκροωμένοις</strong> (test 3) was created with the intent of doing what Legentibus does (and more) but for Greek texts: text/audio allignment, dictionary lookups, commentary, parallel translation, UI customization, etc. We intend to make the reading of ancient Greek as easy and enjoyable as possible.</p>
+      <p><strong>Ἀκροωμένοις</strong> was created with the intent of doing what Legentibus does (and more) but for Greek texts: text/audio allignment, dictionary lookups, commentary, parallel translation, UI customization, etc. We intend to make the reading of ancient Greek as easy and enjoyable as possible.</p>
     </div>
   </div>
 
@@ -293,90 +293,40 @@
       });
     }
 
-    // =========================================================
-    // TOUCH SCROLL FOR TABLETS & MOBILE
-    // =========================================================
-    
     function attachHoverScrollListeners() {
-        const cards = document.querySelectorAll('.book-card');
-        
-        // Only run touch logic on touch devices
-        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        
-        cards.forEach(card => {
-            // Calculate scroll distance for each card
-            const scrollText = card.querySelector('.scroll-text');
-            if (scrollText) {
-                const container = scrollText.parentElement;
-                if (container.classList.contains('needs-scroll')) {
-                    const distance = scrollText.scrollWidth - container.clientWidth;
-                    scrollText.style.setProperty('--scroll-distance', `-${distance}px`);
-                }
+      const cards = document.querySelectorAll('.book-card');
+      cards.forEach(card => {
+        let scrollTimeouts = [];
+        card.addEventListener('mouseenter', () => {
+          if (!window.matchMedia('(hover: hover)').matches) return;
+          const scrollTexts = card.querySelectorAll('.scroll-text');
+          scrollTexts.forEach(text => {
+            const container = text.parentElement;
+            if (container.classList.contains('needs-scroll')) {
+              const scrollDistance = text.scrollWidth - container.clientWidth;
+              const duration = scrollDistance / 30;
+              text.style.transition = `transform ${duration}s linear 0.2s`;
+              text.style.transform = `translateX(-${scrollDistance}px)`;
+              const fadeLeadTime = 1.1;
+              const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
+              const timeout = setTimeout(() => container.classList.add('is-scrolled'), timeUntilFade);
+              scrollTimeouts.push(timeout);
             }
-            
-            // Desktop: mouseenter/mouseleave
-            card.addEventListener('mouseenter', () => {
-                if (isTouch) return; // Skip on touch devices
-                const scrollTexts = card.querySelectorAll('.scroll-text');
-                scrollTexts.forEach(text => {
-                    const container = text.parentElement;
-                    if (container.classList.contains('needs-scroll')) {
-                        const scrollDistance = text.scrollWidth - container.clientWidth;
-                        const duration = scrollDistance / 30;
-                        text.style.transition = `transform ${duration}s linear 0.2s`;
-                        text.style.transform = `translateX(-${scrollDistance}px)`;
-                        const timeout = setTimeout(() => {
-                            container.classList.add('is-scrolled');
-                        }, Math.max(0, (duration + 0.2 - 1.1) * 1000));
-                    }
-                });
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                if (isTouch) return;
-                const scrollTexts = card.querySelectorAll('.scroll-text');
-                scrollTexts.forEach(text => {
-                    const container = text.parentElement;
-                    container.classList.remove('is-scrolled');
-                    text.style.transition = 'transform 0.3s ease-out';
-                    text.style.transform = 'translateX(0)';
-                });
-            });
-            
-            // Touch devices: tap to toggle .touch-active class
-            if (isTouch) {
-                let touchTimeout = null;
-                
-                card.addEventListener('touchstart', (e) => {
-                    // Don't trigger if they tapped info button or Open button
-                    if (e.target.closest('.info-btn') || e.target.closest('.btn')) return;
-                    
-                    // Clear any pending timeout
-                    if (touchTimeout) clearTimeout(touchTimeout);
-                    
-                    // Remove active from all other cards
-                    cards.forEach(c => c.classList.remove('touch-active'));
-                    
-                    // Toggle this card
-                    card.classList.toggle('touch-active');
-                    
-                    // Auto-remove after 4 seconds
-                    if (card.classList.contains('touch-active')) {
-                        touchTimeout = setTimeout(() => {
-                            card.classList.remove('touch-active');
-                        }, 4000);
-                    }
-                }, { passive: true });
-                
-                // Tap outside: remove all active
-                document.addEventListener('touchstart', (e) => {
-                    if (!e.target.closest('.book-card')) {
-                        cards.forEach(c => c.classList.remove('touch-active'));
-                        if (touchTimeout) clearTimeout(touchTimeout);
-                    }
-                }, { passive: true });
-            }
+          });
         });
+        card.addEventListener('mouseleave', () => {
+          if (!window.matchMedia('(hover: hover)').matches) return;
+          scrollTimeouts.forEach(clearTimeout);
+          scrollTimeouts = [];
+          const scrollTexts = card.querySelectorAll('.scroll-text');
+          scrollTexts.forEach(text => {
+            const container = text.parentElement;
+            container.classList.remove('is-scrolled');
+            text.style.transition = 'transform 0.3s ease-out';
+            text.style.transform = 'translateX(0)';
+          });
+        });
+      });
     }
 
     // =========================================================
