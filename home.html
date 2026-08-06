@@ -294,39 +294,92 @@
     }
 
     function attachHoverScrollListeners() {
-      const cards = document.querySelectorAll('.book-card');
-      cards.forEach(card => {
-        let scrollTimeouts = [];
-        card.addEventListener('mouseenter', () => {
-          if (!window.matchMedia('(hover: hover)').matches) return;
-          const scrollTexts = card.querySelectorAll('.scroll-text');
-          scrollTexts.forEach(text => {
-            const container = text.parentElement;
-            if (container.classList.contains('needs-scroll')) {
-              const scrollDistance = text.scrollWidth - container.clientWidth;
-              const duration = scrollDistance / 30;
-              text.style.transition = `transform ${duration}s linear 0.2s`;
-              text.style.transform = `translateX(-${scrollDistance}px)`;
-              const fadeLeadTime = 1.1;
-              const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
-              const timeout = setTimeout(() => container.classList.add('is-scrolled'), timeUntilFade);
-              scrollTimeouts.push(timeout);
+        const cards = document.querySelectorAll('.book-card');
+        
+        cards.forEach(card => {
+            let scrollTimeouts = [];
+            let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            // Helper to start the scroll animation
+            function startScroll(card) {
+                const scrollTexts = card.querySelectorAll('.scroll-text');
+                scrollTexts.forEach(text => {
+                    const container = text.parentElement;
+                    if (container.classList.contains('needs-scroll')) {
+                        const scrollDistance = text.scrollWidth - container.clientWidth;
+                        const duration = scrollDistance / 30;
+                        
+                        text.style.transition = `transform ${duration}s linear 0.2s`;
+                        text.style.transform = `translateX(-${scrollDistance}px)`;
+                        
+                        const fadeLeadTime = 1.1;
+                        const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
+                        
+                        const timeout = setTimeout(() => {
+                            container.classList.add('is-scrolled');
+                        }, timeUntilFade);
+                        
+                        scrollTimeouts.push(timeout);
+                    }
+                });
             }
-          });
+            
+            // Helper to stop the scroll animation
+            function stopScroll() {
+                scrollTimeouts.forEach(clearTimeout);
+                scrollTimeouts = [];
+                
+                const scrollTexts = card.querySelectorAll('.scroll-text');
+                scrollTexts.forEach(text => {
+                    const container = text.parentElement;
+                    container.classList.remove('is-scrolled');
+                    text.style.transition = 'transform 0.3s ease-out';
+                    text.style.transform = 'translateX(0)';
+                });
+            }
+            
+            // Mouse events (desktop)
+            card.addEventListener('mouseenter', () => {
+                if (!window.matchMedia('(hover: hover)').matches) return;
+                startScroll(card);
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                if (!window.matchMedia('(hover: hover)').matches) return;
+                stopScroll();
+            });
+            
+            // Touch events (mobile/tablet)
+            if (isTouchDevice) {
+                let touchTimeout = null;
+                
+                card.addEventListener('touchstart', (e) => {
+                    // Don't interfere with the info button or other interactions
+                    if (e.target.closest('.info-btn') || e.target.closest('.btn')) return;
+                    
+                    // Clear any pending reset
+                    if (touchTimeout) clearTimeout(touchTimeout);
+                    
+                    // If the card is already scrolled (tapped once), reset it (tap again to stop)
+                    const isScrolled = card.querySelector('.scroll-text')?.style?.transform !== 'translateX(0)';
+                    if (isScrolled) {
+                        stopScroll();
+                        return;
+                    }
+                    
+                    startScroll(card);
+                }, { passive: true });
+                
+                card.addEventListener('touchend', () => {
+                    // Don't reset immediately, let the user see the scroll
+                    // Reset after 3 seconds of inactivity
+                    if (touchTimeout) clearTimeout(touchTimeout);
+                    touchTimeout = setTimeout(() => {
+                        stopScroll();
+                    }, 3000);
+                }, { passive: true });
+            }
         });
-        card.addEventListener('mouseleave', () => {
-          if (!window.matchMedia('(hover: hover)').matches) return;
-          scrollTimeouts.forEach(clearTimeout);
-          scrollTimeouts = [];
-          const scrollTexts = card.querySelectorAll('.scroll-text');
-          scrollTexts.forEach(text => {
-            const container = text.parentElement;
-            container.classList.remove('is-scrolled');
-            text.style.transition = 'transform 0.3s ease-out';
-            text.style.transform = 'translateX(0)';
-          });
-        });
-      });
     }
 
     // =========================================================
