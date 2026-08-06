@@ -238,6 +238,8 @@ footer {
   height: 35.5px;         /* Locks it into a square */
   border-radius: 50%;   /* Turns the square into a circle */
 
+  transition: background 0.2s;
+
   background: #eef2f8;
   color: #4b5466;
   border: 1px solid #dde1e7;
@@ -873,6 +875,11 @@ select {
 	.book-card .btn:hover {
 	  background: #b88a5e;
 	  border: 1px solid #a67d56;
+	}
+
+	.book-card .btn-unlock:hover {
+	  background: #aeaeae;
+	  border: 1px solid #999999;
 	}
 
 	.book-card:hover {
