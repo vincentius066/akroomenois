@@ -379,14 +379,16 @@
 
         const logoutBtn = document.getElementById('logoutBtn');
         if (logoutBtn) {
-          logoutBtn.style.display = currentUser.loggedIn ? 'inline-block' : 'none';
-        }
-
-        // Clean URL if login was successful
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('login') === 'success') {
-          const cleanUrl = window.location.pathname + window.location.hash;
-          window.history.replaceState({}, document.title, cleanUrl);
+            logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    await fetch('/auth/logout');
+                    window.location.href = '/home'; // <-- Changed from /home.html to /home
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    window.location.href = '/home'; // <-- Changed here too
+                }
+            });
         }
 
       } catch (error) {
