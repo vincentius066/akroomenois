@@ -1,2376 +1,492 @@
-// ==========================================
-// 1. GLOBAL WEBSITE CONFIGURATION
-// ==========================================
-const SITE_SETTINGS = {
-  fontSize:    { min: "20",  max: "100", default: "70"  },
-  playerSpeed: { min: "0.5", max: "2",   default: "1"   },
-  volume:      { min: "0",   max: "1",   default: "1"   }
-};
-
-const SEEK_TOLERANCE = 0.15;
-const SEEK_EPSILON = 0.05;
-
-// ==========================================
-// 2. INITIALIZE LOGIC ON PAGE LOAD
-// ==========================================
-
-document.addEventListener('generator-ready', function() {
-  
-  // ==========================================
-  // 3. GENERATE THE INTERFACE AUTOMATICALLY
-  // ==========================================
-  const interfaceHTML = `
-    <div id="topBar">
-      <button id="homeBtn"><img class="btn-icon" src="icon/arrow-left.svg" alt="Play"></button>
-      <span class="title">
-      <div id="topBarPrevChapBtn" class="prev-chapter-btn">◀&#xFE0E; &nbsp; &nbsp;</div>
-      <div id="title"></div>
-      <div id="topBarNextChapBtn" class="next-chapter-btn">&nbsp; &nbsp; ▶&#xFE0E;</div>
-      </span>
-      <div id="moreMenuWrapper" style="display: flex; align-items: center; flex-direction: row;">
-        <div id="extraActionsGroup" style="display: none; align-items: center; gap: 10px; margin-right: 10px;">
-          <button id="freqBtn" title="Word Frequency"><img class="btn-icon" src="icon/insights.svg" alt="Settings"></button>
-          <button id="contentsBtn" title="Contents"><img class="btn-icon" src="icon/layout-list.svg" alt="Settings"></button>
-          <button id="settingsBtn" title="Settings"><img class="btn-icon" src="icon/options.svg" alt="Settings"></button>
-        </div>
-        
-        <button id="moreBtn" style="cursor: pointer; z-index: 10;"><img class="btn-icon" src="icon/more-vertical-alt.svg" alt="More Options"></button>
-      </div>
-    </div>
-
-    <div id="popup">
-      <button id="closePopup">✕</button>
-      <div id="popupContent"></div>
-    </div>
-    <div id="popupOverlay"></div>
-
-    <div id="advancedFontPopup">
-      <button id="closeAdvancedFont">✕</button>
-      <h3>Advanced Font Settings</h3>
-      <i>Only Anaktoria supports all glyph variations.</i>
-      <br><br>
-      <label>Beta: 
-         <select id="betaStyleControl">
-           <option value="standard">Β β (Standard)</option>
-           <option value="cursive">Β β/ϐ (Cursive)</option>
-         </select>
-      </label>
-      <br><br>
-      <label>Epsilon: 
-         <select id="epsilonStyleControl">
-           <option value="standard">Ε ε (Standard)</option>
-           <option value="lunate"> Ε ϵ (Lunate)</option>
-         </select>
-      </label>
-      <br><br>
-      <label>Theta: 
-         <select id="thetaStyleControl">
-           <option value="standard">Θ θ (Standard)</option>
-           <option value="cursive">Θ ϑ (Cursive)</option>
-         </select>
-      </label>
-      <br><br>
-      <label>Kappa: 
-         <select id="kappaStyleControl">
-           <option value="standard">Κ κ (Standard)</option>
-           <option value="cursive">Κ ϰ (Cursive)</option>
-         </select>
-      </label>
-      <br><br>
-      <label>Kai: 
-         <select id="kaiStyleControl">
-           <option value="standard">Κα\u03af κα\u03af (Standard)</option>
-           <option value="ligature">Ϗ\u0301 ϗ\u0301 (Ligature)</option>
-           <option value="minuscule">Κα\u03af ϗ\u0301 (Minuscule Ligature Only)</option>
-         </select>
-      </label>
-      <br><br>
-      <label>Ou: 
-         <select id="ouStyleControl">
-           <option value="standard">Ού ού (Standard)</option>
-           <option value="ligature">Ȣ\u0301 ȣ\u0301 (Ligature)</option>
-         </select>
-      </label>
-      <br><br>
-      <label>Pi: 
-         <select id="piStyleControl">
-           <option value="standard">Π π (Standard)</option>
-           <option value="cursive">Π ϖ (Cursive)</option>
-         </select>
-      </label>
-      <br><br>
-      <label>Rho: 
-         <select id="rhoStyleControl">
-           <option value="standard">Ρ ρ (Standard)</option>
-           <option value="variant">Ρ ϱ (Variant)</option>
-         </select>
-      </label>
-      <br><br>
-      <label>Sigma: 
-        <select id="sigmaStyleControl">
-          <option value="standard">Σ σ/ς (Standard)</option>
-          <option value="lunate">Ϲ ϲ (Lunate)</option>
-        </select>
-      </label>
-      <br><br>
-      <label>Stigma: 
-         <select id="stigmaStyleControl">
-           <option value="standard"> Στ στ (Standard)</option>
-           <option value="ligature">Ϛ ϛ (Ligature)</option>
-           <option value="minuscule">Στ ϛ (Minuscule Ligature Only)</option>
-         </select>
-      </label>
-      <br><br>
-      <label>Phi: 
-        <select id="phiStyleControl">
-          <option value="standard">Φ φ (Standard)</option>
-          <option value="variant">Φ ϕ (Variant)</option>
-        </select>
-      </label>
-    </div>
-
-    <div id="settingsPopup">
-      <button id="closeSettings">✕</button>
-      <h3>Settings</h3>
-      <h5 style="text-align: center;">UI</h5>
-      <label>Time Display:
-        <button id="toggle-greek-time" class="settings-btn">
-          <span id="greek-time-status">Greek</span>
-        </button>
-      </label>
-      <br><br>
-      <label>Viewing Mode:
-        <button id="fullscreenBtn" class="settings-btn" style="cursor: pointer;">Fullscreen</button>
-      </label>
-      <br><br>
-      <label>Layout Mode: 
-        <select id="layoutModeControl">
-          <option value="small">Small (Mobile)</option>
-          <option value="medium">Medium (Tablet)</option>
-          <option value="large">Large (Desktop)</option>
-        </select>
-      </label>
-      <h5 style="text-align: center;">Text</h5>
-      <label>Font: 
-        <select id="fontFamilyControl">
-          <option value="SBL">SBL</option>
-          <option value="EB_Garamond">EB Garamond</option>
-          <option value="Anaktoria">Anaktoria</option>
-        </select>
-        <button id="advancedFontBtn" class="settings-btn" style="cursor: pointer;">Advanced</button>
-      </label>
-      <br><br>
-      <label>Size: <input type="range" id="fontControl" step="1"><span id="fontValue"></span></label>
-      <h5 style="text-align: center;">Audio</h5>
-      <label>Speed: <input type="range" id="speedControl" step="0.1"><span id="speedValue"></span></label>
-      <br><br>
-      <label for="volumeControl">Volume:</label><input type="range" id="volumeControl" step="0.01"><span id="volumeValue"></span>
-      <h5 style="text-align: center;">Debug</h5>
-      <label>HTML: 
-        <button id="copyHtml" class="settings-btn" style="cursor: pointer;">Copy</button>
-      </label>
-      <label>Full Page HTML: 
-        <button id="copyFullHtml" class="settings-btn" style="cursor: pointer;">Copy</button>
-      </label>
-    </div>
-        
-    <div id="playerBar">
-      <button id="prevBtn"><img class="btn-icon" src="icon/play-backwards.svg" alt="Backward"></button>
-      <button id="playBtn"><img class="btn-icon" src="icon/play-button.svg" alt="Play"></button>
-      <button id="nextBtn"><img class="btn-icon" src="icon/play-forwards.svg" alt="Forward"></button>
-      <input type="range" id="progressBar" value="0" min="0" step="0.1">
-      <span id="timeDisplay">00:00 / 00:00</span>
-      <button id="langBtn">EN</button>
-    </div>
-  `;
-  const readButtonHTML = `
-  <br><br>
-  <button class="read-btn">Mark as read</button>
-  `;
-
-  const nextChapterButtonHTML = `
-  <br><br>
-  <button id="bottomBarPrevChapBtn" class="next-chapter-btn big-btn">Next chapter</button>
-  `;
-
-  // Inject the interfaces into the body of the page
-  document.body.insertAdjacentHTML('beforeend', interfaceHTML);
-  document.querySelectorAll('.chapter-body').forEach(chapter => {
-    chapter.insertAdjacentHTML('beforeend', nextChapterButtonHTML);
-    
-    // --- NEW: Read Button Injection & State Restoration ---
-    const section = chapter.dataset.section;
-    const isPreface = (section === "0" || section == 0);
-    
-    // Do not render the button on the preface (Chapter 0)
-    if (!isPreface) {
-      chapter.insertAdjacentHTML('beforeend', readButtonHTML);
-      
-      // Restore the "read" class from previous sessions
-      const chapterId = chapter.dataset.section || chapter.dataset.chapter;
-      if (localStorage.getItem(`read_chapter_${chapterId}`) === "true") {
-        chapter.classList.add("read");
-      }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Akroomenois</title>
+  <style>
+    * { box-sizing: -box; margin: 0; padding: 0; }
+    body {
+      font-family: "Inter";
+      background: #f8f5f0;
+      padding: 40px 20px;
+      color: #2c2c2c;
     }
-  });
-  
-  // Grab all DOM elements
+    h1 {
+      font-size: 2.8rem;
+      text-align: center;
+      margin-bottom: 4px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      font-family: "Times New Roman";
+    }
+    .sub {
+      text-align: center;
+      color: #6b6b6b;
+      margin-bottom: 30px;
+      font-size: 1.2rem;
+      font-family: "Times New Roman";
+    }
 
-  const audio = document.getElementById("audio");
-  const settingsPopup = document.getElementById("settingsPopup");
-  const advancedFontPopup = document.getElementById("advancedFontPopup");
-  const closeSettings = document.getElementById("closeSettings");
-  const closeAdvancedFont = document.getElementById("closeAdvancedFont");
-  const popup = document.getElementById("popup");
-  const popupOverlay = document.getElementById("popupOverlay");
-  const popupContent = document.getElementById("popupContent");
-  const playBtn = document.getElementById("playBtn");
-  const progressBar = document.getElementById("progressBar");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const langBtn = document.getElementById("langBtn");
-  const homeBtn = document.getElementById("homeBtn");
-  const settingsBtn = document.getElementById("settingsBtn");
-  const advancedFontBtn = document.getElementById("advancedFontBtn");
-  const speedControl = document.getElementById("speedControl");
-  const speedValue = document.getElementById("speedValue");
-  const fontControl = document.getElementById("fontControl");
-  const fontValue = document.getElementById("fontValue");
-  const volumeControl = document.getElementById("volumeControl");
-  const volumeValue = document.getElementById("volumeValue");
-  const fontFamilyControl = document.getElementById("fontFamilyControl");
-  const timeDisplay = document.getElementById("timeDisplay");
-  const toggleBtn = document.getElementById('toggle-greek-time');
-  const statusText = document.getElementById('greek-time-status');
-  const moreBtn = document.getElementById("moreBtn");
-  const extraActionsGroup = document.getElementById("extraActionsGroup");
-  const contentsBtn = document.getElementById("contentsBtn");
-  const freqBtn = document.getElementById("freqBtn");
-  const fullscreenBtn = document.getElementById('fullscreenBtn');
-  const layoutModeControl = document.getElementById("layoutModeControl");
-  const htmlBtn = document.getElementById('copyHtml');
-  const prevChapterBtns = document.querySelectorAll(".prev-chapter-btn");
-  const nextChapterBtns = document.querySelectorAll(".next-chapter-btn");
+    /* Logout button */
+    #logoutBtn {
+      display: none;
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      z-index: 999;
+      font-family: 'Inter', sans-serif;
+      color: #666;
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      background: white;
+      transition: background 0.2s;
+    }
+    #logoutBtn:hover {
+      background: #f0f0f0;
+    }
 
-  let text = null;
-  let textEn = null;
-  let phrases = [];
-  let words = [];
-  let phrasesEn = [];
-  let notes = [];
+    /* User welcome banner */
+    #userBanner {
+      display: none;
+      text-align: center;
+      padding: 8px 16px;
+      margin-bottom: 20px;
+      background: #ebfdf3;
+      border: 1px solid #cbdfd3;
+      border-radius: 30px;
+      color: #2b8d58;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #userBanner .patron-badge {
+      background: #FF424D;
+      color: white;
+      padding: 2px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      margin-left: 8px;
+      font-weight: bold;
+    }
+  </style>
+  <link rel="icon" type="image/png" sizes="192x192" href="images/kithara_3_orange_favicon_rounded.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/kithara_3_orange_apple_icon_rounded.png">
+</head>
+<body>
 
-  let wasPlaying = false;
-  let currentActive = null;
-  let dictAudioInstance = null;
-  let useGreekNumerals = localStorage.getItem("reader_useGreekNumerals") === "true";
-  let chapterMinTime = 0;
-  let chapterMaxTime = Infinity;
-  let isChapterTransitioning = false;
-  let isReadingModeGreek = true;
+  <!-- LOGOUT BUTTON -->
+  <a href="#" id="logoutBtn">🚪 Logout</a>
 
-  // ==========================================
-  // LOAD AUDIO FOR A CHAPTER
-  // ==========================================
-  
-  function loadAudioForChapter(chapterElement) {
-      if (!chapterElement) return;
-      
-      const chapterAudioSrc = chapterElement.getAttribute('data-audio-src');
-      if (!chapterAudioSrc) return;
-      
-      const audio = document.getElementById('audio');
-      if (!audio) return;
-      
-      // Check if the audio source has changed to avoid unnecessary reloads
-      const currentSrc = audio.querySelector('source')?.src || audio.src;
-      if (currentSrc !== chapterAudioSrc) {
-          audio.src = chapterAudioSrc;
-          audio.load();
-          console.log('🎵 Loaded audio:', chapterAudioSrc);
-      }
-  }
-  
-  // ==========================================
-  // ==========================================
-  // IMPORTANT STUFF
-  // ==========================================
-  // ==========================================
+  <span style="display: block; text-align: justify;">
+  <h1>ΑΚΡΟΩΜΕΝΟΙΣ</h1>
+  <p class="sub">· ΑΝΑΛΕΓΟΥ · ΑΚΟΥΕ · ΜΑΝΘΑΝΕ ·</p>
+  </span>
 
-  // Sticky hover remover
-  document.addEventListener('touchend', (e) => {
-    // 1. Automatically find the clickable element that was tapped
-    // This catches all standard links, buttons, and inputs globally
-    const el = e.target.closest('button, a, input, [tabindex]') || e.target;
+  <!-- USER BANNER -->
+  <div id="userBanner"></div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="library">Library</button>
+    <button class="tab-btn" data-tab="about">About</button>
+    <button class="tab-btn" data-tab="contact">Contact</button>
+    <button class="tab-btn" data-tab="privacy-policy">Privacy Policy</button>
+    <button class="tab-btn" data-tab="terms-of-service">Terms of Service</button>
+  </div>
+
+  <!-- TAB CONTENT: Library -->
+  <div id="tab-library" class="tab-content active">
+    <div class="book-grid" id="library-grid"></div>
+  </div>
+
+  <!-- TAB CONTENT: About -->
+  <div id="tab-about" class="tab-content">
+    <div class="about-text">
+      <p><strong>Ἀκροωμένοις</strong> was created with the intent of doing what Legentibus does (and more) but for Greek texts: text/audio allignment, dictionary lookups, commentary, parallel translation, UI customization, etc. We intend to make the reading of ancient Greek as easy and enjoyable as possible.</p>
+    </div>
+  </div>
+
+  <div id="tab-contact" class="tab-content">
+    <div class="about-text">
+      <p>For any feedback, comments, or questions, you can contact us as info@akroomenois.com.</p>
+    </div>
+  </div>
+
+  <div id="tab-privacy-policy" class="tab-content">
+    <div class="about-text">
+      <p>When you log in through Patreon, our website securely collects your Patreon user ID, email address, and membership tier status solely to verify your active subscription and grant you access to paid audiobook content.<br><br>We do <strong>not</strong> share, sell, or distribute your personal data to any third parties. We do not store your data permanently on our servers; it is used temporarily during your active session to serve you the correct content.<br><br>For any questions, contact us at info@akroomenois.com.</p>
+    </div>
+  </div>
+
+  <div id="tab-terms-of-service" class="tab-content">
+    <div class="about-text">
+      <p>By using this website, you agree to the following terms:<br><br><strong>1. Individual Licensing Varies Per Book</strong><br><br>The copyright and licensing status of the text and audio recording vary for each individual audiobook on this site (both free and paid).<br><br>The text may be Public Domain, CC BY-SA 4.0/CC BY 3.0, or fully copyrighted.<br><br>The audio recording may be Public Domain, CC BY-SA 4.0/CC BY 3.0, used with the author's explicit permission, or fully copyrighted.<br><br>It is the user's responsibility to be aware of the licensing terms of each individual book by looking at the notes provided in them. Please look for the first note after the Preface.<br><br><strong>2. Platform Usage Rights vs. Copyright Licensing</strong><br><br>The rules below are divided into two separate categories:<br><br><strong>A. Copyright Licensing (What you are legally allowed to do with the content itself)</strong><br><br>If the <strong>audio</strong> is copyrighted, your access to it on this website is granted solely for personal, non-commercial streaming use during your active session.<br><br>If the <strong>text</strong> is copyrighted, you may not copy it beyond what is allowed by the copyright holder.<br><br>If the material (audio or text) is in the <strong>Public Domain</strong>, there are no copyright restrictions on your use of it.<br><br>If the material (audio or text) is under a <strong>CC BY-SA 4.0/CC BY 3.0 License</strong>, you must comply with its terms (which require ShareAlike and/or Attribution). No additional copyright restrictions beyond those required by the CC BY-SA/CC BY license are applied.<br><br><strong>B. Platform Technical Rules (Apply to ALL audio files, regardless of copyright status)</strong><br><br>To protect our server resources and prevent misuse of our hosting infrastructure, you may not:<br><br>Redistribute, scrape, or share the direct audio file links from this platform to other websites or services.<br><br>Bypass the streaming mechanism to permanently download or archive the files (beyond standard browser caching).<br><br>Use automated tools to bulk-extract or harvest our audio files.<br><br><strong>3. Paid Content Access</strong><br><br>Access to paid/subscription audiobooks is conditional on your active Patreon membership. If your membership lapses or is cancelled, your access to paid content will be revoked.<br><br><strong>4. Enforcement</strong><br><br>We reserve the right to restrict, suspend, or terminate your access to any content (free or paid) if we determine you have violated these platform usage terms (e.g., by sharing direct file links).<br><br><strong>5. Disclaimer</strong><br><br>The content is provided "as is." We do not guarantee uninterrupted or error-free access.</p>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // BOOK DATA
+    // =========================================================
+    const books = [
+      { title: "Anabasis", cover: "books/anabasis/image/cover.jpg", author: "Xenophon", reader: "bedwere", link: "anabasis.html", isPaid: false, totalWords: "57470", runTime: "12h 4m 36s" },
+      { title: "Cyropaedia (Work in Progress)", cover: "books/cyropaedia/image/cover.jpg", author: "Xenophon", reader: "bedwere", link: "cyropaedia.html", isPaid: false },
+      { title: "A First Greek Reader", cover: "books/a_first_greek_reader/image/cover.jpg", author: "Beresford and Douglas", reader: "Ioannis Stratakis", link: "a_first_greek_reader.html", isPaid: true, totalWords: "8916", runTime: "1h 41m 24s" },
+      { title: "O Katascopos", cover: "books/katascopos/image/cover.jpg", author: "Jacob Gerber", reader: "Luke Ranieri", link: "katascopos.html", isPaid: false, totalWords: "3748", runTime: "38m 46s" },
+      { title: "LGPSI (1-4)", cover: "books/LGPSI/image/cover.jpg", author: "Seumas Macdonald", reader: "Luke Ranieri", link: "LGPSI.html", isPaid: false, totalWords: "3104", runTime: "34m 31s" },
+      { title: "Epistle of James", cover: "books/Jacob/image/cover.jpg", author: "St. James", reader: "peaceuntoyou", link: "jacob.html", isPaid: false, totalWords: "1774", runTime: "23m 55s" },
+      { title: "The Greek War of Independence", cover: "books/the_greek_war_of_independence/image/cover.jpg", author: "Charles D. Chambers", reader: "Ariphron", link: "the_greek_war_of_independence.html", isPaid: false, totalWords: "12578", runTime: "2h 21m 1s" }
+    ];
+
+    // =========================================================
+    // PATREON LOGIN STATE
+    // =========================================================
+    let currentUser = { loggedIn: false, isPatron: false, tiers: [], name: '' };
+
+    // =========================================================
+    // RENDER BOOKS
+    // =========================================================
+    function renderBooks() {
+        const grid = document.getElementById('library-grid');
+        if (!grid) return;
     
-    // 2. Wait your requested 500 milliseconds
-    setTimeout(() => {
-      
-      // 3. Temporarily disable pointer events. 
-      // This makes the browser think the "mouse" just left the element.
-      const originalPointerEvents = el.style.pointerEvents;
-      el.style.pointerEvents = 'none';
-      
-      // 4. Force the browser to immediately recalculate its layout (dropping the hover)
-      void el.offsetHeight; 
-      
-      // 5. Instantly restore it so it can be tapped again normally
-      el.style.pointerEvents = originalPointerEvents;
-      
-    }, 500); // 500ms delay
-  }, { passive: true });
-  
-  // Helper check for active popups
-  function isPopupActive() {
-    return (popup && popup.style.display === "block") || (settingsPopup && settingsPopup.style.display === "block");
-  }
-
-  // Viewport checking functions for autoscroll
-  function isOutOfView(el) {
-    const rect = el.getBoundingClientRect();
-    const topOffset = 80;   
-    const bottomOffset = window.innerHeight - 100; 
-    return rect.top < topOffset + 40 || rect.bottom > bottomOffset - 40;
-  }
-
-  function scrollToTop(el) {
-  window.scrollTo({
-    top: window.scrollY + el.getBoundingClientRect().top - 80, 
-    behavior: "smooth" 
-  });
-
-}
-
-  // instantaneous jumping
-  function jumpToTop(el) {
-  window.scrollTo({
-    top: window.scrollY + el.getBoundingClientRect().top - 80,
-    behavior: "auto"
-  });
-}
-
-  function checkAndCorrectWordVisibility() {
-    const activeWord = document.querySelector(".text span.word.active");
-    if (!activeWord) return;
-    if (isOutOfView(activeWord)) {
-    scrollToTop(activeWord);
-    }
-  }
-  
-  function getCurrentPhraseIndex() {
-    const time = audio.currentTime;
+        console.log('📚 Rendering books. User state:', currentUser);
     
-    for (let i = 0; i < phrases.length; i++) {
-      const start = parseFloat(phrases[i].dataset.start);
-      if (isNaN(start)) continue; // Skip silent phrases during audio playback tracking
-  
-      // Find the next phrase that actually has a valid number for its start time
-      let nextStart = Infinity;
-      for (let j = i + 1; j < phrases.length; j++) {
-        const checkNext = parseFloat(phrases[j].dataset.start);
-        if (!isNaN(checkNext)) {
-          nextStart = checkNext;
-          break;
-        }
-      }
-  
-      if (time >= start && time < nextStart) return i;
-    }
-    return -1;
-  }
-
-  function findFirstValidPhraseIndex() {
-    for (let i = 0; i < phrases.length; i++) {
-      const startAttr = phrases[i].dataset.start;
-      if (startAttr && startAttr.toLowerCase().trim() !== "n/a") {
-        const n = parseFloat(startAttr);
-        if (!isNaN(n)) return i;
-      }
-    }
-    return -1;
-  }
-  
-  function getCurrentWordIndex() {
-    const time = audio.currentTime;
+        grid.innerHTML = books.map(book => {
+            const isPaid = book.isPaid || false;
+            const hasAccess = currentUser.isPatron || !isPaid;
+            const isLoggedIn = currentUser.loggedIn;
+            const showLock = isPaid && !hasAccess;
     
-    for (let i = 0; i < words.length; i++) {
-      const start = parseFloat(words[i].dataset.wordStart);
-      const end = parseFloat(words[i].dataset.wordEnd);
-      
-      // Skip checking this word if it doesn't have valid audio timestamps
-      if (isNaN(start) || isNaN(end)) continue; 
-      
-      if (time >= start && time <= end) return i;
-    }
-    return -1;
-  }
-  
-  // phrase activator (highlighter)
-  function syncVisibleText(useInstantJump = false) {
-    if (!text || !textEn) return;
-    const time = audio.currentTime;
-    const isGreekVisible = (text.style.display !== "none");
-    const activePhrasesList = isGreekVisible ? phrases : phrasesEn;
-  
-    activePhrasesList.forEach((phrase, index) => {
-      const start = parseFloat(phrase.dataset.start);
-      if (isNaN(start)) {
-        phrase.classList.remove("active");
-        return; // Skip calculating or activating items with non-numeric timestamps
-      }
-  
-      // DYNAMIC LOOK-AHEAD: Find the next phrase that actually contains a valid start time
-      let nextStart = Infinity;
-      for (let j = index + 1; j < activePhrasesList.length; j++) {
-        const checkNext = parseFloat(activePhrasesList[j].dataset.start);
-        if (!isNaN(checkNext)) {
-          nextStart = checkNext;
-          break;
-        }
-      }
-  
-      if (time >= start && time < nextStart) {
-        if (currentActive !== phrase) {
-          if (currentActive) currentActive.classList.remove("active");
-          
-          currentActive = phrase;
-          phrase.classList.add("active");
-          
-          // --- CONTROL THE SCROLLING BEHAVIOR HERE ---
-          if (useInstantJump) {
-            // Rule 1: Toggling languages? Snap instantly to the top right now.
-            jumpToTop(phrase);
-          } else if (isGreekVisible) {
-            // Rule 2: Normal Greek reading? Only scroll smoothly if it gets out of sight!
-            if (isOutOfView(phrase)) {
-              scrollToTop(phrase);
+            let actionsHTML = '';
+    
+            if (hasAccess) {
+                actionsHTML = `
+                    <a href="${book.link}" class="btn">Open</a>
+                    <a href="#" class="btn info-btn" aria-label="Information">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </a>
+                `;
+            } else if (isPaid && !isLoggedIn) {
+                actionsHTML = `
+                    <a href="/" class="btn-unlock" onclick="alert('Please login with Patreon to access this book.'); return false;">Unlock</a>
+                    <a href="#" class="btn info-btn" aria-label="Information">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </a>
+                `;
+            } else if (isPaid && isLoggedIn && !currentUser.isPatron) {
+                actionsHTML = `
+                    <a href="https://www.patreon.com/akroomenois" target="_blank" class="btn-unlock">Unlock</a>
+                    <a href="#" class="btn info-btn" aria-label="Information">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </a>
+                `;
             }
-          } else {
-            // Rule 3: Normal English reading?
-            // Only auto-scroll when the phrase is out of view and we're NOT in a chapter transition.
-            if (!isChapterTransitioning) {
-              scrollToTop(phrase);
-            }
-          }
+    
+            let statsList = `
+                <li><strong>Words:</strong> ${book.totalWords || 0}</li>
+                <li><strong>Unique words:</strong> ${book.vocab || 0}</li>
+                <li><strong>Run time:</strong> ${book.runTime || '0 min'}</li>
+                <li><strong>Progress:</strong> ${book.progress || '0%'}</li>
+            `;
+    
+            // The cover with lock overlay - INLINE STYLES ONLY
+            const coverHTML = `
+                <div style="position:relative; display:inline-block; width:150px; height:150px;">
+                    <img class="cover-art" src="${book.cover}" style="width:150px; height:150px; object-fit:cover; display:block; border:1px solid grey;">
+                    ${showLock ? `<img src="images/locked.svg" style="position:absolute; top:1px; left:1px; width:150px; height:150px; opacity:0.5; pointer-events:none;">` : ''}
+                </div>
+            `;
+    
+            return `
+                <div class="book-card-wrapper" data-paid="${isPaid}" data-link="${book.link}">
+                    <div class="book-card ${isPaid && !hasAccess ? 'locked' : ''}">
+                        <div class="card-front">
+                            <div class="scroll-wrapper title-wrapper">
+                                <h2 class="scroll-text">${book.title}</h2>
+                            </div>
+                            ${coverHTML}
+                            <div class="scroll-wrapper">
+                                <p class="author scroll-text">${book.author}</p>
+                            </div>
+                            <div class="scroll-wrapper reader-wrapper">
+                                <p class="reader scroll-text">(read by ${book.reader})</p>
+                            </div>
+                            <div class="card-actions">
+                                ${actionsHTML}
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <h2>Stats</h2>
+                            <ul class="stats-list">${statsList}</ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    
+        attachCardFlipListeners();
+        updateScrollShadows();
+        attachHoverScrollListeners();
+    }
+
+    // =========================================================
+    // CARD FLIP LOGIC
+    // =========================================================
+    function attachCardFlipListeners() {
+      const grid = document.getElementById('library-grid');
+      if (!grid) return;
+      grid.removeEventListener('click', handleCardFlip);
+      grid.addEventListener('click', handleCardFlip);
+    }
+
+    function handleCardFlip(e) {
+      const infoBtn = e.target.closest('.info-btn');
+      const cardBack = e.target.closest('.card-back');
+      if (infoBtn) {
+        e.preventDefault();
+        const card = infoBtn.closest('.book-card');
+        if (card) card.classList.add('is-flipped');
+      } else if (cardBack) {
+        const card = cardBack.closest('.book-card');
+        if (card) card.classList.remove('is-flipped');
+      }
+    }
+
+    // =========================================================
+    // HOVER SCROLL LOGIC
+    // =========================================================
+    function updateScrollShadows() {
+      document.querySelectorAll('.scroll-text').forEach(text => {
+        const container = text.parentElement;
+        text.style.letterSpacing = 'normal';
+        text.style.wordSpacing = 'normal';
+        container.classList.remove('needs-scroll');
+        if (text.scrollWidth > container.clientWidth) {
+          text.style.letterSpacing = '-0.3px';
+          text.style.wordSpacing = '-0.8px';
+          if (text.scrollWidth <= container.clientWidth) return;
+          text.style.letterSpacing = 'normal';
+          text.style.wordSpacing = 'normal';
+          container.classList.add('needs-scroll');
         }
-      } else {
-        phrase.classList.remove("active");
-      }
-    });
-    isChapterTransitioning = false
-  }
-  
-  // ==========================================
-  // GREEK NUMERAL TIME DISPLAY
-  // ==========================================
-  
-  //Greek Numeral Timeline Track
-  function convertToGreekNumerals(num) {
-    if (num === 0) return '&nbsp;Ο';
-    
-    const tens = ['&nbsp;', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ϙ'];
-    const ones = ['&nbsp;', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ϝ', 'Ζ', 'Η', 'Θ'];
-      
-    let result = '';
-    result += tens[Math.floor(num / 10)];
-    result += ones[num % 10];
-      
-    return result;
-  }
-
-  function greekNumeralForTitle(n) {
-    if (n < 1 || n > 99) return n.toString();
-    // reuse convertToGreekNumerals but strip the leading '&nbsp;' for zero
-    let numStr = convertToGreekNumerals(n).replace(/&nbsp;/g, '');
-    return numStr + '\u0374'; // add Greek numeral sign (ʹ)
-  }
-  
-  // Example format helper for your time string (e.g., "08:53" -> "Η : ΝΓ")
-  function formatAudioTime(currentTime, totalDuration, useGreek) {
-    const formatPart = (timeVal) => {
-      const minutes = Math.floor(timeVal / 60);
-      const seconds = Math.floor(timeVal % 60);
-    
-      if (useGreek) {
-        return `${convertToGreekNumerals(minutes)}:${convertToGreekNumerals(seconds)}`;
-      } else {
-        // Standard padStart format: "08 : 53"
-        const displayMin = String(minutes).padStart(2, '0');
-        const displaySec = String(seconds).padStart(2, '0');
-        return `${displayMin}:${displaySec}`;
-      }
-    };
-    return `${formatPart(currentTime)} / ${formatPart(totalDuration)}`;
-  }
-
-  toggleBtn.addEventListener('click', () => {
-    useGreekNumerals = !useGreekNumerals;
-
-    localStorage.setItem("reader_useGreekNumerals", useGreekNumerals);
-    
-    // Update button text indicator
-    statusText.textContent = useGreekNumerals ? 'Standard' : 'Greek';
-    
-    // Force an immediate UI redraw if audio is paused/playing
-    if (audio) {
-      const relativeCurrent = Math.max(0, audio.currentTime - chapterMinTime);
-      const relativeDuration = Math.max(0, chapterMaxTime - chapterMinTime);
-      timeDisplay.innerHTML = formatAudioTime(relativeCurrent, relativeDuration, useGreekNumerals);
-    }
-  });
-  
-  //End of Greek numeral Timeline Track
-  
-  // Universal Highlight & Timeline Track
-  audio.addEventListener("timeupdate", () => {
-
-    // 0.5 (optimizing)
-    if (audio.seeking) {
-      const relativeCurrent = Math.max(0, audio.currentTime - chapterMinTime);
-      progressBar.value = relativeCurrent;
-      return; // <-- CRITICAL: stops here, doesn't run syncVisibleText
-    }
-    
-    // 1. Enforce active chapter playback bounds
-    if (audio.currentTime < chapterMinTime - SEEK_TOLERANCE) {
-      audio.currentTime = chapterMinTime;
-    }
-    if (audio.currentTime > chapterMaxTime + SEEK_TOLERANCE) {
-      audio.pause();
-      audio.currentTime = chapterMaxTime;
-      playBtn.innerHTML = '<img class="btn-icon" src="icon/play-button.svg" alt="Play">';
-    }
-    
-    // 2. Set the relative position of the progress bar
-    const relativeCurrent = Math.max(0, audio.currentTime - chapterMinTime);
-    progressBar.value = relativeCurrent;
-    
-    // Track if the phrase changes during this tick
-    const oldActivePhrase = currentActive;
-
-    syncVisibleText(false); // Run default phrase alignment mechanics
-    
-    const isGreekVisible = (text.style.display !== "none");
-    
-    // Word Highlight Handling (Only applies when reading the Greek text layout)
-    if (isGreekVisible) {
-      const currentWordIndex = getCurrentWordIndex();
-      
-      // Clear out the previous word highlight
-      const previousActiveWord = document.querySelector(".text span.word.active");
-      if (previousActiveWord) {
-        previousActiveWord.classList.remove("active");
-      }
-      
-      // Highlight the active playing word
-      if (currentWordIndex !== -1) {
-        words[currentWordIndex].classList.add("active");
-      }
-    }
-  
-    // Check if a brand new phrase has been activated during this update tick
-    const isNewPhraseStarted = (currentActive !== oldActivePhrase && currentActive !== null);
-  
-    if (isGreekVisible) {
-      if (isNewPhraseStarted) {
-        // A new paragraph/phrase element just started. 
-        // Let syncVisibleText handle its scrolling, DO NOT run word correction on this frame.
-      } else {
-        // Only run word visibility corrections if we are midway through reading an active line
-        // and it breaks or wraps onto a new line downward.
-        checkAndCorrectWordVisibility();
-      }
-    }
-    
-    // Update the clock string dynamically
-    if (timeDisplay) {
-      const relativeDuration = Math.max(0, chapterMaxTime - chapterMinTime);
-      timeDisplay.innerHTML = formatAudioTime(relativeCurrent, relativeDuration, useGreekNumerals);
-    }
-  });
-
-  function handleNoteClick(e) {
-    e.stopPropagation(); 
-    if (isPopupActive()) return;
-  
-    const note = e.currentTarget;
-    wasPlaying = !audio.paused; 
-    audio.pause();
-  
-    let noteContent = note.dataset.note || "No note data available.";
-    
-    // Group 1: Any HTML tag (to protect existing links/attributes)
-    // Group 2: Standalone URLs in plain text (excluding '<' so it stops before tags)
-    const urlRegex = /(<[^>]+>)|(https?:\/\/[^\s<]+|www\.[^\s<]+)/gi;
-    
-    noteContent = noteContent.replace(urlRegex, (match, htmlTag, matchedUrl) => {
-      // If it matched an HTML tag (like <a href="..."> or </a>), leave it completely alone!
-      if (htmlTag) {
-        return htmlTag;
-      }
-  
-      // Process standalone plain-text URLs
-      const punctuationMatch = matchedUrl.match(/[.,;:!"']+$/);
-      let trailingPunctuation = "";
-      let cleanUrl = matchedUrl;
-  
-      if (punctuationMatch) {
-        trailingPunctuation = punctuationMatch[0];
-        cleanUrl = matchedUrl.slice(0, -trailingPunctuation.length);
-      }
-  
-      const hyperLink = cleanUrl.startsWith("http") ? cleanUrl : `https://${cleanUrl}`;
-      const breakableUrlText = cleanUrl.replace(/\//g, "/&shy;");
-  
-      return `<a href="${hyperLink}" target="_blank" style="color: #007bff; text-decoration: underline; word-break: break-word;">${breakableUrlText}</a>${trailingPunctuation}`;
-    });
-  
-    popupContent.innerHTML = `
-      <div style="font-family: inherit; text-align: justify; font-size: 0.9em; padding: 10px; line-height: 1.5;">
-        <h3 style="margin-top: 0; color: #a52a2a;">Note</h3>
-        <p>${noteContent}</p>
-      </div>
-    `;
-  
-    popup.style.display = "block";
-    document.body.style.overflow = 'hidden';
-    popupOverlay.style.display = "block";
-  }
-
-  function setupDictionaryAudioButton() {
-    const speakBtn = document.getElementById("dictSpeakBtn");
-    if (!speakBtn) return;
-
-    speakBtn.addEventListener("click", () => {
-      if (dictAudioInstance) {
-        dictAudioInstance.pause();
-        dictAudioInstance = null;
-      }
-
-      const start = parseFloat(speakBtn.dataset.start);
-      let end = parseFloat(speakBtn.dataset.end);
-
-      if (isNaN(start) || isNaN(end) || start === 0) return;
-
-      const mainAudioSource = audio.querySelector("source");
-      const audioUrl = mainAudioSource ? mainAudioSource.src : audio.src;
-
-      if (!audioUrl) return;
-
-      dictAudioInstance = new Audio(audioUrl);
-      
-      if (speedControl) {
-        dictAudioInstance.playbackRate = parseFloat(speedControl.value);
-      }
-
-      dictAudioInstance.currentTime = start;
-      dictAudioInstance.play();
-
-      // High-Precision Engine Loop (Checks timestamps up to 120 times a second)
-      function checkPrecisionTimeline() {
-        if (!dictAudioInstance) return; // Stop loop if cleaned up
-
-        if (dictAudioInstance.currentTime >= end) {
-          dictAudioInstance.pause();
-          dictAudioInstance = null;
-        } else {
-          // Keep looping dynamically while the audio tracks forward
-          requestAnimationFrame(checkPrecisionTimeline);
-        }
-      }
-
-      // Kick off our precision monitor immediately upon playback initiation
-      dictAudioInstance.addEventListener("play", () => {
-        requestAnimationFrame(checkPrecisionTimeline);
       });
-    });
-  }
+    }
 
-  // ==========================================
-  // TITLE HELPERS
-  // ==========================================
-  
-  function stripHTML(str) {
-    return str.replace(/<[^>]*>/g, '');
-  }
-  
-  // Helper function to get the current language mode (Greek = true, English = false)
-  function isGreekDisplayed() {
-    return text && text.style.display !== "none";
-  }
-  
-  function getActiveChapter() {
-    return document.querySelector(".chapter-body.active");
-  }
-  
-  function updateTitle() {
-    const activeChapter = getActiveChapter();
+    // =========================================================
+    // DETECT HOVER STATE AND SCROLL
+    // =========================================================
     
-    const playerBar = document.getElementById("playerBar");
-    const timeDisplayAndProgressBar = document.getElementById("timeDisplayAndProgressBar");
-    if (!activeChapter) return;
-  
-    const section = activeChapter.dataset.section;
-    if (!section) {
-      const ch = activeChapter.dataset.chapter;
-      const titleEl = document.getElementById('title');
-      if (titleEl) titleEl.textContent = `Chapter ${ch}`;
-      document.title = `Chapter ${ch}`;
-      if (langBtn) langBtn.style.visibility = 'visible';
-      if (playerBar) playerBar.style.display = '';
-      if (prevBtn) prevBtn.style.visibility = 'visible';
-      if (nextBtn) nextBtn.style.visibility = 'visible';
-      if (playBtn) playBtn.style.visibility = 'visible';
-      if (progressBar) progressBar.style.visibility = 'visible';
-      if (timeDisplay) timeDisplay.style.visibility = 'visible';
-      return;
-    }
-    if (section === "0" || section === 0) {
-      const titleEl = document.getElementById('title');
-      if (titleEl) {
-        titleEl.textContent = 'Preface';
-      }
-      document.title = 'Preface';
-
-      if (hasEnglishContent()) {
-        if (langBtn) langBtn.style.visibility = 'visible';
-        if (playerBar) playerBar.style.display = '';
-        if (prevBtn) prevBtn.style.visibility = 'hidden';
-        if (nextBtn) nextBtn.style.visibility = 'hidden';
-        if (playBtn) playBtn.style.visibility = 'hidden';
-        if (progressBar) progressBar.style.visibility = 'hidden';
-        if (timeDisplay) timeDisplay.style.visibility = 'hidden';
-      } else {
-        if (langBtn) langBtn.style.visibility = 'hidden';
-        if (playerBar) playerBar.style.display = '';
-        if (prevBtn) prevBtn.style.visibility = 'hidden';
-        if (nextBtn) nextBtn.style.visibility = 'hidden';
-        if (playBtn) playBtn.style.visibility = 'hidden';
-        if (progressBar) progressBar.style.visibility = 'hidden';
-        if (timeDisplay) timeDisplay.style.visibility = 'hidden';
-      }
-      return;
-    }
-    if (langBtn) langBtn.style.visibility = 'visible';
-    if (playerBar) playerBar.style.display = '';
-    if (prevBtn) prevBtn.style.visibility = 'visible';
-    if (nextBtn) nextBtn.style.visibility = 'visible';
-    if (playBtn) playBtn.style.visibility = 'visible';
-    if (progressBar) progressBar.style.visibility = 'visible';
-    if (timeDisplay) timeDisplay.style.visibility = 'visible';
-  
-    const parts = section.split('.');
-    const book = parseInt(parts[0], 10);
-    const chapter = parseInt(parts[1], 10);
-    const isGreek = isGreekDisplayed();
-    const language = isGreek ? 'greek' : 'english';
-  
-    // 1. Try to fetch the configuration for the active language.
-    let templates = window.BOOK_TITLE?.[language];
-    let activeTemplateLang = templates ? language : null;
-  
-    // 2. Fallbacks if the target language is missing
-    if (!templates) {
-      if (window.BOOK_TITLE?.english) {
-        templates = window.BOOK_TITLE.english;
-        activeTemplateLang = 'english';
-      } else if (window.BOOK_TITLE?.greek) {
-        templates = window.BOOK_TITLE.greek;
-        activeTemplateLang = 'greek';
-      } else if (window.BOOK_TITLE && window.BOOK_TITLE.medium) {
-        templates = window.BOOK_TITLE; // Fallback for flat structure without language keys
-        activeTemplateLang = 'english'; // Default to Arabic numerals
-      }
-    }
-  
-    if (!templates) return;
-  
-    // 3. Only use Greek numerals if we actually loaded a Greek template.
-    const useGreekNumerals = (activeTemplateLang === 'greek');
-  
-    const bookStr = useGreekNumerals ? greekNumeralForTitle(book) : book.toString();
-    const chapStr = useGreekNumerals ? greekNumeralForTitle(chapter) : chapter.toString();
-  
-    // Build all three title variants
-    const smallTitle = templates.small.replace(/\{book\}/g, bookStr).replace(/\{chapter\}/g, chapStr);
-    const mediumTitle = templates.medium.replace(/\{book\}/g, bookStr).replace(/\{chapter\}/g, chapStr);
-    const largeTitle = templates.large.replace(/\{book\}/g, bookStr).replace(/\{chapter\}/g, chapStr);
-  
-    const titleEl = document.getElementById('title');
-    if (titleEl) {
-      titleEl.innerHTML = `
-        <span class="title-small">${smallTitle}</span>
-        <span class="title-medium">${mediumTitle}</span>
-        <span class="title-large">${largeTitle}</span>
-      `;
-    }
-  
-    // Set browser tab title (use medium version, stripped of HTML)
-    document.title = stripHTML(mediumTitle);
-  }
-  
-  //==========================================
-  // RESILIENT PROGRESS AND METADATA RESTORATION
-  // ==========================================
-
-  // 1. Force the progress bar to update its maximum capacity as soon as the real duration is resolved
-  audio.addEventListener("timeupdate", () => {
-    const relDuration = chapterMaxTime - chapterMinTime;
-    if (isFinite(relDuration) && progressBar.max !== relDuration.toString()) {
-      progressBar.max = relDuration;
-    }
-  });
-
-  // 2. Safely capture data availability to restore historical relative playback offsets
-  audio.addEventListener('canplay', function onCanPlay() {
-      console.log('[canplay] fired, currentTime before set:', audio.currentTime);
-      let targetTime = chapterMinTime;
-      if (window._savedStartTime !== undefined) {
-          targetTime = window._savedStartTime;
-          window._savedStartTime = undefined;
-      }
-      console.log('[canplay] setting currentTime to:', targetTime);
-      audio.currentTime = targetTime;
-      progressBar.value = targetTime - chapterMinTime;
-      audio.removeEventListener('canplay', onCanPlay);
-  }, { once: true });
-
-  async function handleWordClick(e) {
-    e.stopPropagation();
-    if (typeof isPopupActive === "function" && isPopupActive()) return;
-
-    const word = e.currentTarget;
-    const phrase = word.closest("span.phrase");
-    const isSilentPhrase = phrase && phrase.dataset.start && phrase.dataset.start.toLowerCase().trim() === "n/a";
-    
-    if (phrase && (phrase.classList.contains("active") || isSilentPhrase)) {
-      if (typeof audio !== 'undefined') {
-        wasPlaying = !audio.paused; 
-        audio.pause();
-      }
-
-      let dictionaryLookupTerm = word.textContent.trim();
-      
-      // ... KEEP ALL YOUR SANITIZATION REPLACEMENTS (.replace(/.../) etc.) ...
-      
-      dictionaryLookupTerm = dictionaryLookupTerm
-        .replace(/\u00AD/g, "")
-        .replace(/ι\u0300/g, "ὶ")
-        .replace(/ι\u0301/g, "ί")
-          
-        .replace(/ϲ/g, "σ")
-        .replace(/Ϲ/g, "Σ")
-        .replace(/ϖ/g, "π")
-        .replace(/ϰ/g, "κ")
-        .replace(/ϛ/g, "στ")
-        .replace(/Ϛ/g, "Στ")
-        .replace(/ϐ/g, "β")
-        .replace(/ϗ/g, "και")
-        .replace(/ϗ\u0301/g, "κα\u03af")
-        .replace(/ϗ\u0300/g, "κα\u1f76")
-        .replace(/Ϗ/g, "Και")
-        .replace(/Ϗ\u0301/g, "Κα\u03af")
-        .replace(/Ϗ\u0300/g, "Κα\u1f76")
-        .replace(/ȣ\u0314\u0342/g, "οὗ")
-        .replace(/ȣ\u0313\u0342/g, "οὖ")
-        .replace(/ȣ\u0314\u0300/g, "οὓ")
-        .replace(/ȣ\u0313\u0300/g, "οὒ")
-        .replace(/ȣ\u0314\u0301/g, "οὕ")
-        .replace(/ȣ\u0313\u0301/g, "οὔ")
-        .replace(/ȣ\u0342/g, "οῦ")
-        .replace(/ȣ\u0300/g, "οὺ")
-        .replace(/ȣ\u0301/g, "ού")
-        .replace(/ȣ\u0314/g, "οὑ")
-        .replace(/ȣ\u0313/g, "οὐ")
-        .replace(/Ȣ\u0314\u0342/g, "Οὗ")
-        .replace(/Ȣ\u0313\u0342/g, "Οὖ")
-        .replace(/Ȣ\u0314\u0300/g, "Οὓ")
-        .replace(/Ȣ\u0313\u0300/g, "Οὒ")
-        .replace(/Ȣ\u0314\u0301/g, "Οὕ")
-        .replace(/Ȣ\u0313\u0301/g, "Οὔ")
-        .replace(/Ȣ\u0342/g, "Οῦ")
-        .replace(/Ȣ\u0300/g, "Οὺ")
-        .replace(/Ȣ\u0301/g, "Ού")
-        .replace(/Ȣ\u0314/g, "Οὑ")
-        .replace(/Ȣ\u0313/g, "Οὐ")
-        .replace(/ȣ/g, "ου")
-        .replace(/Ȣ/g, "Ου")
-        .replace(/ϵ\u0314\u0300/g, "ἓ")
-        .replace(/ϵ\u0313\u0300/g, "ἒ")
-        .replace(/ϵ\u0314\u0301/g, "ἕ")
-        .replace(/ϵ\u0313\u0301/g, "ἔ")
-        .replace(/ϵ\u0300/g, "ὲ")
-        .replace(/ϵ\u0301/g, "έ")
-        .replace(/ϵ\u0314/g, "ἑ")
-        .replace(/ϵ\u0313/g, "ἐ")
-        .replace(/ϵ/g, "ε")
-        .replace(/ϑ/g, "θ")
-        .replace(/ϕ/g, "φ")
-        .replace(/ϱ\u0314/g, "ῥ")
-        .replace(/ϱ\u0313/g, "ῤ")
-        .replace(/ϱ/g, "ρ");
-
-      if (dictionaryLookupTerm.endsWith("σ")) {
-        dictionaryLookupTerm = dictionaryLookupTerm.slice(0, -1) + "ς";
-      }
-
-      const cleanLookupKey = dictionaryLookupTerm.replace(/[.,·;:’'’\"\(\)]/g, "").normalize("NFC");
-
-      popupContent.innerHTML = `<div style="padding:10px;">Loading data definitions...</div>`;
-      popup.style.display = "block";
-      document.body.style.overflow = 'hidden';
-      popupOverlay.style.display = "block";
-
-      const jsonPath = window.APP_CONFIG?.dictionaryJsonPath || "data/default_greek_lexicon.json";
-
-      if (window.DictionaryEngine) {
-        await window.DictionaryEngine.renderEntry(cleanLookupKey, word, jsonPath);
-      }
-
-    } else if (phrase && typeof audio !== 'undefined') {
-      let targetStart = parseFloat(phrase.dataset.start);
-      if (!isNaN(targetStart)) {
-        // Enforce boundaries
-        audio.currentTime = Math.max(chapterMinTime, Math.min(chapterMaxTime, targetStart + SEEK_EPSILON));
-      }
-    }
-  }
-  
-  // Dictionary Popup Close Actions
-  const closePopup = () => {
-    if (dictAudioInstance) {
-      dictAudioInstance.pause();
-      dictAudioInstance = null;
-    }
-    popup.style.display = "none";
-    document.body.style.overflow = '';
-    popupOverlay.style.display = "none";
-    if (wasPlaying) { audio.play(); wasPlaying = false; }
-  };
-  if (document.getElementById("closePopup")) document.getElementById("closePopup").addEventListener("click", closePopup);
-
-  // Controls UI Action
-  playBtn.addEventListener("click", () => {
-    if (isPopupActive()) return; 
-    if (audio.paused) {
-      if (audio.currentTime >= chapterMaxTime || audio.currentTime < chapterMinTime) {
-        audio.currentTime = chapterMinTime;
-      }
-      audio.play();
-      playBtn.innerHTML = '<img class="btn-icon" src="icon/play-pause.svg" alt="Pause">';
-    } else {
-      audio.pause();
-      playBtn.innerHTML = '<img class="btn-icon" src="icon/play-button.svg" alt="Play">';
-    }
-  });
-
-  progressBar.addEventListener("input", () => {
-    if (isPopupActive()) { 
-      progressBar.value = audio.currentTime - chapterMinTime; 
-      return; 
-    }
-    // Update audio absolute currentTime from the progress bar's relative position
-    audio.currentTime = parseFloat(progressBar.value) + chapterMinTime;
-  });
-
-  // Forward Button Click Handler
-  nextBtn.addEventListener("click", () => {
-    if (isPopupActive()) return;
-
-    let index = getCurrentPhraseIndex();
-
-    // If the playhead is before the first phrase, jump to the first valid phrase
-    if (index === -1) {
-      const firstIdx = findFirstValidPhraseIndex();
-      if (firstIdx !== -1) {
-        audio.currentTime = parseFloat(phrases[firstIdx].dataset.start) + SEEK_EPSILON;
-      }
-      return;
-    }
-
-    if (index !== -1) {
-      let nextIndex = index + 1;
-      while (nextIndex < phrases.length) {
-        const startAttr = phrases[nextIndex].dataset.start;
-        if (startAttr && startAttr.toLowerCase().trim() !== "n/a") {
-          audio.currentTime = parseFloat(startAttr) + SEEK_EPSILON;
-          break;
-        }
-        nextIndex++;
-      }
-    }
-  });
-  
-  // Backward Button Click Handler
-  prevBtn.addEventListener("click", () => {
-    if (isPopupActive()) return; 
-    let index = getCurrentPhraseIndex();
-    
-    if (index > 0) {
-      let prevIndex = index - 1;
-      while (prevIndex >= 0) {
-        const startAttr = phrases[prevIndex].dataset.start;
-        if (startAttr && startAttr.toLowerCase().trim() !== "n/a") {
-          audio.currentTime = parseFloat(startAttr) + SEEK_EPSILON;
-          break;
-        }
-        prevIndex--;
-      }
-    }
-  });
-
-  // Helper function to sync the lang button text with actual display state
-  function syncLangButtonWithDisplay() {
-    if (isGreekDisplayed()) {
-      langBtn.textContent = "EN"; // Currently showing Greek, button says switch to English
-    } else {
-      langBtn.textContent = "GR"; // Currently showing English, button says switch to Greek
-    }
-  }
-  
-  langBtn.addEventListener("click", () => {
-    // 1. Completely clear out old highlights across both languages
-    if (currentActive) currentActive.classList.remove("active");
-    phrases.forEach(p => p.classList.remove("active"));
-    phrasesEn.forEach(p => p.classList.remove("active"));
-    currentActive = null; 
-
-    // 2. Toggle the visibility layouts
-    if (isGreekDisplayed()) {
-      langBtn.textContent = "GR";
-      text.style.display = "none";
-      textEn.style.display = "block";
-      localStorage.setItem("reader_languageMode", "english");
-      updateTitle();
-    } else {
-      langBtn.textContent = "EN";
-      text.style.display = "block";
-      textEn.style.display = "none";
-      localStorage.setItem("reader_languageMode", "greek");
-      updateTitle();
-    }
-
-    // 3. Force an instantaneous view alignment and re-highlight, even if paused!
-    syncVisibleText(true); 
-    
-    // 4. EXCEPTION: When RETURNING to Greek, find the first phrase of the current section
-    if (langBtn.textContent === "EN" && currentActive) {
-      const currentSecNum = currentActive.dataset.section;
-      
-      if (currentSecNum) {
-        // Find the absolute first Greek phrase assigned to this data-section
-        const firstPhraseOfSection = Array.from(phrases).find(p => p.dataset.section === currentSecNum);
+    function attachHoverScrollListeners() {
+        const cards = document.querySelectorAll('.book-card');
         
-        if (firstPhraseOfSection) {
-          jumpToTop(firstPhraseOfSection); // Snap the paragraph beginning to the top line!
-        } else {
-          jumpToTop(currentActive); // Fallback safety snap
-        }
-      } else {
-        jumpToTop(currentActive); // Fallback if no section data exists (like the title)
-      }
-    }
-  });
-  
-  // Keyboard Navigation Bindings
-  document.addEventListener("keydown", (e) => {
-    if (isPopupActive()) return;
-    if (["Space", "ArrowLeft", "ArrowRight"].includes(e.code)) e.preventDefault();
-    if (e.code === "Space") {
-      if (audio.paused) {
-        if (audio.currentTime >= chapterMaxTime || audio.currentTime < chapterMinTime) {
-          audio.currentTime = chapterMinTime;
-        }
-        audio.play();
-        playBtn.innerHTML = '<img class="btn-icon" src="icon/play-pause.svg" alt="Pause">';
-      } else {
-        audio.pause();
-        playBtn.innerHTML = '<img class="btn-icon" src="icon/play-button.svg" alt="Play">';
-      }
-    }
-    if (e.code === "ArrowRight") {
-      let index = getCurrentPhraseIndex();
-
-      if (index === -1) {
-        const firstIdx = findFirstValidPhraseIndex();
-        if (firstIdx !== -1) {
-          audio.currentTime = parseFloat(phrases[firstIdx].dataset.start) + SEEK_EPSILON;
-        }
-        return;
-      }
-
-      if (index !== -1) {
-        let nextIndex = index + 1;
-        while (nextIndex < phrases.length) {
-          const startAttr = phrases[nextIndex].dataset.start;
-          if (startAttr && startAttr.toLowerCase().trim() !== "n/a") {
-            audio.currentTime = parseFloat(startAttr) + SEEK_EPSILON;
-            break;
-          }
-          nextIndex++;
-        }
-      }
-    }
-    
-    if (e.code === "ArrowLeft") {
-      let index = getCurrentPhraseIndex();
-      
-      if (index > 0) {
-        let prevIndex = index - 1;
-        while (prevIndex >= 0) {
-          const startAttr = phrases[prevIndex].dataset.start;
-          if (startAttr && startAttr.toLowerCase().trim() !== "n/a") {
-            audio.currentTime = parseFloat(startAttr) + SEEK_EPSILON;
-            break;
-          }
-          prevIndex--;
-        }
-      }
-    }
-  });
-
-  // Save current listening position on pause or track scrubbing
-  audio.addEventListener("pause", () => {
-    localStorage.setItem("reader_currentTime", audio.currentTime);
-  });
-
-  progressBar.addEventListener("change", () => {
-    localStorage.setItem("reader_currentTime", audio.currentTime);
-  });
-
-  // Backup: Save time if they close the tab or navigate away while playing
-  window.addEventListener("beforeunload", () => {
-    localStorage.setItem("reader_currentTime", audio.currentTime);
-  });
-
-  //helper function to detect if the current chapter has an english translation or not
-  function hasEnglishContent() {
-      const activeChapter = getActiveChapter();
-      if (!activeChapter) return false;
-      const enContainer = activeChapter.querySelector('.text_en');
-      if (!enContainer) return false;
-      const spans = enContainer.querySelectorAll('.phrase_en');
-      for (const span of spans) {
-          if (span.textContent.trim().length > 0) {
-              return true;
-          }
-      }
-      return false;
-  }
-
-  //helper function change the visibility of the language btn
-  function updateLanguageToggleVisibility() {
-    const btn = document.getElementById('langBtn');
-    if (!btn) return;
-    if (!hasEnglishContent()) {
-      btn.style.display = 'none';
-      localStorage.setItem("reader_languageMode", "greek");
-    } else {
-      btn.style.display = '';
-    }
-  }
-  
-  // ==========================================
-  // AUTOMATIC & MANUAL LAYOUT SYNC ENGINE
-  // ==========================================
-  
-  // Helper function to detect the active CSS breakpoint layout
-  function detectCurrentSystemLayout() {
-    const width = window.innerWidth;
-    if (width <= 768) {
-      return "small"; // Mobile
-    } else if (width > 768 && width <= 1023) {
-      return "medium"; // Tablet
-    } else {
-      return "large"; // Desktop
-    }
-  }
-
-  // Synchronize the dropdown to match the real display state
-  function syncLayoutUI() {
-    if (!layoutModeControl) return;
-
-    const savedLayout = localStorage.getItem("reader_layoutMode");
-    
-    if (savedLayout && savedLayout !== "auto") {
-      // 1. Restore historical manual override if one exists
-      layoutModeControl.value = savedLayout;
-      document.body.classList.remove("layout-small", "layout-medium", "layout-large");
-      document.body.classList.add(`layout-${savedLayout}`);
-    } else {
-      // 2. Otherwise, match exactly what the responsive CSS engine is outputting
-      layoutModeControl.value = detectCurrentSystemLayout();
-    }
-  }
-
-  // Handle manual selection changes by the user
-  if (layoutModeControl) {
-    layoutModeControl.addEventListener("change", () => {
-      const selectedLayout = layoutModeControl.value;
-      
-      // Clear out previous active manual layouts
-      document.body.classList.remove("layout-small", "layout-medium", "layout-large");
-      
-      // Force the manual debug configuration overrides
-      document.body.classList.add(`layout-${selectedLayout}`);
-      
-      // Save choice permanently to local storage
-      localStorage.setItem("reader_layoutMode", selectedLayout);
-
-      updateTitle();
-    });
-  }
-
-  // Run synchronization right away when the page opens
-  syncLayoutUI();
-
-  // Keep dropdown accurate if user resizes window (only updates if no manual block is hard-forced)
-  window.addEventListener("resize", () => {
-    const savedLayout = localStorage.getItem("reader_layoutMode");
-    if (!savedLayout) {
-      if (layoutModeControl) {
-        layoutModeControl.value = detectCurrentSystemLayout();
-      }
-    }
-  });
-  
-  // ==========================================
-  // COPY ACTIVE CHAPTER HTML TO CLIPBOARD
-  // ==========================================
-  if (htmlBtn) {
-    htmlBtn.addEventListener("click", () => {
-      // Find the currently active chapter body
-      const activeChapter = document.querySelector(".chapter-body.active");
-      
-      if (activeChapter) {
-        // Get its full outer HTML structure
-        const activeHtml = activeChapter.outerHTML;
-        
-        // Write it to the system clipboard
-        navigator.clipboard.writeText(activeHtml)
-          .then(() => {
-            // Provide a quick visual feedback on the button
-            const originalText = htmlBtn.textContent;
-            htmlBtn.textContent = "Copied!";
-            htmlBtn.style.backgroundColor = "#4caf50"; // Optional green flash
+        cards.forEach(card => {
+            let scrollTimeouts = [];
+            let isScrolling = false;
             
-            setTimeout(() => {
-              htmlBtn.textContent = originalText;
-              htmlBtn.style.backgroundColor = "";
-            }, 1500);
-          })
-          .catch(err => {
-            console.error("Failed to copy HTML: ", err);
-            alert("Could not copy HTML. Please verify clipboard permissions.");
-          });
-      } else {
-        alert("No active chapter found to copy.");
-      }
-    });
-  }
-
-  if (document.getElementById('copyFullHtml')) {
-    document.getElementById('copyFullHtml').addEventListener('click', () => {
-      const fullHtml = document.documentElement.outerHTML;
-      navigator.clipboard.writeText(fullHtml)
-        .then(() => {
-          const btn = document.getElementById('copyFullHtml');
-          const original = btn.textContent;
-          btn.textContent = "Copied!";
-          btn.style.backgroundColor = "#4caf50";
-          setTimeout(() => {
-            btn.textContent = original;
-            btn.style.backgroundColor = "";
-          }, 1500);
-        })
-        .catch(err => {
-          console.error("Failed to copy full HTML:", err);
-          alert("Could not copy full HTML.");
+            // The actual scroll functions (same as before)
+            function startScroll() {
+                if (isScrolling) return;
+                isScrolling = true;
+                const scrollTexts = card.querySelectorAll('.scroll-text');
+                scrollTexts.forEach(text => {
+                    const container = text.parentElement;
+                    if (container.classList.contains('needs-scroll')) {
+                        const scrollDistance = text.scrollWidth - container.clientWidth;
+                        const duration = scrollDistance / 30;
+                        text.style.transition = `transform ${duration}s linear 0.2s`;
+                        text.style.transform = `translateX(-${scrollDistance}px)`;
+                        const fadeLeadTime = 1.1;
+                        const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
+                        const timeout = setTimeout(() => container.classList.add('is-scrolled'), timeUntilFade);
+                        scrollTimeouts.push(timeout);
+                    }
+                });
+            }
+            
+            function stopScroll() {
+                isScrolling = false;
+                scrollTimeouts.forEach(clearTimeout);
+                scrollTimeouts = [];
+                const scrollTexts = card.querySelectorAll('.scroll-text');
+                scrollTexts.forEach(text => {
+                    const container = text.parentElement;
+                    container.classList.remove('is-scrolled');
+                    text.style.transition = 'transform 0.3s ease-out';
+                    text.style.transform = 'translateX(0)';
+                });
+            }
+            
+            // Use a single function to check hover and act
+            function checkHover() {
+                // Check if this card is hovered
+                if (card.matches(':hover')) {
+                    if (!isScrolling) startScroll();
+                } else {
+                    if (isScrolling) stopScroll();
+                }
+            }
+            
+            // Run check on every animation frame (smooth, efficient)
+            function loop() {
+                checkHover();
+                requestAnimationFrame(loop);
+            }
+            loop();
         });
-    });
-  }
-  
-  // ==========================================
-  // EVERY GLYPH VARIANT SELECTION CONTROL
-  // ==========================================
-  
-  initAdvancedFontSettings();
-  
-  // ==========================================
-  // SLIDERS & CONTROLS OPERATIONAL EVENT LISTENERS
-  // ==========================================
-
-  speedControl.addEventListener("input", () => {
-    const speed = parseFloat(speedControl.value);
-    audio.playbackRate = speed;
-    speedValue.textContent = speed.toFixed(1) + "x";
-    localStorage.setItem("reader_playerSpeed", speed); // Save preference
-  });
-
-  fontControl.addEventListener("input", () => {
-    const size = fontControl.value + "px";
-    
-    if (text) text.style.fontSize = size;
-    if (textEn) textEn.style.fontSize = size;
-    
-    fontValue.textContent = size;
-    localStorage.setItem("reader_fontSize", fontControl.value);
-  
-    const activePhrase = document.querySelector(".phrase_en.active");
-    if (activePhrase) {
-      const linesCount = getLineCount(activePhrase);
-      console.log(`The active paragraph is taking up exactly ${linesCount} lines right now.`);
     }
-  });
 
-  // Font Family Operational Event Listener
-  if (fontFamilyControl) {
-    const savedFontFamily = localStorage.getItem("reader_fontFamily") || "SBL";
-    fontFamilyControl.value = savedFontFamily;
-    
-    fontFamilyControl.addEventListener("change", () => {
-      if (text) {
-        text.style.fontFamily = fontFamilyControl.value;
-        localStorage.setItem("reader_fontFamily", fontFamilyControl.value); // Save preference
-      }
-      if (textEn) {
-        textEn.style.fontFamily = fontFamilyControl.value;
-        localStorage.setItem("reader_fontFamily", fontFamilyControl.value); // Save preference
-      }
-    });
-  }
-  
-  volumeControl.addEventListener("input", () => {
-    audio.volume = volumeControl.value;
-    volumeValue.textContent = Math.round(volumeControl.value * 100) + "%";
-    localStorage.setItem("reader_volume", volumeControl.value); // Save preference
-  });
-
-  // Handle toggling the action menu visibility
-  if (moreBtn && extraActionsGroup) {
-    moreBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const isHidden = extraActionsGroup.style.display === "none" || extraActionsGroup.style.display === "";
-      const titleContainer = document.querySelector('.title');
-      
-      if (isHidden) {
-        extraActionsGroup.style.display = "flex";
-        titleContainer.classList.add('hiddenIfOnMobile');
-      } else {
-        extraActionsGroup.style.display = "none";
-        titleContainer.classList.remove('hiddenIfOnMobile');
-      }
-    });
-  }
-
-  if (contentsBtn) {
-    contentsBtn.addEventListener("click", () => {
-      // 1. Pause audio and remember state
-      wasPlaying = !audio.paused;
-      audio.pause();
-
-      // Build the list of chapters
-      const chapters = getAllChapters();
-      if (chapters.length === 0) return;
-
-      // Check how many unique books exist, completely ignoring the Preface ("0")
-      const uniqueBooks = new Set();
-      chapters.forEach(ch => {
-        const sec = ch.dataset.section;
-        if (sec) {
-          const bookNum = sec.split('.')[0]; 
-          
-          if (bookNum !== "0") {
-            uniqueBooks.add(bookNum);
-          }
-        }
-      });
-      const isSingleBook = uniqueBooks.size <= 1;
-      
-      let html = `<h3 style="margin-top:0; margin-bottom: 5px;">Table of Contents</h3>
-                  <div style="font-size: 0.9em; color: #555; margin-bottom: 15px; font-weight: 500;">
-                    <!--GRAND_TOTALS-->
-                  </div>
-                  <ul style="list-style:none; padding:0; margin:0;">`;
-                  
-      let grandTotalWords = 0;
-      let grandTotalDuration = 0;
-      
-      chapters.forEach((chapter, index) => {
-        const section = chapter.dataset.section;
-        const isPreface = (section === "0" || section === 0);
-        let label = "";
-        
-        // Check for Preface
-        if (isPreface) {
-          label = "Preface";
-        } 
-        // Check for standard sections
-        else if (section) {
-          const parts = section.split('.');
-          const bookName = window.APP_CONFIG?.customBookName || "Book";
-          const chapName = window.APP_CONFIG?.customChapterName || "Chapter";
-          
-          if (isSingleBook) {
-            label = `${chapName} ${parts[1]}`;
-          } else {
-            label = `${bookName} ${parts[0]}, ${chapName} ${parts[1]}`;
-          }
-        } 
-        // Fallback
-        else {
-          const chapName = window.APP_CONFIG?.customChapterName || "Chapter";
-          label = `${chapName} ${chapter.dataset.chapter}`;
-        }
-        
-        // --- Calculate and Cache Meta Information (Skipped for Chapter 0) ---
-        let metaHtml = "";
-
-        if (!isPreface) {
-          if (!chapter.dataset.wordCount) {
-            const chapterWords = chapter.querySelectorAll("span.word");
-            chapter.dataset.wordCount = chapterWords.length;
-            
-            const validWords = Array.from(chapterWords).filter(w => {
-              const s = parseFloat(w.dataset.wordStart);
-              const e = parseFloat(w.dataset.wordEnd);
-              return !isNaN(s) && !isNaN(e);
-            });
-
-            if (validWords.length > 0) {
-              const minTime = parseFloat(validWords[0].dataset.wordStart);
-              const maxTime = parseFloat(validWords[validWords.length - 1].dataset.wordEnd);
-              chapter.dataset.duration = (maxTime - minTime).toString();
-            } else {
-              chapter.dataset.duration = "0";
-            }
-          }
-
-          const wordCount = chapter.dataset.wordCount;
-          const duration = parseFloat(chapter.dataset.duration);
-
-          grandTotalWords += parseInt(wordCount || 0, 10);
-          grandTotalDuration += duration || 0;
-
-          let timeString = "";
-          
-          if (duration > 0) {
-            const minutes = Math.floor(duration / 60);
-            const seconds = Math.floor(duration % 60);
-            timeString = ` · ${minutes}m ${seconds}s`;
-          }
-
-          const metaString = `${wordCount} words${timeString}`;
-          metaHtml = `<div style="font-size: 0.9em; color: #555; margin-top: 3px;">${metaString}</div>`;
-        }
-        // ---------------------------------------------------------------------
-
-        // --- NEW: Generate Circle Read Button HTML ---
-        let readCircleBtnHtml = "";
-        if (!isPreface) {
-          const chapterId = chapter.dataset.section || chapter.dataset.chapter;
-          const isRead = localStorage.getItem(`read_chapter_${chapterId}`) === "true" || chapter.classList.contains("read");
-          
-          // Apply 'active' class and inline styling based on read state
-          const readActiveClass = isRead ? "active" : "";
-          const readActiveColor = isRead ? "#8fdfaa" : "transparent"; 
-          const readActiveBorder = isRead ? "#8fdfaa" : "#aaa";
-          
-          readCircleBtnHtml = `<button class="toc-read-btn ${readActiveClass}" data-chapter-id="${chapterId}" data-index="${index}" title="Toggle read status" style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid ${readActiveBorder}; background-color: ${readActiveColor}; cursor: pointer; flex-shrink: 0; margin-left: 10px; padding: 0; transition: background-color 0.2s ease, border-color 0.2s ease;"></button>`;
-        }
-
-        // Updated <li> wrapper to use Flexbox to align text left and button right
-        html += `<li style="padding:8px 0; border-bottom:1px solid #eee; cursor:pointer; display: flex; justify-content: space-between; align-items: center;" data-index="${index}">
-          <div style="flex-grow: 1; padding-right: 10px;">
-            <div>${label}</div>
-            ${metaHtml}
-          </div>
-          ${readCircleBtnHtml}
-        </li>`;
-      });
-      html += `</ul>`;
-
-      const totalMinutes = Math.floor(grandTotalDuration / 60);
-      const totalSeconds = Math.floor(grandTotalDuration % 60);
-      
-      console.log(`Total Book Words: ${grandTotalWords} | Total Run Time: ${totalMinutes}m ${totalSeconds}s`);
-      
-      const totalsString = `Total: ${grandTotalWords} words&nbsp;·&nbsp;${totalMinutes}m ${totalSeconds}s`;
-      html = html.replace('<!--GRAND_TOTALS-->', totalsString);
-      
-      popupContent.innerHTML = html;
-      popup.style.display = "block";
-      document.body.style.overflow = 'hidden';
-      popupOverlay.style.display = "block";
-  
-      // Add click listeners to each list item
-      const items = popupContent.querySelectorAll('li');
-      items.forEach((item) => {
-        item.addEventListener('click', (e) => {
-          
-          // --- NEW: Handle clicks explicitly on the circular read button ---
-          const tocBtn = e.target.closest('.toc-read-btn');
-          if (tocBtn) {
-            e.stopPropagation(); // Prevent the chapter navigation from firing
-            
-            const index = parseInt(tocBtn.dataset.index, 10);
-            const targetChapter = chapters[index];
-            const chapterId = tocBtn.dataset.chapterId;
-            
-            if (targetChapter) {
-              // Toggle the actual 'read' class on the target chapter in the DOM
-              targetChapter.classList.toggle("read");
-              const isNowRead = targetChapter.classList.contains("read");
-              
-              // Update Local Storage and button visuals
-              if (isNowRead) {
-                localStorage.setItem(`read_chapter_${chapterId}`, "true");
-                tocBtn.classList.add("active");
-                tocBtn.style.backgroundColor = "#8fdfaa";
-                tocBtn.style.borderColor = "#8fdfaa";
-              } else {
-                localStorage.removeItem(`read_chapter_${chapterId}`);
-                tocBtn.classList.remove("active");
-                tocBtn.style.backgroundColor = "transparent";
-                tocBtn.style.borderColor = "#aaa";
-              }
-              
-              // Keep the main chapter read button at the bottom of the page in sync
-              updateReadButtonStatus(targetChapter);
-            }
-            return; // Stop execution here, do not navigate or close popup
-          }
-
-          // --- ORIGINAL NAVIGATION LOGIC ---
-          const index = parseInt(item.dataset.index, 10);
-          const targetChapter = chapters[index];
-          if (targetChapter) {
-            // Close the popup
-            popup.style.display = "none";
-            document.body.style.overflow = '';
-            popupOverlay.style.display = "none";
-
-            // Briefly resume audio if it was playing
-            if (wasPlaying) { 
-              audio.play(); 
-              wasPlaying = false; 
-            }
-            
-            goToChapter(targetChapter);
-          }
-        });
-      });
-    });
-  }
-
-  if (freqBtn) {
-    freqBtn.addEventListener("click", async () => {
-
-      wasPlaying = !audio.paused;
-      audio.pause();
-      
-      // 1. Show an initial loading state
-      popupContent.innerHTML = `<div style="padding:10px;">Loading frequency data...</div>`;
-      popup.style.display = "block";
-      document.body.style.overflow = 'hidden';
-      popupOverlay.style.display = "block";
-  
+    // =========================================================
+    // CHECK LOGIN STATUS
+    // =========================================================
+    async function checkLoginStatus() {
       try {
-        // 2. Fetch the JSON data
-        const response = await fetch(window.APP_CONFIG?.frequencyJsonPath || "frequency_data.json");
-        const freqData = await response.json();
-        console.log(`Total vocabulary entries loaded: ${freqData.length}`);
-  
-        // 3. Define the brackets (REVERSED: Highest frequencies at the top)
-        const brackets = [
-          { id: "1000-4999", min: 1000, max: 4999, label: "1000-4999x" },
-          { id: "500-999", min: 500, max: 999, label: "500-999x" },
-          { id: "100-499", min: 100, max: 499, label: "100-499x" },
-          { id: "50-99", min: 50, max: 99, label: "50-99x" },
-          { id: "10-49", min: 10, max: 49, label: "10-49x" },
-          { id: "5-9", min: 5, max: 9, label: "5-9x" },
-          { id: "1-4", min: 1, max: 4, label: "1-4x" }
-        ];
-  
-        // 4. Initialize State
-        let currentTab = "all"; 
-        let activeBrackets = new Set(brackets.map(b => b.id)); // All selected by default
-  
-        // 5. Build the UI Shell
-        popupContent.innerHTML = `
-          <h3 style="margin-top:0;">Word Frequency</h3>
-          
-          <!-- Tabs -->
-          <div style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;">
-            <button id="freqTabAll" class="settings-btn" style="cursor: pointer; background-color: #ddd;">All</button>
-            <button id="freqTabVerbs" class="settings-btn" style="cursor: pointer;">Verbs</button>
-          </div>
-  
-          <!-- Selectable Bracket Toggles -->
-          <div id="bracketContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; justify-content: center;">
-            ${brackets.map(b => `
-              <button class="settings-btn bracket-btn" data-id="${b.id}" style="cursor: pointer; padding: 4px 8px; font-size: 0.85em; background-color: #ddd;">
-                ${b.label}
-              </button>
-            `).join("")}
-          </div>
-  
-          <!-- Scrollable Results Container -->
-          <div id="freqResults" style="max-height: 55vh; overflow-y: auto; padding-right: 10px; text-align: left;"></div>
-        `;
-  
-        // Grab interactive DOM elements
-        const tabAllBtn = document.getElementById("freqTabAll");
-        const tabVerbsBtn = document.getElementById("freqTabVerbs");
-        const bracketBtns = popupContent.querySelectorAll(".bracket-btn");
-        const resultsContainer = document.getElementById("freqResults");
-  
-        // 6. Bind Tab Events
-        tabAllBtn.addEventListener("click", () => {
-          currentTab = "all";
-          tabAllBtn.style.backgroundColor = "#ddd"; 
-          tabVerbsBtn.style.backgroundColor = "";
-          renderResults(freqData);
-        });
-  
-        tabVerbsBtn.addEventListener("click", () => {
-          currentTab = "verbs";
-          tabVerbsBtn.style.backgroundColor = "#ddd";
-          tabAllBtn.style.backgroundColor = "";
-          renderResults(freqData);
-        });
-  
-        // 7. Bind Multi-Select Bracket Events
-        bracketBtns.forEach(btn => {
-          btn.addEventListener("click", (e) => {
-            const id = e.target.dataset.id;
-            if (activeBrackets.has(id)) {
-              activeBrackets.delete(id); // Unselect
-              e.target.style.backgroundColor = ""; 
-            } else {
-              activeBrackets.add(id); // Select
-              e.target.style.backgroundColor = "#ddd"; 
-            }
-            renderResults(freqData);
-          });
-        });
-        
-        // Helper: Gloss Formatter (Mirrors DictionaryEngine's structure so toggleGloss works perfectly)
-        const formatGlossWithToggle = (glossText) => {
-          if (!glossText) return '—';
-          const semicolonIndex = glossText.indexOf(';');
-          if (semicolonIndex === -1) return glossText;
-  
-          const visiblePart = glossText.substring(0, semicolonIndex + 1);
-          const hiddenPart = glossText.substring(semicolonIndex + 1);
-  
-          // Wrapped in an outer span so DictionaryEngine.toggleGloss(this) finds `.extra-gloss` in this.parentNode
-          return `
-            <span>
-              <span>${visiblePart}</span><!--
-           --><span class="extra-gloss" style="display: none;">${hiddenPart}</span>
-              <button class="gloss-toggle-btn" onclick="if(window.DictionaryEngine) { DictionaryEngine.toggleGloss(this); }" style="cursor: pointer; z-index: 10; margin-left: 6px; font-size: 0.85em; padding: 1px 6px; border-radius: 4px; border: 1px solid #ccc; background-color: #f1f3f5;">
-                More
-              </button>
-            </span>
-          `;
+        console.log('🔍 Checking login status...');
+        const response = await fetch('/api/me');
+        const data = await response.json();
+        console.log('✅ /api/me response:', data);
+
+        currentUser = {
+          loggedIn: data.loggedIn || false,
+          isPatron: data.isPatron || false,
+          tiers: data.tiers || [],
+          name: data.name || ''
         };
 
-        // 8. Main Rendering Logic
-        function renderResults(data) {
-          let html = "";
-  
-          // Filter vocabulary by current tab (All vs Verbs)
-          const filteredData = data.filter(item => {
-            if (currentTab === "verbs") {
-              // Loosened check to account for missing keys or string "true" in JSON imports
-              return item.isVerb == true || item.isVerb === "true";
-            }
-            return true;
-          });
-  
-          // Iterate through brackets (already reversed so higher frequencies print first)
-          brackets.forEach(bracket => {
-            if (!activeBrackets.has(bracket.id)) return; // Skip unselected brackets
-  
-            const wordsInBracket = filteredData.filter(w => w.totalFrequency >= bracket.min && w.totalFrequency <= bracket.max);
-            
-            // Optional: Sort words descending within their bracket
-            wordsInBracket.sort((a, b) => b.totalFrequency - a.totalFrequency);
+        console.log('📊 Current user state:', currentUser);
 
-            if (wordsInBracket.length > 0) {
-              // Inject section separators
-              html += `
-                <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0 10px 0;">
-                <h5 style="text-align: center; margin: 0 0 15px 0;">${bracket.label}</h5>
-              `;
-  
-              // Render the vocabulary lines
-              wordsInBracket.forEach(item => {
-                const greekText = item.pseudoLemma || "";
-                const engText = item.gloss || "";
-                const frequency = item.totalFrequency || 0;
-                
-                // Surface forms handling
-                let surfaceToggleBtn = "";
-                let surfaceFormsDiv = "";
+        updateUserBanner();
+        renderBooks();
 
-                if (item.surfaceFormsContributed && item.surfaceFormsContributed.length > 0) {
-                  const listItems = item.surfaceFormsContributed.map(sf => `${sf.surfaceForm} (${sf.formFrequency}x)`).join(", ");
-                  
-                  // Inline toggler for the surface forms
-                  surfaceToggleBtn = `<button onclick="const el = this.parentElement.nextElementSibling; if(el.style.display === 'none'){ el.style.display = 'block'; this.textContent = '[-] forms'; } else { el.style.display = 'none'; this.textContent = '[+] forms'; }" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 0.75em; padding: 0; margin-left: 8px;">[+] forms</button>`;
-                  
-                  surfaceFormsDiv = `<div style="display: none; font-size: 0.85em; color: #666; margin-top: 4px; padding-left: 10px; border-left: 2px solid #ddd; font-weight: normal;">${listItems}</div>`;
-                }
-  
-                // Structure output
-                html += `
-                  <div style="margin-bottom: 14px; font-size: 1.1em; line-height: 1.3;">
-                    <div style="font-weight: bold; display: flex; align-items: center; flex-wrap: wrap;">
-                      ${greekText} (${frequency}x) ${surfaceToggleBtn}
-                    </div>
-                    ${surfaceFormsDiv}
-                    ${engText ? `<div style="font-size: 0.9em; color: #555; margin-top: 3px;">${formatGlossWithToggle(engText)}</div>` : ""}
-                  </div>
-                `;
-              });
-            }
-          });
-  
-          // Fallback if combination yields no results
-          if (html === "") {
-            html = `<div style="text-align: center; color: #777; margin-top: 20px;">No words match the selected filters.</div>`;
-          }
-  
-          resultsContainer.innerHTML = html;
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.style.display = currentUser.loggedIn ? 'inline-block' : 'none';
         }
-  
-        // 9. Initial paint
-        renderResults(freqData);
-  
+
+        // Clean URL if login was successful
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('login') === 'success') {
+          const cleanUrl = window.location.pathname + window.location.hash;
+          window.history.replaceState({}, document.title, cleanUrl);
+        }
+
       } catch (error) {
-        console.error("Error fetching frequency data:", error);
-        popupContent.innerHTML = `<div style="padding:10px; color: red;">Failed to load word frequencies.</div>`;
+        console.error('❌ Error checking login status:', error);
+        currentUser = { loggedIn: false, isPatron: false, tiers: [], name: '' };
+        renderBooks();
       }
-    });
-  }
+    }
 
-  // Fullscreen Mode Toggle Listener
-  if (fullscreenBtn) {
-    fullscreenBtn.addEventListener("click", () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-          .then(() => {
-            fullscreenBtn.textContent = "Windowed";
-            // Prevent the elastic pull-down boundary behavior on mobile
-            document.documentElement.style.overscrollBehavior = "contain";
-            document.body.style.overscrollBehavior = "contain";
-          })
-          .catch((err) => {
-            console.error(`Error attempting to enable fullscreen: ${err.message}`);
-          });
+    // =========================================================
+    // UPDATE USER BANNER
+    // =========================================================
+    function updateUserBanner() {
+      const banner = document.getElementById('userBanner');
+      if (!banner) return;
+
+      if (currentUser.loggedIn && currentUser.isPatron) {
+        const tierNames = currentUser.tiers.map(t => t.title).join(', ');
+        banner.innerHTML = `
+          👋 Welcome, ${currentUser.name}! 
+          <span class="patron-badge">🎧 PATRON</span>
+          ${tierNames ? `<span style="font-weight:normal;color:#555;font-size:0.85rem;"> · ${tierNames}</span>` : ''}
+        `;
+        banner.style.display = 'block';
+      } else if (currentUser.loggedIn && !currentUser.isPatron) {
+        banner.innerHTML = `
+          👋 Welcome, ${currentUser.name}! 
+          <span style="color:#FF424D;">You are not an active patron.</span>
+          <a href="https://www.patreon.com/akroomenois" target="_blank" style="color:#FF424D;font-weight:bold;">Become a patron →</a>
+        `;
+        banner.style.display = 'block';
       } else {
-        document.exitFullscreen();
-        fullscreenBtn.textContent = "Fullscreen";
-        // Restore standard scrolling behavior
-        document.documentElement.style.overscrollBehavior = "auto";
-        document.body.style.overscrollBehavior = "auto";
-      }
-    });
-
-    // Handle standard fallbacks if the user hits the system 'Esc' key or native gestures
-    document.addEventListener("fullscreenchange", () => {
-      if (!document.fullscreenElement) {
-        fullscreenBtn.textContent = "Fullscreen";
-        document.documentElement.style.overscrollBehavior = "auto";
-        document.body.style.overscrollBehavior = "auto";
-      } else {
-        fullscreenBtn.textContent = "Windowed";
-        document.documentElement.style.overscrollBehavior = "contain";
-        document.body.style.overscrollBehavior = "contain";
-      }
-    });
-  }
-  
-  // ==========================================
-  // INTEGRATED POPUP ACTION ROUTERS
-  // ==========================================
-  if (homeBtn) {
-    homeBtn.addEventListener("click", () => {
-      window.location.href = "home.html";
-    });
-  }
-
-  // Opening Main Settings
-  settingsBtn.addEventListener("click", () => {
-    wasPlaying = !audio.paused;
-    audio.pause();
-    settingsPopup.style.display = "block";
-    document.body.style.overflow = 'hidden';
-    popupOverlay.style.display = "block";
-  });
-
-  // Handoff: Settings -> Advanced Font Panel
-  advancedFontBtn.addEventListener("click", () => {
-    // Hide settings panel temporarily so they don't visually overlap
-    settingsPopup.style.display = "none";
-    // Open the advanced menu layer
-    advancedFontPopup.style.display = "block";
-  });
-
-  // Handoff Back: Advanced Font Panel -> Settings
-  if (closeAdvancedFont) {
-    closeAdvancedFont.addEventListener("click", () => {
-      // Hide advanced panel
-      advancedFontPopup.style.display = "none";
-      // Re-reveal standard settings smoothly without toggling audio playback
-      settingsPopup.style.display = "block";
-    });
-  }
-
-  // Closing Main Settings entirely (Resumes Audio if it was playing)
-  closeSettings.addEventListener("click", () => {
-    settingsPopup.style.display = "none";
-    document.body.style.overflow = '';
-    popupOverlay.style.display = "none";
-    if (wasPlaying) { audio.play(); wasPlaying = false; }
-  });
-
-  // Overlay Click: Emergency Backup Close-All
-  popupOverlay.addEventListener("click", () => {
-    popup.style.display = "none";
-    settingsPopup.style.display = "none";
-    advancedFontPopup.style.display = "none"; // Make sure this shuts off too
-    popupOverlay.style.display = "none";
-    document.body.style.overflow = '';
-    if (wasPlaying) { audio.play(); wasPlaying = false; }
-  });
-
-  // ==========================================
-  // MASTER CLASSICAL GREEK HYPHENATOR
-  // ==========================================
-  const ALL_GREEK_VOWELS = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", "ϋ", "ἀ", "ἐ", "ἰ", "ὀ", "ὐ", "ᾱ̓", "ἠ", "ῑ̓", "ὠ", "ῡ̓", "αἰ", "αὐ", "εἰ", "εὐ", "οἰ", "οὐ", "υἰ", "ᾀ", "ᾱὐ", "ᾐ", "ηὐ", "ᾠ", "ωὐ", "ῡἰ", "ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ", "ά", "έ", "\u03af", "ό", "ύ", "ᾱ́", "ή", "ῑ́", "ώ", "ῡ́", "α\u03af", "αύ", "ε\u03af", "εύ", "ο\u03af", "ού", "υ\u03af", "ᾴ", "ᾱύ", "ῄ", "ηύ", "ῴ", "ωύ", "ῡ\u03af", "ΐ", "ΰ", "ἄ", "ἔ", "ἴ", "ὄ", "ὔ", "ᾱ̓́", "ἤ", "ῑ̓́", "ὤ", "ῡ̓́", "αἴ", "αὔ", "εἴ", "εὔ", "οἴ", "οὔ", "υἴ", "ᾄ", "ᾱὔ", "ᾔ", "ηὔ", "ᾤ", "ωὔ", "ῡἴ", "ἅ", "ἕ", "ἵ", "ὅ", "ὕ", "ᾱ̔́", "ἥ", "ῑ̔́", "ὥ", "ῡ̔́", "αἵ", "αὕ", "εἵ", "εὕ", "οἵ", "οὕ", "υἵ", "ᾅ", "ᾱὕ", "ᾕ", "ηὕ", "ᾥ", "ωὕ", "ῡἵ", "ὰ", "ὲ", "\u1f76", "ὸ", "ὺ", "ᾱ̀", "ὴ", "ῑ̀", "ὼ", "ῡ̀", "α\u1f76", "αὺ", "ε\u1f76", "εὺ", "ο\u1f76", "οὺ", "υ\u1f76", "ᾲ", "ᾱὺ", "ῂ", "ηὺ", "ῲ", "ωὺ", "ῡ\u1f76", "ῒ", "ῢ", "ἂ", "ἒ", "ἲ", "ὂ", "ὒ", "ᾱ̓̀", "ἢ", "ῑ̓̀", "ὢ", "ῡ̓̀", "αἲ", "αὒ", "εἲ", "εὒ", "οἲ", "οὒ", "υἲ", "ᾂ", "ᾱὒ", "ᾒ", "ηὒ", "ᾢ", "ωὒ", "ῡἲ", "ἃ", "ἓ", "ἳ", "ὃ", "ὓ", "ᾱ̔̀", "ἣ", "ῑ̔̀", "ὣ", "ῡ̔̀", "αἳ", "αὓ", "εἳ", "εὓ", "οἳ", "οὓ", "υἳ", "ᾃ", "ᾱὓ", "ᾓ", "ηὓ", "ᾣ", "ωὓ", "ῡἳ", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "αῖ", "αῦ", "εῖ", "εῦ", "οῖ", "οῦ", "υῖ", "ᾷ", "ᾱῦ", "ῇ", "ηῦ", "ῷ", "ωῦ", "ῡῖ", "ἆ", "ἦ", "ἶ", "ὦ", "ὖ", "αἶ", "αὖ", "εἶ", "εὖ", "οἶ", "οὖ", "υἶ", "ᾆ", "ᾱὖ", "ᾖ", "ηὖ", "ᾦ", "ωὖ", "ῡἶ", "ἇ", "ἧ", "ἷ", "ὧ", "ὗ", "αἷ", "αὗ", "εἷ", "εὗ", "οἷ", "οὗ", "υἷ", "ᾇ", "ᾱὗ", "ᾗ", "ηὗ", "ᾧ", "ωὗ", "ῡἷ"];
-
-  // Sort by length descending to match clusters like "αἷ" completely before breaking them into "α"
-  const sortedVowels = [...ALL_GREEK_VOWELS].sort((a, b) => b.length - a.length);
-
-  function tokenizeGreekWord(word) {
-    let tokens = [];
-    let i = 0;
-    
-    while (i < word.length) {
-      let matched = false;
-      
-      // Try to find the longest vowel/diphthong match from your list first
-      for (const vowel of sortedVowels) {
-        if (word.startsWith(vowel, i)) {
-          tokens.push({ type: 'V', text: vowel });
-          i += vowel.length;
-          matched = true;
-          break;
-        }
-      }
-      
-      // If it's not a vowel cluster, treat it as a consonant/punctuation block
-      if (!matched) {
-        tokens.push({ type: 'C', text: word[i] });
-        i++;
+        banner.style.display = 'none';
       }
     }
-    return tokens;
-  }
 
-  function hyphenateGreekWord(word) {
-    // Strip trailing punctuation details for linguistic checking, restore later
-    const cleanWord = word.replace(/[.,·;:’'’\"\(\)]/g, "");
-    const tokens = tokenizeGreekWord(cleanWord);
-    let output = "";
-    
-    for (let i = 0; i < tokens.length; i++) {
-      output += tokens[i].text;
-      
-      // Rule Core: Core Classical Syllabification (V-C-V pattern)
-      if (i < tokens.length - 2) {
-        const current = tokens[i];
-        const next = tokens[i + 1];
-        const nextNext = tokens[i + 2];
-        
-        if (current.type === 'V' && next.type === 'C' && nextNext.type === 'V') {
-          // Do not drop a soft hyphen if it is a standalone vowel modifier or punctuation mark
-          if (["'", "’", "·"].includes(next.text)) continue;
-          output += "&shy;";
-        }
-        // Split between identical double consonants (e.g., ν-ν, λ-λ, μ-μ)
-        else if (current.type === 'C' && next.type === 'C' && current.text.toLowerCase() === next.text.toLowerCase()) {
-          output += "&shy;";
-        }
+    // =========================================================
+    // TAB SWITCHING WITH URL PATHS
+    // =========================================================
+    function syncTabWithHash() {
+      const tabName = window.location.hash.replace('#', '') || 'library';
+      const targetBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+      const targetContent = document.getElementById('tab-' + tabName);
+      if (targetContent && targetBtn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        targetBtn.classList.add('active');
+        targetContent.classList.add('active');
       }
     }
-    
-    // Put back any trailing punctuation stripped from the original outer word string
-    const punctuationMatch = word.match(/[.,·;:’'’\"\(\)]+$/);
-    if (punctuationMatch) {
-      output += punctuationMatch[0];
-    }
-    const leadingPunctuation = word.match(/^[(\"’']+/);
-    if (leadingPunctuation) {
-      output = leadingPunctuation[0] + output;
-    }
-    
-    return output;
-  }
-  
-  // ==========================================
-  // LOAD SAVED PREFERENCES & UPDATE CHAPTER ELEMENTS
-  // ==========================================
-  
-  function applyUserSettings() {
-    if (fontControl && fontValue) {
-      fontControl.min = SITE_SETTINGS.fontSize.min;
-      fontControl.max = SITE_SETTINGS.fontSize.max;
-      
-      const savedFontSize = localStorage.getItem("reader_fontSize") || SITE_SETTINGS.fontSize.default;
-      fontControl.value = savedFontSize;
-      fontValue.textContent = savedFontSize + "px";
-      
-      if (localStorage.getItem("reader_fontSize")) {
-        if (text) text.style.fontSize = savedFontSize + "px";
-        if (textEn) textEn.style.fontSize = savedFontSize + "px";
-      }
-    }
-    
-    if (fontFamilyControl) {
-      const savedFontFamily = localStorage.getItem("reader_fontFamily") || "SBL";
-      fontFamilyControl.value = savedFontFamily;
-      
-      if (localStorage.getItem("reader_fontFamily") && text) {
-        text.style.fontFamily = savedFontFamily;
-        textEn.style.fontFamily = savedFontFamily;
-      }
-    }
-  
-    if (speedControl && speedValue) {
-      speedControl.min = SITE_SETTINGS.playerSpeed.min;
-      speedControl.max = SITE_SETTINGS.playerSpeed.max;
-      
-      const savedSpeed = localStorage.getItem("reader_playerSpeed") || SITE_SETTINGS.playerSpeed.default;
-      speedControl.value = savedSpeed;
-      speedValue.textContent = Number(savedSpeed).toFixed(1) + "x";
-      
-      audio.addEventListener("loadedmetadata", () => {
-        audio.playbackRate = parseFloat(savedSpeed);
-      });
-    }
-  
-    if (volumeControl && volumeValue) {
-      volumeControl.min = SITE_SETTINGS.volume.min;
-      volumeControl.max = SITE_SETTINGS.volume.max;
-      
-      const savedVolume = localStorage.getItem("reader_volume") || SITE_SETTINGS.volume.default;
-      volumeControl.value = savedVolume;
-      volumeValue.textContent = Math.round(savedVolume * 100) + "%";
-      audio.volume = parseFloat(savedVolume);
-    }
-  
-    if (statusText) {
-      statusText.textContent = useGreekNumerals ? 'Standard' : 'Greek';
-    }
-  }
 
-  function updateActiveChapterElements(activeContainer) {
-    // Dynamically assign the text container DOM elements
-    text = activeContainer.querySelector(".text");
-    textEn = activeContainer.querySelector(".text_en");
-
-    applyUserSettings();
-    
-    // Redefine your global selector references
-    phrases = activeContainer.querySelectorAll("span.phrase");
-    phrasesEn = activeContainer.querySelectorAll("span.phrase_en");
-    notes = activeContainer.querySelectorAll(".note-marker");
-
-    // Clear previous active highlight state (avoid stale references to removed nodes)
-    if (currentActive) {
-      try { currentActive.classList.remove("active"); } catch (e) {}
-      currentActive = null;
-    }
-    phrases.forEach(p => p.classList && p.classList.remove("active"));
-    phrasesEn.forEach(p => p.classList && p.classList.remove("active"));
-    
-    // Run hyphenation dynamically on the newly loaded chapter words
-    const temporaryWords = activeContainer.querySelectorAll("span.word");
-    temporaryWords.forEach(wordElement => {
-      const originalText = wordElement.textContent.trim();
-      if (originalText.length > 0 && !wordElement.innerHTML.includes("&shy;")) {
-        wordElement.innerHTML = hyphenateGreekWord(originalText);
-      }
-    });
-
-    // Assign global "words" reference for timeline tracking calculations
-    words = activeContainer.querySelectorAll("span.word");
-    recalculateAudioBoundaries();
-  }
-
-  const activeChapter = getActiveChapter();
-  updateActiveChapterElements(activeChapter);
-  
-  // ==========================================
-  // CHAPTER NAVIGATION ENGINE
-  // ==========================================
-
-  // Helper to get all available chapters in the document
-  function getAllChapters() {
-    return document.querySelectorAll(".chapter-body");
-  }
-
-  // Master function to navigate between chapters
-  function navigateChapter(direction) {
-    const chapters = Array.from(getAllChapters());
-    const activeChapter = getActiveChapter();
-    if (!activeChapter || chapters.length <= 1) return;
-
-    const currentIndex = chapters.indexOf(activeChapter);
-    let targetIndex = currentIndex + direction;
-
-    // Boundary check: Ensure the target chapter exists
-    if (targetIndex < 0 || targetIndex >= chapters.length) {
-      return;
-    }
-
-    isChapterTransitioning = true;
-    
-    // 1. Pause current playback safely
-    audio.pause();
-    wasPlaying = false;
-    
-    // Reset the play button UI visually to the "Play" state
-    if (playBtn) {
-      playBtn.innerHTML = '<img class="btn-icon" src="icon/play-button.svg" alt="Play">';
-    }
-
-    // 2. Hide current chapter and show the target chapter
-    activeChapter.classList.remove("active");
-    activeChapter.style.display = "none"; // Ensure it is visually hidden if CSS relies on display
-
-    const targetChapter = chapters[targetIndex];
-    targetChapter.classList.add("active");
-    targetChapter.style.display = "block";
-
-    // 3. Re-bind and update active DOM elements to reference the new active chapter
-    updateActiveChapterElements(targetChapter);
-
-    updateLanguageToggleVisibility(); //Makes sure it changes the language mode before fetching it
-    const currentLang = localStorage.getItem("reader_languageMode") || "greek";
-      if (currentLang === "english") {
-        langBtn.textContent = "GR";
-        text.style.display = "none";
-        textEn.style.display = "block";
-      } else {
-        langBtn.textContent = "EN";
-        text.style.display = "block";
-        textEn.style.display = "none";
-      }
-    updateTitle();
-    
-    // 5. Reset progress playheads and load the new chapter's audio track
-    localStorage.removeItem("reader_currentTime"); // Clear previous saved time offset
-    audio.currentTime = chapterMinTime;
-    progressBar.value = 0;
-
-    // Dynamically update the audio source if your chapters use different audio files
-    loadAudioForChapter(targetChapter);
-  }
-    
-  function recalculateAudioBoundaries() {
-    const validWords = Array.from(words).filter(w => {
-      const s = parseFloat(w.dataset.wordStart);
-      const e = parseFloat(w.dataset.wordEnd);
-      return !isNaN(s) && !isNaN(e);
-    });
-
-    if (validWords.length > 0) {
-      chapterMinTime = parseFloat(validWords[0].dataset.wordStart);
-      chapterMaxTime = parseFloat(validWords[validWords.length - 1].dataset.wordEnd);
-    } else {
-      chapterMinTime = 0;
-      chapterMaxTime = audio.duration || Infinity;
-    }
-
-    const relDuration = chapterMaxTime - chapterMinTime;
-    progressBar.max = isFinite(relDuration) ? relDuration : 100;
-  }
-
-  // ==========================================
-  // JUMP TO A SPECIFIC CHAPTER
-  // ==========================================
-  function goToChapter(targetChapter) {
-    const chapters = Array.from(getAllChapters());
-    const activeChapter = getActiveChapter();
-    if (!activeChapter || !targetChapter) return;
-  
-    const currentIndex = chapters.indexOf(activeChapter);
-    const targetIndex = chapters.indexOf(targetChapter);
-  
-    if (targetIndex === -1 || targetIndex === currentIndex) return;
-  
-    // --- Same logic as navigateChapter, but without direction ---
-    isChapterTransitioning = true;
-  
-    // Pause
-    audio.pause();
-    wasPlaying = false;
-    if (playBtn) {
-      playBtn.innerHTML = '<img class="btn-icon" src="icon/play-button.svg" alt="Play">';
-    }
-  
-    // Hide current, show target
-    activeChapter.classList.remove("active");
-    activeChapter.style.display = "none";
-  
-    targetChapter.classList.add("active");
-    targetChapter.style.display = "block";
-  
-    // Update active elements
-    updateActiveChapterElements(targetChapter);
-  
-    // Reset progress
-    localStorage.removeItem("reader_currentTime");
-    audio.currentTime = chapterMinTime;
-    progressBar.value = 0;
-  
-    // Update audio source
-    loadAudioForChapter(targetChapter);
-  
-    // Apply saved language preference
-    updateLanguageToggleVisibility(); //Makes sure it changes the language mode before fetching it
-    const currentLang = localStorage.getItem("reader_languageMode") || "greek";
-    if (currentLang === "english") {
-      langBtn.textContent = "GR";
-      text.style.display = "none";
-      textEn.style.display = "block";
-    } else {
-      langBtn.textContent = "EN";
-      text.style.display = "block";
-      textEn.style.display = "none";
-    }
-    updateTitle();
-  
-    // Save chapter
-    const chapterNum = targetChapter.getAttribute("data-chapter");
-    if (chapterNum) {
-      localStorage.setItem("savedChapter", chapterNum);
-    
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: "auto" }); 
-    }
-  }
-  
-  // ==========================================
-  // READ CHAPTER LOGIC
-  // ==========================================
-  function updateReadButtonStatus(chapter) {
-    const readBtn = chapter.querySelector('.read-btn');
-    if (!readBtn) return;
-
-    const isRead = chapter.classList.contains('read');
-    const section = chapter.dataset.section;
-    
-    // Fetch custom names from config, defaulting to "Chapter" if missing
-    let chapName = window.APP_CONFIG?.customChapterName || "Chapter";
-    let chapNum = "";
-
-    // Parse the chapter number from your dataset structures
-    if (section && section !== "0") {
-      const parts = section.split('.');
-      chapNum = parts[1] || parts[0]; // Extracts the chapter from "book.chapter" format
-    } else {
-      chapNum = chapter.dataset.chapter;
-    }
-
-    if (isRead) {
-      readBtn.textContent = `${chapName} completed!`;
-      readBtn.classList.add('active'); // Add active class for custom CSS
-    } else {
-      readBtn.textContent = "Mark as read";
-      readBtn.classList.remove('active'); // Remove active class
-    }
-  }
-
-  // Initialize the correct text/state for all buttons on page load
-  document.querySelectorAll('.chapter-body').forEach(chapter => {
-    const section = chapter.dataset.section;
-    if (!(section === "0" || section == 0)) {
-      updateReadButtonStatus(chapter);
-    }
-  });
-  
-  // ==========================================
-  // GLOBAL EVENT DELEGATOR (REPLACES ALL BINDING LOGIC)
-  // ==========================================
-  document.addEventListener("click", (e) => {
-    // 1. Check if clicked element is a word (or inside a word)
-    const wordElement = e.target.closest(".chapter-body.active span.word");
-    if (wordElement) {
-      handleWordClick({
-        stopPropagation: () => e.stopPropagation(),
-        currentTarget: wordElement
-      });
-      return;
-    }
-
-    // 2. Check if clicked element is a note marker
-    const noteElement = e.target.closest(".chapter-body.active .note-marker");
-    if (noteElement) {
-      handleNoteClick({
-        stopPropagation: () => e.stopPropagation(),
-        currentTarget: noteElement
-      });
-      return;
-    }
-    
-    // 3. --- NEW: Check if clicked element is the Read Button ---
-    const readBtnElement = e.target.closest(".read-btn");
-    if (readBtnElement) {
-      const chapter = readBtnElement.closest(".chapter-body");
-      if (chapter) {
-        // Toggle the 'read' class on the chapter
-        chapter.classList.toggle("read");
-        
-        // Save or remove the state in localStorage
-        const chapterId = chapter.dataset.section || chapter.dataset.chapter;
-        if (chapter.classList.contains("read")) {
-          localStorage.setItem(`read_chapter_${chapterId}`, "true");
-        } else {
-          localStorage.removeItem(`read_chapter_${chapterId}`);
-        }
-        
-        // Update the button's UI to reflect the new state
-        updateReadButtonStatus(chapter);
-      }
-      return; // Stop execution
-    }
-  });
-
-  // ==========================================
-  // CHAPTER LOGIC
-  // ==========================================
-  
-  prevChapterBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      navigateChapter(-1);
-      handleChapterTransition();
-    });
-  });
-  
-  nextChapterBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      navigateChapter(1);
-      handleChapterTransition();
-    });
-  });
-  
-  // Orchestrates everything that needs to happen AFTER a chapter switch
-  function handleChapterTransition() {
-    const activeChapter = document.querySelector(".chapter-body.active");
-    if (!activeChapter) return;
-    
-    // 1. Save the current chapter to localStorage
-    const chapterNum = activeChapter.getAttribute("data-chapter");
-    if (chapterNum) {
-      localStorage.setItem("savedChapter", chapterNum);
-    }
-  
-    // 2. Jump to the top of the page smoothly
-    window.scrollTo({ top: 0, behavior: "auto" }); 
-    // Note: Change "smooth" to "auto" if you want an instant, non-animated jump.
-  }
-
-  // ==========================================
-  // OBSERVE CHAPTER CHANGES FOR AUDIO LOADING
-  // ==========================================
-  
-  const chapterObserver = new MutationObserver(function() {
-      const activeChapter = document.querySelector('.chapter-body.active');
-      if (activeChapter) {
-          loadAudioForChapter(activeChapter);
-      }
-  });
-  
-  // Observe all chapter bodies for class changes
-  document.querySelectorAll('.chapter-body').forEach(chapter => {
-      chapterObserver.observe(chapter, { attributes: true, attributeFilter: ['class'] });
-  });
-    
-  // ==========================================
-  // INITIAL ACTIVE CHAPTER BOOTSTRAPPER & SETUP CONFIG BOUNDARIES & LIMIT AUDIO SCOPE TO WORDS TIMESTAMP BOUNDARIES
-  // ==========================================
-  const savedChapterNum = localStorage.getItem("savedChapter");
-  let startingChapter = document.querySelector(".chapter-body.active"); 
-  
-  if (savedChapterNum) {
-    const savedChapter = document.querySelector(`.chapter-body[data-chapter="${savedChapterNum}"]`);
-    if (savedChapter) {
-      if (startingChapter) {
-        startingChapter.classList.remove("active");
-        startingChapter.style.display = "none";
-      }
-      savedChapter.classList.add("active");
-      savedChapter.style.display = "block";
-      startingChapter = savedChapter;
-    }
-  }
-
-  // BOOT STEP 1: Process and populate elements inside our active container.
-  // This defines the active 'text', 'textEn', and 'words' arrays.
-  if (startingChapter) {
-    updateActiveChapterElements(startingChapter); // This also internally runs recalculateAudioBoundaries()
-    
-    if (audio) {
-      const initialSrc = startingChapter.getAttribute("data-audio-src");
-      if (initialSrc) {
-        audio.src = initialSrc;
-        audio.load();
-        
-        // FALLBACK: If canplay doesn't fire within 3 seconds, force the time
-        setTimeout(() => {
-          if (audio.currentTime < chapterMinTime - 1) {
-            console.warn('[fallback] canplay did not fire or seek failed, forcing time to', chapterMinTime);
-            audio.currentTime = chapterMinTime;
-            progressBar.value = 0;
+    // =========================================================
+    // LOGOUT
+    // =========================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          try {
+            await fetch('/auth/logout.js');
+            window.location.href = '/home';
+          } catch (error) {
+            console.error('Logout error:', error);
+            window.location.href = '/home';
           }
-        }, 3000);
+        });
       }
-    }
-  }
+    });
 
-  //one time language mode change based off the last recorded language mode switch from the last session
-  updateLanguageToggleVisibility(); //Makes sure it changes the language mode before fetching it
-  const initialLang = localStorage.getItem("reader_languageMode") || "greek";
-  if (initialLang === "english") {
-    langBtn.textContent = "GR";
-    text.style.display = "none";
-    textEn.style.display = "block";
-  } else {
-    langBtn.textContent = "EN";
-    text.style.display = "block";
-    textEn.style.display = "none";
-  }
-  updateTitle();
-  
-  // BOOT STEP 2: Configure timeline constraints & playback ranges
-  const savedTime = localStorage.getItem("reader_currentTime");
-  if (savedTime) {
-    const t = parseFloat(savedTime);
-    if (t >= chapterMinTime && t <= chapterMaxTime) {
-      // Store it so the 'canplay' listener can use it
-      window._savedStartTime = t;
-    }
-  }
+    // =========================================================
+    // TAB CLICK HANDLERS
+    // =========================================================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.location.hash = btn.dataset.tab;
+      });
+    });
 
-  // ==========================================
-  // REMOVE LOADING SCREEN
-  // ==========================================
-  
-  const loading = document.getElementById('loadingScreen');
-  if (loading) loading.classList.add('hidden');
-});
+    window.addEventListener('hashchange', syncTabWithHash);
+
+    // =========================================================
+    // INITIALIZE
+    // =========================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🚀 Page loaded, initializing...');
+      syncTabWithHash();
+      
+      // Wait a moment for everything to settle, then check login
+      setTimeout(() => {
+        checkLoginStatus();
+      }, 100);
+
+      // Re-run scroll shadow check after fonts load
+      if (document.fonts) {
+        document.fonts.ready.then(() => {
+          updateScrollShadows();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
