@@ -293,40 +293,67 @@
       });
     }
 
+    // =========================================================
+    // DETECT HOVER STATE AND SCROLL
+    // =========================================================
+    
     function attachHoverScrollListeners() {
-      const cards = document.querySelectorAll('.book-card');
-      cards.forEach(card => {
-        let scrollTimeouts = [];
-        card.addEventListener('mouseenter', () => {
-          if (!window.matchMedia('(hover: hover)').matches) return;
-          const scrollTexts = card.querySelectorAll('.scroll-text');
-          scrollTexts.forEach(text => {
-            const container = text.parentElement;
-            if (container.classList.contains('needs-scroll')) {
-              const scrollDistance = text.scrollWidth - container.clientWidth;
-              const duration = scrollDistance / 30;
-              text.style.transition = `transform ${duration}s linear 0.2s`;
-              text.style.transform = `translateX(-${scrollDistance}px)`;
-              const fadeLeadTime = 1.1;
-              const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
-              const timeout = setTimeout(() => container.classList.add('is-scrolled'), timeUntilFade);
-              scrollTimeouts.push(timeout);
+        const cards = document.querySelectorAll('.book-card');
+        
+        cards.forEach(card => {
+            let scrollTimeouts = [];
+            let isScrolling = false;
+            
+            // The actual scroll functions (same as before)
+            function startScroll() {
+                if (isScrolling) return;
+                isScrolling = true;
+                const scrollTexts = card.querySelectorAll('.scroll-text');
+                scrollTexts.forEach(text => {
+                    const container = text.parentElement;
+                    if (container.classList.contains('needs-scroll')) {
+                        const scrollDistance = text.scrollWidth - container.clientWidth;
+                        const duration = scrollDistance / 30;
+                        text.style.transition = `transform ${duration}s linear 0.2s`;
+                        text.style.transform = `translateX(-${scrollDistance}px)`;
+                        const fadeLeadTime = 1.1;
+                        const timeUntilFade = Math.max(0, (duration + 0.2 - fadeLeadTime) * 1000);
+                        const timeout = setTimeout(() => container.classList.add('is-scrolled'), timeUntilFade);
+                        scrollTimeouts.push(timeout);
+                    }
+                });
             }
-          });
+            
+            function stopScroll() {
+                isScrolling = false;
+                scrollTimeouts.forEach(clearTimeout);
+                scrollTimeouts = [];
+                const scrollTexts = card.querySelectorAll('.scroll-text');
+                scrollTexts.forEach(text => {
+                    const container = text.parentElement;
+                    container.classList.remove('is-scrolled');
+                    text.style.transition = 'transform 0.3s ease-out';
+                    text.style.transform = 'translateX(0)';
+                });
+            }
+            
+            // Use a single function to check hover and act
+            function checkHover() {
+                // Check if this card is hovered
+                if (card.matches(':hover')) {
+                    if (!isScrolling) startScroll();
+                } else {
+                    if (isScrolling) stopScroll();
+                }
+            }
+            
+            // Run check on every animation frame (smooth, efficient)
+            function loop() {
+                checkHover();
+                requestAnimationFrame(loop);
+            }
+            loop();
         });
-        card.addEventListener('mouseleave', () => {
-          if (!window.matchMedia('(hover: hover)').matches) return;
-          scrollTimeouts.forEach(clearTimeout);
-          scrollTimeouts = [];
-          const scrollTexts = card.querySelectorAll('.scroll-text');
-          scrollTexts.forEach(text => {
-            const container = text.parentElement;
-            container.classList.remove('is-scrolled');
-            text.style.transition = 'transform 0.3s ease-out';
-            text.style.transform = 'translateX(0)';
-          });
-        });
-      });
     }
 
     // =========================================================
