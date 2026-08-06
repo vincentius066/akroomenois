@@ -178,9 +178,9 @@
           `;
         } else if (isPaid && !isLoggedIn) {
           actionsHTML = `
-            <a href="/" class="btn" style="background:#ccc; cursor:pointer; text-decoration:none; color:#666;" 
+            <a href="/" class="btn" style="background:#ccc; cursor:pointer; text-decoration:none; color:#666; length:88.53px;" 
                onclick="alert('Please login with Patreon to access this book.'); return false;">
-              🔒 Login to Unlock
+              Unlock
             </a>
             <a href="#" class="btn info-btn" aria-label="Information">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -192,8 +192,8 @@
           `;
         } else if (isPaid && isLoggedIn && !currentUser.isPatron) {
           actionsHTML = `
-            <a href="https://www.patreon.com/akroomenois" target="_blank" class="btn" style="background:#FF424D; color:white; text-decoration:none;">
-              🔒 Become a Patron
+            <a href="https://www.patreon.com/akroomenois" target="_blank" class="btn" style="background:#FF424D; color:white; text-decoration: none; length:88.53px;">
+              Unlock
             </a>
             <a href="#" class="btn info-btn" aria-label="Information">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
