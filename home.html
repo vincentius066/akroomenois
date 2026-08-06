@@ -82,7 +82,7 @@
 <body>
 
   <!-- LOGOUT BUTTON -->
-  <a href="#" id="logoutBtn">🚪 Logout</a>
+  <a href="/auth/logout" id="logoutBtn">🚪 Logout</a>
 
   <span style="display: block; text-align: justify;">
   <h1>ΑΚΡΟΩΜΕΝΟΙΣ</h1>
@@ -437,25 +437,6 @@
         targetContent.classList.add('active');
       }
     }
-
-    // =========================================================
-    // LOGOUT
-    // =========================================================
-    document.addEventListener('DOMContentLoaded', () => {
-      const logoutBtn = document.getElementById('logoutBtn');
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', async (e) => {
-          e.preventDefault();
-          try {
-            await fetch('/auth/logout');
-            window.location.href = '/home';
-          } catch (error) {
-            console.error('Logout error:', error);
-            window.location.href = '/home';
-          }
-        });
-      }
-    });
 
     // =========================================================
     // TAB CLICK HANDLERS
