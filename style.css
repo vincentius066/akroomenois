@@ -887,19 +887,49 @@ select {
 	  background: #f0ebe6;
 	  border-radius: 8px 8px 0 0;
 	}
+
+	.book-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+	}
+	
+	.book-card.is-flipped:hover {
+	    transform: rotateY(180deg) translateY(-6px);
+	}
 }
 
 /* =========================================================
-   STICKY HOVERS
+   TOUCH DEVICE TITLE SCROLL (iOS/Android fix)
    ========================================================= */
 
-.book-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
-}
-
-.book-card.is-flipped:hover {
-    transform: rotateY(180deg) translateY(-6px);
+/* On touch devices, use .touch-active class to trigger scroll */
+@media (hover: none) {
+    .book-card.touch-active .scroll-text {
+        transition: transform 4s linear 0.2s !important;
+        transform: translateX(var(--scroll-distance, -50px)) !important;
+    }
+    
+    .book-card.touch-active .scroll-wrapper.needs-scroll::after {
+        opacity: 0;
+        transition: opacity 1.1s linear;
+    }
+    
+    /* Reset when not active */
+    .book-card:not(.touch-active) .scroll-text {
+        transform: translateX(0) !important;
+        transition: transform 0.3s ease-out !important;
+    }
+    
+    .book-card:not(.touch-active) .scroll-wrapper.needs-scroll::after {
+        opacity: 1;
+        transition: opacity 0.3s ease-out;
+    }
+    
+    /* Prevent card lift interference on touch */
+    .book-card.touch-active {
+        transform: translateY(-6px) !important;
+        box-shadow: 0 10px 24px rgba(0,0,0,0.12) !important;
+    }
 }
 
 /* =========================================================
