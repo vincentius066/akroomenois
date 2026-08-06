@@ -899,6 +899,43 @@ select {
 }
 
 /* =========================================================
+   FORCE TOUCH SCROLL (No JavaScript Needed)
+   ========================================================= */
+
+/* On touch devices, scroll the title when tapped */
+@media (hover: none) {
+    .book-card .scroll-text {
+        /* Force hardware acceleration */
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+    
+    /* When tapped, iOS applies :hover — use it */
+    .book-card:hover .scroll-text {
+        transition: transform 4s linear 0.2s !important;
+        -webkit-transform: translateX(var(--scroll-distance, -50px)) !important;
+        transform: translateX(var(--scroll-distance, -50px)) !important;
+    }
+    
+    .book-card:hover .scroll-wrapper.needs-scroll::after {
+        opacity: 0 !important;
+        transition: opacity 1.1s linear;
+    }
+    
+    /* Reset when not tapped */
+    .book-card:not(:hover) .scroll-text {
+        -webkit-transform: translateX(0) !important;
+        transform: translateX(0) !important;
+        transition: transform 0.3s ease-out !important;
+    }
+    
+    .book-card:not(:hover) .scroll-wrapper.needs-scroll::after {
+        opacity: 1 !important;
+        transition: opacity 0.3s ease-out;
+    }
+}
+
+/* =========================================================
    TABLET LAYOUT RULES (TRIGGERS ON SCREEN SIZE OR MANUAL OVERRIDE)
    ========================================================= */
 @media (min-width: 768px) and (max-width: 1023px) {
