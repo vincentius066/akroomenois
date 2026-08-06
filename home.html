@@ -106,7 +106,7 @@
   <!-- TAB CONTENT: About -->
   <div id="tab-about" class="tab-content">
     <div class="about-text">
-      <p><strong>Ἀκροωμένοις</strong> (test) was created with the intent of doing what Legentibus does (and more) but for Greek texts: text/audio allignment, dictionary lookups, commentary, parallel translation, UI customization, etc. We intend to make the reading of ancient Greek as easy and enjoyable as possible.</p>
+      <p><strong>Ἀκροωμένοις</strong> (test 2) was created with the intent of doing what Legentibus does (and more) but for Greek texts: text/audio allignment, dictionary lookups, commentary, parallel translation, UI customization, etc. We intend to make the reading of ancient Greek as easy and enjoyable as possible.</p>
     </div>
   </div>
 
@@ -298,10 +298,13 @@
         
         cards.forEach(card => {
             let scrollTimeouts = [];
-            let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            let isScrolling = false;
             
             // Helper to start the scroll animation
             function startScroll(card) {
+                if (isScrolling) return;
+                isScrolling = true;
+                
                 const scrollTexts = card.querySelectorAll('.scroll-text');
                 scrollTexts.forEach(text => {
                     const container = text.parentElement;
@@ -326,6 +329,7 @@
             
             // Helper to stop the scroll animation
             function stopScroll() {
+                isScrolling = false;
                 scrollTimeouts.forEach(clearTimeout);
                 scrollTimeouts = [];
                 
@@ -349,36 +353,45 @@
                 stopScroll();
             });
             
-            // Touch events (mobile/tablet)
-            if (isTouchDevice) {
-                let touchTimeout = null;
+            // Touch/Click events (mobile + tablet)
+            // iOS prefers click over touchstart for this
+            card.addEventListener('click', (e) => {
+                // Don't trigger if they clicked the info button or Open button
+                if (e.target.closest('.info-btn') || e.target.closest('.btn')) return;
                 
-                card.addEventListener('touchstart', (e) => {
-                    // Don't interfere with the info button or other interactions
-                    if (e.target.closest('.info-btn') || e.target.closest('.btn')) return;
-                    
-                    // Clear any pending reset
-                    if (touchTimeout) clearTimeout(touchTimeout);
-                    
-                    // If the card is already scrolled (tapped once), reset it (tap again to stop)
-                    const isScrolled = card.querySelector('.scroll-text')?.style?.transform !== 'translateX(0)';
-                    if (isScrolled) {
+                // If already scrolling, stop it
+                if (isScrolling) {
+                    stopScroll();
+                    return;
+                }
+                
+                // Otherwise, start scrolling
+                startScroll(card);
+                
+                // Auto-stop after 4 seconds on touch devices
+                if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                    setTimeout(() => {
                         stopScroll();
-                        return;
+                    }, 4000);
+                }
+            });
+            
+            // Emergency reset: if user taps anywhere else on the page, stop all scrolling
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.book-card')) {
+                    // Check if this card is scrolling and reset it
+                    const scrollTexts = card.querySelectorAll('.scroll-text');
+                    let shouldReset = false;
+                    scrollTexts.forEach(text => {
+                        if (text.style.transform !== 'translateX(0)') {
+                            shouldReset = true;
+                        }
+                    });
+                    if (shouldReset) {
+                        stopScroll();
                     }
-                    
-                    startScroll(card);
-                }, { passive: true });
-                
-                card.addEventListener('touchend', () => {
-                    // Don't reset immediately, let the user see the scroll
-                    // Reset after 3 seconds of inactivity
-                    if (touchTimeout) clearTimeout(touchTimeout);
-                    touchTimeout = setTimeout(() => {
-                        stopScroll();
-                    }, 3000);
-                }, { passive: true });
-            }
+                }
+            });
         });
     }
 
