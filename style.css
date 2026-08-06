@@ -173,8 +173,24 @@
   text-decoration: none;
   font-weight: 500;
   transition: background 0.2s;
+  cursor:pointer;
 
   border: 1px solid #c0956a;
+}
+
+.book-card .btn-unlock {
+  display: inline-block;
+  background: #ccc;
+  color: #666;
+  padding: 8px 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+  cursor:pointer;
+  length:88.53px;
+
+  border: 1px solid #bab8b8;
 }
 
 .cover-art {
@@ -303,8 +319,6 @@ footer {
 .card-back .card-actions {
   margin-top: auto; 
 }
-
-.unlock { background:#ccc; cursor:pointer; text-decoration:none; color:#666; length:88.53px; border: 1px solid #bab8b8; }
 
 /* =========================================================
    HORIZONTAL SCROLL CONTAINERS
