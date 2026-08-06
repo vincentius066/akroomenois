@@ -2079,7 +2079,8 @@ document.addEventListener('generator-ready', function() {
 
     // Dynamically update the audio source if your chapters use different audio files
     loadAudioForChapter(targetChapter);
-  
+  }
+    
   function recalculateAudioBoundaries() {
     const validWords = Array.from(words).filter(w => {
       const s = parseFloat(w.dataset.wordStart);
