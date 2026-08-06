@@ -193,6 +193,12 @@
   border: 1px solid #bab8b8;
 }
 
+.cover-art {
+  height: 150px;
+  width: 150px;
+  object-fit: cover;
+  border: 1px solid grey;
+}
 /* About tab */
 .about-text {
   max-width: 640px;
@@ -357,47 +363,6 @@ footer {
 .scroll-wrapper .author, .scroll-wrapper .reader { margin-bottom: 0; font-style: italic; color: #6b6b6b; font-size: 1rem; }
 .title-wrapper { margin-bottom: 6px; }
 .reader-wrapper { margin-bottom: 12px; }
-
-/* =========================================================
-   LOCK OVERLAY ON COVER IMAGES
-   ========================================================= */
-
-.cover-art {
-  height: 150px;
-  width: 150px;
-  object-fit: cover;
-  border: 1px solid grey;
-	
-  display: block;
-}
-
-.cover-wrapper {
-    position: relative;
-    display: inline-block;
-    width: 150px;
-    height: 150px;
-}
-
-.lock-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.3); /* Optional: darkens the image slightly */
-    pointer-events: none; /* Allows clicks to pass through to buttons */
-    border-radius: 4px;
-}
-
-.lock-icon {
-    width: 40px;
-    height: 40px;
-    opacity: 0.5;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
 
 /* =========================================================
    NORMAL RULES
