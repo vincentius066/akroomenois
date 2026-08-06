@@ -882,20 +882,24 @@ select {
 	  border: 1px solid #999999;
 	}
 
-	.book-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
-  }
-
-  .book-card.is-flipped:hover {
-    transform: rotateY(180deg) translateY(-6px);
-  }
-
 	.tab-btn:hover {
 	  color: #2c2c2c;
 	  background: #f0ebe6;
 	  border-radius: 8px 8px 0 0;
 	}
+}
+
+/* =========================================================
+   STICKY HOVERS
+   ========================================================= */
+
+.book-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+.book-card.is-flipped:hover {
+    transform: rotateY(180deg) translateY(-6px);
 }
 
 /* =========================================================
@@ -909,7 +913,6 @@ select {
   .title.hiddenIfOnMobile { display: flex !important; }
 }
 
-	
 /* =========================================================
    MOBILE LAYOUT RULES (TRIGGERS ON SCREEN SIZE OR MANUAL OVERRIDE)
    ========================================================= */
