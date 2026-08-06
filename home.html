@@ -178,7 +178,7 @@
           `;
         } else if (isPaid && !isLoggedIn) {
           actionsHTML = `
-            <a href="/" class="btn unlock" onclick="alert('Please login with Patreon to access this book.'); return false;">
+            <a href="/" class="btn-unlock" onclick="alert('Please login with Patreon to access this book.'); return false;">
               Unlock
             </a>
             <a href="#" class="btn info-btn" aria-label="Information">
@@ -191,7 +191,7 @@
           `;
         } else if (isPaid && isLoggedIn && !currentUser.isPatron) {
           actionsHTML = `
-            <a href="https://www.patreon.com/akroomenois" target="_blank" class="btn unlock">
+            <a href="https://www.patreon.com/akroomenois" target="_blank" class="btn-unlock">
               Unlock
             </a>
             <a href="#" class="btn info-btn" aria-label="Information">
