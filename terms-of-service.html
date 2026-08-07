@@ -1,1 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Terms of Service | Akroomenois</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Inter", sans-serif;
+      background: #f8f5f0;
+      padding: 40px 20px;
+      color: #2c2c2c;
+    }
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      font-size: 0.95rem;
+    }
+    .top-nav a {
+      color: #6b6b6b;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .top-nav a:hover {
+      color: #2c2c2c;
+    }
+    .content-container {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: justify;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #3d3d3d;
+    }
+    .content-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-family: "Times New Roman", serif;
+      font-weight: 300;
+      letter-spacing: 1px;
+      font-size: 2rem;
+    }
+    .content-container p {
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
 
+  <!-- TOP NAVIGATION -->
+  <nav class="top-nav">
+    <a href="/">Home</a>
+    <div>
+      <a href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id=TTiouu3TFB59C6YY-djV2suYv8pvEjFc61WyqxJqK666ApDzHsnVmS2tPLcejn7e&redirect_uri=https://akroomenois.com/auth/callback&scope=identity%20identity.memberships" id="loginBtn">Log In</a>
+      <a href="/auth/logout" id="logoutBtn" style="display: none;">Log Out</a>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content-container">
+    <h2>Terms of Service</h2>
+    <p>By using this website, you agree to the following terms:</p>
+    <p><strong>1. Individual Licensing Varies Per Book</strong><br>The copyright and licensing status of the text and audio recording vary for each individual audiobook on this site (both free and paid). The text may be Public Domain, CC BY-SA 4.0/CC BY 3.0, or fully copyrighted. The audio recording may be Public Domain, CC BY-SA 4.0/CC BY 3.0, used with the author's explicit permission, or fully copyrighted. It is the user's responsibility to be aware of the licensing terms of each individual book by looking at the notes provided in them. Please look for the first note after the Preface.</p>
+    <p><strong>2. Platform Usage Rights vs. Copyright Licensing</strong><br>The rules below are divided into two separate categories:</p>
+    <p><strong>A. Copyright Licensing (What you are legally allowed to do with the content itself)</strong><br>If the <strong>audio</strong> is copyrighted, your access to it on this website is granted solely for personal, non-commercial streaming use during your active session. If the <strong>text</strong> is copyrighted, you may not copy it beyond what is allowed by the copyright holder. If the material (audio or text) is in the <strong>Public Domain</strong>, there are no copyright restrictions on your use of it. If the material (audio or text) is under a <strong>CC BY-SA 4.0/CC BY 3.0 License</strong>, you must comply with its terms (which require ShareAlike and/or Attribution). No additional copyright restrictions beyond those required by the CC BY-SA/CC BY license are applied.</p>
+    <p><strong>B. Platform Technical Rules (Apply to ALL audio files, regardless of copyright status)</strong><br>To protect our server resources and prevent misuse of our hosting infrastructure, you may not: Redistribute, scrape, or share the direct audio file links from this platform to other websites or services. Bypass the streaming mechanism to permanently download or archive the files (beyond standard browser caching). Use automated tools to bulk-extract or harvest our audio files.</p>
+    <p><strong>3. Paid Content Access</strong><br>Access to paid/subscription audiobooks is conditional on your active Patreon membership. If your membership lapses or is cancelled, your access to paid content will be revoked.</p>
+    <p><strong>4. Enforcement</strong><br>We reserve the right to restrict, suspend, or terminate your access to any content (free or paid) if we determine you have violated these platform usage terms (e.g., by sharing direct file links).</p>
+    <p><strong>5. Disclaimer</strong><br>The content is provided "as is." We do not guarantee uninterrupted or error-free access.</p>
+  </div>
+
+  <script>
+    let currentUser = { loggedIn: false, name: '' };
+
+    async function checkLoginStatus() {
+      try {
+        const response = await fetch('/api/me');
+        const data = await response.json();
+        currentUser = { loggedIn: data.loggedIn || false, name: data.name || '' };
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        
+        if (currentUser.loggedIn) {
+          if (logoutBtn) {
+            logoutBtn.style.display = 'inline-block';
+            logoutBtn.textContent = `Log Out | ${currentUser.name}`;
+          }
+          if (loginBtn) loginBtn.style.display = 'none';
+        } else {
+          if (logoutBtn) logoutBtn.style.display = 'none';
+          if (loginBtn) loginBtn.style.display = 'inline-block';
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
+  </script>
+</body>
+</html>
