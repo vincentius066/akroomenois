@@ -86,11 +86,17 @@
 
 .top-nav {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   gap: 24px;
-  margin-bottom: 40px;
+  
+  /* Reduces the padding above and below */
+  margin-top: -15px; 
+  margin-bottom: 20px; 
+  
   font-size: 0.95rem;
+  width: 100%; /* Ensures the container stretches across the entire screen */
 }
 .top-nav a {
   color: #6b6b6b;
