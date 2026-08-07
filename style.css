@@ -102,7 +102,7 @@
 }
 
 /* Logout button */
-#logoutBtn,
+/*#logoutBtn,
 #loginBtn {
   display: none;
   position: fixed;
@@ -122,7 +122,7 @@
 #logoutBtn:hover,
 #loginBtn:hover {
   background: #f0f0f0;
-}
+}*/
 
 /* User welcome banner */
 #userBanner {
