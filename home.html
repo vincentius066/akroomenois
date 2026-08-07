@@ -34,14 +34,11 @@
 </head>
 <body>
 
-  <!-- TOP NAVIGATION -->
-  <nav class="top-nav">
-    <a href="/">Home</a>
-    <a href="privacy-policy.html">Privacy Policy</a>
-    <a href="terms-of-service.html">TOS</a>
-    <a href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id=TTiouu3TFB59C6YY-djV2suYv8pvEjFc61WyqxJqK666ApDzHsnVmS2tPLcejn7e&redirect_uri=https://akroomenois.com/auth/callback&scope=identity%20identity.memberships" id="loginBtn">Log In</a>
-    <a href="/auth/logout" id="logoutBtn" style="display: none;">Log Out</a>
-  </nav>
+  <!-- TOP AUTH BUTTON -->
+  <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+    <a href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id=TTiouu3TFB59C6YY-djV2suYv8pvEjFc61WyqxJqK666ApDzHsnVmS2tPLcejn7e&redirect_uri=https://akroomenois.com/auth/callback&scope=identity%20identity.memberships" id="loginBtn" style="color: #6b6b6b; text-decoration: none; font-size: 0.95rem; transition: color 0.2s;">Log In</a>
+    <a href="/auth/logout" id="logoutBtn" style="display: none; color: #6b6b6b; text-decoration: none; font-size: 0.95rem; transition: color 0.2s;">Log Out</a>
+  </div>
 
   <span style="display: block; text-align: justify; cursor: default;">
   <h1>ΑΚΡΟΩΜΕΝΟΙΣ</h1>
@@ -76,6 +73,12 @@
     </div>
   </div>
 
+  <!-- FOOTER -->
+  <footer style="text-align: center; margin-top: 60px; padding-bottom: 20px; font-size: 0.95rem;">
+    <a href="privacy-policy.html" style="color: #6b6b6b; text-decoration: none; margin: 0 15px; transition: color 0.2s;">Privacy Policy</a>
+    <a href="terms-of-service.html" style="color: #6b6b6b; text-decoration: none; margin: 0 15px; transition: color 0.2s;">Terms of Service</a>
+  </footer>
+  
   <script>
     // =========================================================
     // BOOK DATA
