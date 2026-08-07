@@ -84,6 +84,23 @@
    RULES TAKEN FROM INDEX.HTML
    ========================================================= */
 
+.top-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 40px;
+  font-size: 0.95rem;
+}
+.top-nav a {
+  color: #6b6b6b;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.top-nav a:hover {
+  color: #2c2c2c;
+}
+
 /* Logout button */
 #logoutBtn,
 #loginBtn {
