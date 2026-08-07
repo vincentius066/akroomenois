@@ -309,7 +309,7 @@
     async function checkLoginStatus() {
       try {
         console.log('🔍 Checking login status...');
-        const response = await fetch('/api/me');
+        const response = await fetch('/api/me', { credentials: 'include' });
         const data = await response.json();
         console.log('✅ /api/me response:', data);
 
