@@ -1,1 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Privacy Policy | Akroomenois</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Inter", sans-serif;
+      background: #f8f5f0;
+      padding: 40px 20px;
+      color: #2c2c2c;
+    }
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      font-size: 0.95rem;
+    }
+    .top-nav a {
+      color: #6b6b6b;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .top-nav a:hover {
+      color: #2c2c2c;
+    }
+    .content-container {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: justify;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #3d3d3d;
+    }
+    .content-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-family: "Times New Roman", serif;
+      font-weight: 300;
+      letter-spacing: 1px;
+      font-size: 2rem;
+    }
+  </style>
+</head>
+<body>
 
+  <!-- TOP NAVIGATION -->
+  <nav class="top-nav">
+    <a href="/">Home</a>
+    <div>
+      <a href="https://www.patreon.com/oauth2/authorize?response_type=code&client_id=TTiouu3TFB59C6YY-djV2suYv8pvEjFc61WyqxJqK666ApDzHsnVmS2tPLcejn7e&redirect_uri=https://akroomenois.com/auth/callback&scope=identity%20identity.memberships" id="loginBtn">Log In</a>
+      <a href="/auth/logout" id="logoutBtn" style="display: none;">Log Out</a>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content-container">
+    <h2>Privacy Policy</h2>
+    <p>When you log in through Patreon, our website securely collects your Patreon user ID, email address, and membership tier status solely to verify your active subscription and grant you access to paid audiobook content.</p>
+    <br>
+    <p>We do <strong>not</strong> share, sell, or distribute your personal data to any third parties. We do not store your data permanently on our servers; it is used temporarily during your active session to serve you the correct content.</p>
+    <br>
+    <p>For any questions, contact us at info@akroomenois.com.</p>
+  </div>
+
+  <script>
+    let currentUser = { loggedIn: false, name: '' };
+
+    async function checkLoginStatus() {
+      try {
+        const response = await fetch('/api/me');
+        const data = await response.json();
+        currentUser = { loggedIn: data.loggedIn || false, name: data.name || '' };
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        
+        if (currentUser.loggedIn) {
+          if (logoutBtn) {
+            logoutBtn.style.display = 'inline-block';
+            logoutBtn.textContent = `Log Out | ${currentUser.name}`;
+          }
+          if (loginBtn) loginBtn.style.display = 'none';
+        } else {
+          if (logoutBtn) logoutBtn.style.display = 'none';
+          if (loginBtn) loginBtn.style.display = 'inline-block';
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
+  </script>
+</body>
+</html>
