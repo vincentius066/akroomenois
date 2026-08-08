@@ -1597,7 +1597,9 @@ document.addEventListener('generator-ready', function() {
   
         // 5. Build the UI Shell
         popupContent.innerHTML = `
-          <h3 style="margin-top:0;">Word Frequency</h3>
+          <h3 style="margin-top:0; margin-bottom: 5px;">Word Frequency</h3>
+          <!-- Dynamic Total Count -->
+          <div id="freqTotalCount" style="font-size: 0.9em; color: #555; margin-bottom: 15px; text-align: center; font-weight: 500;"></div>
           
           <!-- Tabs -->
           <div style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;">
@@ -1623,6 +1625,7 @@ document.addEventListener('generator-ready', function() {
         const tabVerbsBtn = document.getElementById("freqTabVerbs");
         const bracketBtns = popupContent.querySelectorAll(".bracket-btn");
         const resultsContainer = document.getElementById("freqResults");
+        const totalCountContainer = document.getElementById("freqTotalCount");
   
         // 6. Bind Tab Events
         tabAllBtn.addEventListener("click", () => {
@@ -1654,7 +1657,7 @@ document.addEventListener('generator-ready', function() {
           });
         });
         
-        // Helper: Gloss Formatter (Mirrors DictionaryEngine's structure so toggleGloss works perfectly)
+        // Helper: Gloss Formatter
         const formatGlossWithToggle = (glossText) => {
           if (!glossText) return '—';
           const semicolonIndex = glossText.indexOf(';');
@@ -1663,7 +1666,6 @@ document.addEventListener('generator-ready', function() {
           const visiblePart = glossText.substring(0, semicolonIndex + 1);
           const hiddenPart = glossText.substring(semicolonIndex + 1);
   
-          // Wrapped in an outer span so DictionaryEngine.toggleGloss(this) finds `.extra-gloss` in this.parentNode
           return `
             <span>
               <span>${visiblePart}</span><!--
@@ -1678,30 +1680,34 @@ document.addEventListener('generator-ready', function() {
         // 8. Main Rendering Logic
         function renderResults(data) {
           let html = "";
+          let totalWordsCount = 0; // Initialize total counter for the current filters
   
           // Filter vocabulary by current tab (All vs Verbs)
           const filteredData = data.filter(item => {
             if (currentTab === "verbs") {
-              // Loosened check to account for missing keys or string "true" in JSON imports
               return item.isVerb == true || item.isVerb === "true";
             }
             return true;
           });
   
-          // Iterate through brackets (already reversed so higher frequencies print first)
+          // Iterate through brackets
           brackets.forEach(bracket => {
             if (!activeBrackets.has(bracket.id)) return; // Skip unselected brackets
   
             const wordsInBracket = filteredData.filter(w => w.totalFrequency >= bracket.min && w.totalFrequency <= bracket.max);
             
-            // Optional: Sort words descending within their bracket
+            // Sort words descending within their bracket
             wordsInBracket.sort((a, b) => b.totalFrequency - a.totalFrequency);
 
+            // Add this bracket's valid words to the grand total
+            totalWordsCount += wordsInBracket.length;
+
             if (wordsInBracket.length > 0) {
-              // Inject section separators
+              // Inject section separators with the specific bracket count
               html += `
                 <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0 10px 0;">
-                <h5 style="text-align: center; margin: 0 0 15px 0;">${bracket.label}</h5>
+                <h5 style="text-align: center; margin: 0 0 3px 0;">${bracket.label}</h5>
+                <div style="text-align: center; font-size: 0.9em; color: #555; margin-bottom: 15px;">${wordsInBracket.length} unique words</div>
               `;
   
               // Render the vocabulary lines
@@ -1743,6 +1749,9 @@ document.addEventListener('generator-ready', function() {
           }
   
           resultsContainer.innerHTML = html;
+
+          // Update the global total count at the top of the popup
+          totalCountContainer.innerHTML = `total: ${totalWordsCount} unique words`;
         }
   
         // 9. Initial paint
