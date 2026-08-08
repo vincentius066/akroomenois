@@ -1751,7 +1751,7 @@ document.addEventListener('generator-ready', function() {
           resultsContainer.innerHTML = html;
 
           // Update the global total count at the top of the popup
-          totalCountContainer.innerHTML = `total: ${totalWordsCount} unique words`;
+          totalCountContainer.innerHTML = `Total: ${totalWordsCount} unique words`;
         }
   
         // 9. Initial paint
