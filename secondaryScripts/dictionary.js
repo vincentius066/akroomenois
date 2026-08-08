@@ -40,11 +40,17 @@ function attachVocabListeners() {
         // Update UI
         buttons.forEach(b => {
           b.classList.remove('active');
-          b.style.fontWeight = 'normal'; // Reset styles
+          b.style.fontWeight = 'normal'; 
+          b.style.backgroundColor = '#f8f9fa'; // Reset to pale neutral grey
         });
         
         e.target.classList.add('active');
-        e.target.style.fontWeight = 'bold'; // Highlight active
+        e.target.style.fontWeight = 'bold'; 
+        
+        // Apply low-saturation colors
+        if (selectedStatus === 'new') e.target.style.backgroundColor = '#e5c0c0'; // Pale Red
+        if (selectedStatus === 'learning') e.target.style.backgroundColor = '#e5d0b3'; // Pale Orange
+        if (selectedStatus === 'known') e.target.style.backgroundColor = '#c0e5c8'; // Pale Green
       });
     });
   });
@@ -323,11 +329,18 @@ window.DictionaryEngine = {
         
         const currentStatus = getLemmaStatus(lemma); 
         
+        const getBg = (status, btnType) => {
+          if (status !== btnType) return '#f8f9fa';
+          if (btnType === 'new') return '#e5c0c0';
+          if (btnType === 'learning') return '#e5d0b3';
+          return '#c0e5c8';
+        };
+
         const vocabButtonsHTML = `
           <div class="vocab-controls" data-lemma="${lemma}" style="margin-top: 8px; margin-bottom: 8px; display: flex; gap: 8px;">
-            <button class="vocab-btn new-btn ${currentStatus === 'new' ? 'active' : ''}" data-status="new">New</button>
-            <button class="vocab-btn learning-btn ${currentStatus === 'learning' ? 'active' : ''}" data-status="learning">Learning</button>
-            <button class="vocab-btn known-btn ${currentStatus === 'known' ? 'active' : ''}" data-status="known">Known</button>
+            <button class="vocab-btn new-btn ${currentStatus === 'new' ? 'active' : ''}" data-status="new" style="background-color: ${getBg(currentStatus, 'new')};">New</button>
+            <button class="vocab-btn learning-btn ${currentStatus === 'learning' ? 'active' : ''}" data-status="learning" style="background-color: ${getBg(currentStatus, 'learning')};">Learning</button>
+            <button class="vocab-btn known-btn ${currentStatus === 'known' ? 'active' : ''}" data-status="known" style="background-color: ${getBg(currentStatus, 'known')};">Known</button>
           </div>
         `;
         // -------------------------------------------
