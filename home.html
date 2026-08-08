@@ -302,6 +302,54 @@
     }
 
     // =========================================================
+    // DYNAMIC VOCABULARY ENGINE
+    // =========================================================
+    async function initializeLibraryVocab() {
+      console.log('📖 Fetching vocabulary data for all texts...');
+      
+      // A Set automatically prevents duplicates. Perfect for a global word count.
+      const globalVocabSet = new Set();
+    
+      // Promise.all allows us to fetch all JSON files concurrently for maximum speed
+      await Promise.all(books.map(async (book) => {
+        try {
+          // 1. Derive the book's base directory from its cover image path
+          // e.g., "books/anabasis/image/cover.jpg" -> "books/anabasis"
+          const basePath = book.cover.split('/image/')[0];
+    
+          // 2. Construct the exact path to the frequency data JSON
+          const jsonPath = `${basePath}/dictionary_data/frequency_data_5.json`;
+    
+          // 3. Fetch the dictionary/frequency data
+          const response = await fetch(jsonPath);
+          
+          // If a book doesn't have a JSON file yet, throw an error to skip it cleanly
+          if (!response.ok) throw new Error(`File not found: ${jsonPath}`);
+    
+          const wordData = await response.json();
+    
+          // 4. The number of unique words is simply the number of keys in the JSON object
+          const bookWords = Object.keys(wordData);
+          book.vocab = bookWords.length; // This injects the count into your book array
+    
+          // 5. Add every word to the global Set
+          bookWords.forEach(word => globalVocabSet.add(word));
+    
+        } catch (error) {
+          // Fails gracefully for works-in-progress (like Cyropaedia)
+          console.warn(`Vocab fetch skipped for ${book.title}:`, error.message);
+          book.vocab = 0; 
+        }
+      }));
+    
+      // You now have access to a deduplicated global word count!
+      console.log(`🏛️ Total unique words across all books: ${globalVocabSet.size}`);
+      
+      // Optional: If you ever add a <span id="global-vocab"> to your About tab
+      // document.getElementById('global-vocab').textContent = globalVocabSet.size;
+    }
+    
+    // =========================================================
     // CHECK LOGIN STATUS
     // =========================================================
     async function checkLoginStatus() {
@@ -384,15 +432,20 @@
     // =========================================================
     // INITIALIZE
     // =========================================================
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       console.log('🚀 Page loaded, initializing...');
       syncTabWithHash();
       
-      // Wait a moment for everything to settle, then check login
+      // NEW: Await the vocabulary calculations first
+      await initializeLibraryVocab();
+    
+      // Wait a moment for everything to settle, then check login.
+      // checkLoginStatus() automatically calls renderBooks() for us.
+      // Because initializeLibraryVocab() ran first, renderBooks() will now have the real vocab numbers.
       setTimeout(() => {
         checkLoginStatus();
       }, 100);
-
+    
       // Re-run scroll shadow check after fonts load
       if (document.fonts) {
         document.fonts.ready.then(() => {
