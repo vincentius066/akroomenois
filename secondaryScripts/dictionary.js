@@ -1,5 +1,55 @@
 // secondaryScripts/dictionary.js
 
+const VOCAB_KEY = "reader_vocab_library";
+
+function getVocabLibrary() {
+  const lib = localStorage.getItem(VOCAB_KEY);
+  return lib ? JSON.parse(lib) : {};
+}
+
+function setLemmaStatus(lemma, status) {
+  const lib = getVocabLibrary();
+  if (status === "new") {
+    delete lib[lemma];
+  } else {
+    lib[lemma] = status; 
+  }
+  localStorage.setItem(VOCAB_KEY, JSON.stringify(lib));
+}
+
+function getLemmaStatus(lemma) {
+  const lib = getVocabLibrary();
+  return lib[lemma] || "new";
+}
+
+function attachVocabListeners() {
+  // Select all vocab control groups in the popup
+  const containers = document.querySelectorAll('.vocab-controls');
+  
+  containers.forEach(container => {
+    const lemma = container.getAttribute('data-lemma');
+    const buttons = container.querySelectorAll('.vocab-btn');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const selectedStatus = e.target.getAttribute('data-status');
+        
+        // Save to global library
+        setLemmaStatus(lemma, selectedStatus);
+
+        // Update UI
+        buttons.forEach(b => {
+          b.classList.remove('active');
+          b.style.fontWeight = 'normal'; // Reset styles
+        });
+        
+        e.target.classList.add('active');
+        e.target.style.fontWeight = 'bold'; // Highlight active
+      });
+    });
+  });
+}
+
 window.DictionaryEngine = {
   // --- Constants moved to standard object properties ---
   grammaticalFeatures: {
@@ -270,7 +320,18 @@ window.DictionaryEngine = {
       const cardsHTML = Object.keys(groupedByLemma).map(lemma => {
         const optionsList = groupedByLemma[lemma];
         const sharedGlossHTML = formatGlossWithToggle(optionsList[0].gloss);
-
+        
+        const currentStatus = getLemmaStatus(lemma); 
+        
+        const vocabButtonsHTML = `
+          <div class="vocab-controls" data-lemma="${lemma}" style="margin-top: 8px; margin-bottom: 8px; display: flex; gap: 8px;">
+            <button class="vocab-btn new-btn ${currentStatus === 'new' ? 'active' : ''}" data-status="new">New</button>
+            <button class="vocab-btn learning-btn ${currentStatus === 'learning' ? 'active' : ''}" data-status="learning">Learning</button>
+            <button class="vocab-btn known-btn ${currentStatus === 'known' ? 'active' : ''}" data-status="known">Known</button>
+          </div>
+        `;
+        // -------------------------------------------
+        
         // If there is only 1 analysis for this lemma
         if (optionsList.length === 1) {
           const option = optionsList[0];
@@ -283,7 +344,7 @@ window.DictionaryEngine = {
             <div class="dict-entry-card" style="line-height: 1.4;">
               <div><strong>Lemma:</strong> <span style="color:#007bff; font-weight:bold; font-size:1.05em;">${lemma}</span></div>
               <div style="margin-top: 3px;"><strong>Gloss:</strong> <span>${sharedGlossHTML}</span></div>
-              
+              ${vocabButtonsHTML}
               <div class="lemma-sub-option" style="margin-top: 6px; padding-left: 10px; border-left: 2px solid #dee2e6;">
                 <div>
                   <strong>Part of Speech:</strong> 
@@ -329,6 +390,7 @@ window.DictionaryEngine = {
             <div class="dict-entry-card" style="line-height: 1.4;">
               <div><strong>Lemma:</strong> <span style="color:#007bff; font-weight:bold; font-size:1.05em;">${lemma}</span></div>
               <div style="margin-top: 3px;"><strong>Gloss:</strong> <span>${sharedGlossHTML}</span></div>
+              ${vocabButtonsHTML}
               ${analysesHTML}
             </div>
           `;
@@ -340,6 +402,8 @@ window.DictionaryEngine = {
       if (typeof setupDictionaryAudioButton === "function") {
         setupDictionaryAudioButton();
       }
+
+      attachVocabListeners();
 
     } catch (error) {
       console.error("Dictionary Engine Processing Fault:", error);
