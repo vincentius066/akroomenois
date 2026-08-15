@@ -160,6 +160,13 @@
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+@font-face {
+  font-family: "olga";
+  src: url("font/SBL_BLit.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
   unicode-range: U+0041-005A, U+0061-007A, U+005B, U+005D;
 }
 
@@ -249,12 +256,26 @@
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+@font-face {
+  font-family: "complutum";
+  src: url("font/SBL_BLit.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
   unicode-range: U+0041-005A, U+0061-007A, U+005B, U+005D;
 }
 
 @font-face {
   font-family: "decker";
   src: url("gfs_font/decker.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "decker";
+  src: url("font/SBL_BLit.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -280,6 +301,13 @@
 @font-face {
   font-family: "goschen";
   src: url("gfs_font/goschen.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "goschen";
+  src: url("font/SBL_BLit.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
