@@ -1,4 +1,324 @@
-  @font-face {
+/* =========================================================
+   GFS FONTS
+   ========================================================= */
+@font-face {
+  font-family: "artemisia";
+  src: url("gfs_font/GFSArtemisia.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "artemisia";
+  src: url("gfs_font/GFSArtemisiaBold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "artemisia";
+  src: url("gfs_font/GFSArtemisiaBoldIt.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "artemisia";
+  src: url("gfs_font/GFSArtemisiaItalic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "bodoni";
+  src: url("gfs_font/GFSBodoni.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "bodoni";
+  src: url("gfs_font/GFSBodoniBold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "bodoni";
+  src: url("gfs_font/GFSBodoniIt.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "bodoni";
+  src: url("gfs_font/GFSBodoniBoldIt.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "didot";
+  src: url("gfs_font/GFSDidot.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "didot";
+  src: url("gfs_font/GFSDidotBold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "didot";
+  src: url("gfs_font/GFSDidotItalic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "didot";
+  src: url("gfs_font/GFSDidotBoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "elpis";
+  src: url("gfs_font/GFSElpis.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "georgiou";
+  src: url("gfs_font/GFSGeorgiou-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/*add rest of georgiou fonts*/
+
+@font-face {
+  font-family: "heraklitos";
+  src: url("gfs_font/GFSHeraklit.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "neohellenic";
+  src: url("gfs_font/GFSNeohellenic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "neohellenic";
+  src: url("gfs_font/GFSNeohellenicBold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "neohellenic";
+  src: url("gfs_font/GFSNeohellenicIt.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "neohellenic";
+  src: url("gfs_font/GFSNeohellenicBoldIt.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "olga";
+  src: url("gfs_font/GFSOlga.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "pyrsos";
+  src: url("gfs_font/GFSPyrsos.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "theokritos";
+  src: url("gfs_font/GFSTheokritos.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "didotdisplay";
+  src: url("gfs_font/GFS_Didot_Display.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "galatea";
+  src: url("gfs_font/GFS_Galatea.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "galatea";
+  src: url("gfs_font/GFS_Galatea_Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "orpheus";
+  src: url("gfs_font/GFS_Orpheus.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "orpheussans";
+  src: url("gfs_font/GFS_Orpheus_Sans.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "otter";
+  src: url("gfs_font/GFS_Otter.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "baskerville";
+  src: url("gfs_font/baskerville.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "bondoniclassic";
+  src: url("gfs_font/bondoni_classic.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "complutum";
+  src: url("gfs_font/complutum.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "decker";
+  src: url("gfs_font/decker.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "didotclassic";
+  src: url("gfs_font/didot_classic.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "gazis";
+  src: url("gfs_font/gazis.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "goschen";
+  src: url("gfs_font/goschen.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "orpheusclassic";
+  src: url("gfs_font/orpheus_classic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "philostratos";
+  src: url("gfs_font/philostratos.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "porson";
+  src: url("gfs_font/porson.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "solomos";
+  src: url("gfs_font/solomos.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =========================================================
+   NORMAL FONTS
+   ========================================================= */
+
+@font-face {
   font-family: "SBL";
   src: url("font/SBL_BLit.ttf") format("truetype");
   font-weight: normal;
