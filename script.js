@@ -156,6 +156,32 @@ document.addEventListener('generator-ready', function() {
           <option value="SBL">SBL</option>
           <option value="EB_Garamond">EB Garamond</option>
           <option value="Anaktoria">Anaktoria</option>
+          <option value="artemisia">Artemisia (GFS)</option>
+          <option value="bodoni">Bodoni (GFS)</option>
+          <option value="bondoniclassic">Bodoni Classic (GFS)</option>
+          <option value="didot">Didot (GFS)</option>
+          <option value="didotdisplay">Didot Display (GFS)</option>
+          <option value="didotclassic">Didot Classic (GFS)</option>
+          <option value="elpis">Elpis (GFS)</option>
+          <option value="georgiou">Georgiou (GFS)</option>
+          <option value="heraklitos">Heraklitos (GFS)</option>
+          <option value="neohellenic">Neohellenic (GFS)</option>
+          <option value="Olga">Olga (GFS)</option>
+          <option value="Pyrsos">Pyrsos (GFS)</option>
+          <option value="theokritos">Theokritos (GFS)</option>
+          <option value="galatea">Galatea (GFS)</option>
+          <option value="orpheus">Orpheus (GFS)</option>
+          <option value="orpheussans">Orpheus Sans (GFS)</option>
+          <option value="orpheusclassic">Orpheus Classic (GFS)</option>
+          <option value="otter">Otter (GFS)</option>
+          <option value="baskerville">Baskerville (GFS)</option>
+          <option value="complutum">Complutum (GFS)</option>
+          <option value="decker">Decker (GFS)</option>
+          <option value="gazis">Gazis (GFS)</option>
+          <option value="goschen">Goschen (GFS)</option>
+          <option value="philostratos">Philostratos (GFS)</option>
+          <option value="porson">Porson (GFS)</option>
+          <option value="solomos">Solomos (GFS)</option>
         </select>
         <button id="advancedFontBtn" class="settings-btn" style="cursor: pointer;">Advanced</button>
       </label>
