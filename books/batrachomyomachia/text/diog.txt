@@ -300,7 +300,6 @@ Book 1, Chapter 1, Section 99.
 Book 1, Chapter 1, Section 100.
 Λειχοπίναξ ὄχθῃσιν ἐφεζόμενος μαλακῇσιν·
 
-Book 1.
 Book 1, Chapter 2.
 Book 1, Chapter 2, Section 101.
 δεινὸν δʼ ἐξολόλυξε, δραμὼν δʼ ἤγγειλε μύεσσιν.
@@ -602,7 +601,6 @@ Book 1, Chapter 2, Section 199.
 Book 1, Chapter 2, Section 200.
 δεινὸν ἐσάλπιγξαν πολέμου κτύπον· οὐρανόθεν δὲ
 
-Book 1.
 Book 1, Chapter 3.
 Book 1, Chapter 3, Section 201.
 Ζεὺς Κρονίδης βρόντησε, τέρας πολέμοιο κακοῖο.
