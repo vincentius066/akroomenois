@@ -1217,7 +1217,7 @@ item []:
         intervals [98]:
             xmin = 66.660000
             xmax = 67.520000
-            text = "πέπονθα"
+            text = "πέπονθειν"
         intervals [99]:
             xmin = 67.520000
             xmax = 68.780000
