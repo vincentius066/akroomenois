@@ -2117,7 +2117,7 @@ item []:
         intervals [323]:
             xmin = 220.000000
             xmax = 221.090000
-            text = "θρύλλος,"
+            text = "θυμός,"
         intervals [324]:
             xmin = 221.090000
             xmax = 222.130000
