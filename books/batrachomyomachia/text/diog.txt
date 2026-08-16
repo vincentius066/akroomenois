@@ -1,47 +1,49 @@
 Book 1, Chapter 1, Section 1.
-Ἀρχόμενος [πρῶτον Μουσῶν] χορὸν ἐξ Ἑλικῶνος
+Ἀρχόμενος [πρῶτον Μουσῶν]GGGG{*}HHHH{* Ἀρχόμενος πρώτης σελίδος: Beginning from the first page…}IIII χορὸν ἐξ ἙλικῶνοςGGGG{*}HHHH{* χορὸν ἐξ Ἑλικῶνος: acc. subject after ἐπεύχομαι, I pray that a chorus…}IIII
 
 Book 1, Chapter 1, Section 2.
-ἐλθεῖν εἰς ἐμὸν ἦτορ ἐπεύχομαι εἵνεκʼ ἀοιδῆς,
+ἐλθεῖνGGGG{*}HHHH{* ἐλθεῖν: aor. inf. ἔρχομαι}IIII εἰς ἐμὸν ἦτορ ἐπεύχομαι εἵνεκʼ ἀοιδῆς,
 
 Book 1, Chapter 1, Section 3.
-ἣν νέον ἐν δέλτοισιν ἐμοῖς ἐπὶ γούνασι θῆκα,
+ἣν νέον ἐν δέλτοισινGGGG{*}HHHH{* δέλτοισιν: dat. pl. (Attic δέλτοις)}IIII ἐμοῖςGGGG{*}HHHH{* ἐν δέλτοισιν ἐμοῖς: ἐμοῖς ambiguous but likely with δέλτοισιν.}IIII ἐπὶ γούνασι θῆκαGGGG{*}HHHH{* θῆκα: I placed, 1s aor. τίθημι, = Attic ἔθηκα (cf. προσέθηκε in line 10). Epic often omits the augment.}IIII,
 
 Book 1, Chapter 1, Section 4.
-δῆριν ἀπειρεσίην, πολεμόκλονον ἔργον Ἄρηος,
+δῆριν ἀπειρεσίηνGGGG{*}HHHH{* δῆριν ἀπειρεσίην: boundless strife, in
+apposition to ἣν.}IIII, πολεμόκλονον ἔργον Ἄρηος,
 
 Book 1, Chapter 1, Section 5.
-εὐχόμενος μερόπεσσιν [ἐν] οὔατα πᾶσι βαλέσθαι
+εὐχόμενος μερόπεσσιν [ἐν]GGGG{*}HHHH{* ἐς: Attic εἰς}IIII οὔατα πᾶσιGGGG{*}HHHH{* μερόπεσσιν ἐς οὔατα πᾶσι: into the ears of all mortals, μερόπεσσιν Ep. dat. of possession with body parts}IIII βαλέσθαιGGGG{*}HHHH{* βαλέσθαι: to throw, aor. mid. inf. βάλλω}IIII
 
 Book 1, Chapter 1, Section 6.
-πῶς μύες ἐν βατράχοισιν ἀριστεύσαντες ἔβησαν,
+πῶς μύες ἐν βατράχοισινGGGG{*}HHHH{* ἐν βατράχοισιν: among the frogs}IIII ἀριστεύσαντες ἔβησανGGGG{*}HHHH{* ἔβησαν: 3p of the 2nd aor. βαίνω, (they) went}IIII,
 
 Book 1, Chapter 1, Section 7.
-γηγενέων ἀνδρῶν μιμούμενοι ἔργα Γιγάντων,
+γηγενέωνGGGG{*}HHHH{* γηγενέων: Ep. gen. pl.}IIII ἀνδρῶν μιμούμενοι ἔργα Γιγάντων,
 
 Book 1, Chapter 1, Section 8.
-ὡς [ἔπος] ἐν θνητοῖσιν ἔην· τοίην δʼ ἔχεν ἀρχήν.
+ὡς [ἔπος] ἐν θνητοῖσιν ἔηνGGGG{*}HHHH{* ἔην: Ep. 3s impf. εἰμί}IIII· τοίην δʼ ἔχενGGGG{*}HHHH{* ἔχεν: Attic εἶχε(ν)}IIII ἀρχήν.
 
 Book 1, Chapter 1, Section 9.
-Μῦς ποτε διψαλέος γαλέης κίνδυνον ἀλύξας,
+Μῦς ποτε διψαλέος γαλέης κίνδυνον ἀλύξαςGGGG{*}HHHH{* ἀλύξας: aor. pple ἀλύσκω}IIII,
 
 Book 1, Chapter 1, Section 10.
-πλησίον ἐν λίμνῃ [ἁπαλὸν] προσέθηκε γένειον,
+πλησίον ἐν λίμνῃ [ἁπαλὸν] προσέθηκεGGGG{*}HHHH{* προσέθηκε: 3s aor. προστίθημι}IIII γένειον,
 
 Book 1, Chapter 1, Section 11.
-ὕδατι τερπόμενος [μελιηδέϊ]· τὸν δὲ [κατεῖδεν]
+ὕδατι τερπόμενος [μελιηδέϊ]· τὸνGGGG{*}HHHH{* τὸν: him. in Epic ὁ, ἡ, τό is generally a pronoun}IIII δὲ [κατεῖδεν]GGGG{*}HHHH{* κατεῖδε: he observed, 3s aor. καθ-οράω}IIII
 
 Book 1, Chapter 1, Section 12.
-λιμνόχαρις πολύφημος, ἔπος δʼ ἐφθέγξατο τοῖον·
+λιμνόχαρις πολύφημος, ἔπος δʼ ἐφθέγξατοGGGG{*}HHHH{* ἐφθέγξατο: 3s aor. φθέγγομαι}IIII τοῖον·
 
 Book 1, Chapter 1, Section 13.
-«Ξεῖνε τίς εἶ; πόθεν ἦλθες ἐπʼ [ᾐόνα]; τίς [δέ σʼ] ὁ φύσας;
+«Ξεῖνε τίς εἶ; πόθεν ἦλθεςGGGG{*}HHHH{* ἦλθες: 2s aor. ἔρχομαι}IIII ἐπʼ [ᾐόνα]; τίς [δέ σʼ] ὁ φύσας;
 
 Book 1, Chapter 1, Section 14.
-πάντα δʼ ἀλήθευσον, μὴ ψευδόμενόν σε νοήσω.
+πάντα δʼ ἀλήθευσονGGGG{*}HHHH{* ἀλήθευσον: tell truthfully, aor. act. imperative sing. of ἀληθεύω}IIII, μὴ ψευδόμενόν σε νοήσωGGGG{*}HHHH{* μὴ… νοήσω: lest I notice that… νοήσω 1s aor. act. subj. of νοέω, negative purpose clause introduced by μή.}IIII.
 
 Book 1, Chapter 1, Section 15.
-εἰ γάρ σε γνοίην φίλον ἄξιον ἐς δόμον ἄξω·
+εἰ γάρ σε γνοίην φίλον ἄξιον ἐς δόμονGGGG{*}HHHH{* ἄξιον ἐς δόμον: ἄξιον ambiguous but
+likely with δόμον}IIII ἄξωGGGG{*}HHHH{* γνοίην… ἄξω: if I should come to know… I will lead. γνοίην 1s aor. act. opt. γιγνώσκω, ἄξω 1s fut. act. ind. ἄγω. Mixed condition, future less vivid in protasis, future more vivid in apodosis.}IIII·
 
 Book 1, Chapter 1, Section 16.
 δῶρα δέ τοι δώσω ξεινήϊα πολλὰ καὶ ἐσθλά.
